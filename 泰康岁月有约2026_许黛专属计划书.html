@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>泰康岁月有约2026 · 许黛女士专属计划书</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700&family=Noto+Sans+SC:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root {
+    --gold: #C8A96E;
+    --gold-light: #E8D5A3;
+    --gold-dark: #9A7A45;
+    --navy: #1A2744;
+    --navy-light: #243560;
+    --charcoal: #2C2C2C;
+    --cream: #FAF7F2;
+    --warm-white: #FFFEF9;
+    --text-primary: #1A1A1A;
+    --text-secondary: #5A5A5A;
+    --text-muted: #9A9A9A;
+    --orange: #E8733A;
+    --green: #3A8A5A;
+    --red: #C0392B;
+    --shadow: 0 8px 40px rgba(0,0,0,0.12);
+    --shadow-sm: 0 2px 12px rgba(0,0,0,0.08);
+    --radius: 16px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: linear-gradient(135deg, #F5F0E8 0%, #EDE8DC 50%, #F0ECE2 100%);
+    min-height: 100vh;
+    color: var(--text-primary);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 32px 16px;
+  }
+
+  .outer-wrap {
+    width: 65%;
+    min-width: 720px;
+    max-width: 1000px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 60%, #2A4080 100%);
+    border-radius: var(--radius) var(--radius) 0 0;
+    padding: 36px 40px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 240px; height: 240px;
+    border-radius: 50%;
+    background: rgba(200,169,110,0.12);
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: 160px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: rgba(200,169,110,0.07);
+  }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brand-logo {
+    width: 36px; height: 36px;
+    background: var(--gold);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: white;
+    font-weight: 700;
+    font-family: 'Playfair Display', serif;
+  }
+  .brand-name {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 2px;
+  }
+  .badge {
+    background: rgba(200,169,110,0.2);
+    border: 1px solid rgba(200,169,110,0.4);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 11px;
+    color: var(--gold-light);
+    letter-spacing: 1px;
+  }
+  .header-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: #FFFFFF;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .header-subtitle {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 1px;
+  }
+  .header-stats {
+    display: flex;
+    gap: 32px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .stat-item { flex: 1; }
+  .stat-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .stat-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--gold-light);
+    font-weight: 600;
+  }
+  .stat-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 2px;
+  }
+  .gold-divider {
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+    margin: 8px 0;
+  }
+
+  /* ── TABS ── */
+  .tabs-bar {
+    background: var(--warm-white);
+    border-bottom: 1px solid #E8E0D0;
+    display: flex;
+    padding: 0 24px;
+    gap: 0;
+  }
+  .tab-btn {
+    padding: 16px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    border: none;
+    background: none;
+    position: relative;
+    letter-spacing: 0.5px;
+    transition: color 0.2s;
+    white-space: nowrap;
+  }
+  .tab-btn::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.25s;
+  }
+  .tab-btn.active { color: var(--navy); }
+  .tab-btn.active::after { transform: scaleX(1); }
+  .tab-btn:hover { color: var(--charcoal); }
+
+  /* ── CONTENT ── */
+  .content-area {
+    background: var(--warm-white);
+    border-radius: 0 0 var(--radius) var(--radius);
+    box-shadow: var(--shadow);
+  }
+  .tab-panel { display: none; padding: 32px 36px; }
+  .tab-panel.active { display: block; }
+
+  /* ── SECTION TITLE ── */
+  .section-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .section-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+
+  /* ── OVERVIEW CARDS ── */
+  .overview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .ov-card {
+    background: linear-gradient(135deg, #F8F4ED 0%, #F3EDE0 100%);
+    border: 1px solid #E8DFC8;
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .ov-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--gold);
+  }
+  .ov-card-icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  .ov-card-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+  .ov-card-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--navy);
+    font-weight: 600;
+  }
+  .ov-card-note {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+
+  /* ── PRODUCT STRUCTURE ── */
+  .product-structure {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    border-radius: var(--radius-sm);
+    padding: 24px;
+    margin-bottom: 24px;
+    color: white;
+  }
+  .structure-title {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+  .structure-flow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .flow-box {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(200,169,110,0.3);
+    border-radius: 8px;
+    padding: 12px 16px;
+    text-align: center;
+    flex: 1;
+    min-width: 120px;
+  }
+  .flow-box-title {
+    font-size: 12px;
+    color: var(--gold-light);
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+  }
+  .flow-box-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: white;
+  }
+  .flow-box-note {
+    font-size: 10px;
+    color: rgba(255,255,255,0.45);
+    margin-top: 2px;
+    line-height: 1.4;
+  }
+  .flow-arrow {
+    color: var(--gold);
+    font-size: 20px;
+    opacity: 0.7;
+  }
+
+  /* ── PENSION PHASES ── */
+  .phase-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .phase-card {
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    border: 1px solid;
+  }
+  .phase-card.phase-a {
+    background: linear-gradient(135deg, #FFF8EE 0%, #FFF1D8 100%);
+    border-color: #E8C878;
+  }
+  .phase-card.phase-b {
+    background: linear-gradient(135deg, #EEF4FF 0%, #E0ECFF 100%);
+    border-color: #8BB4E8;
+  }
+  .phase-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .phase-card.phase-a .phase-label { color: var(--gold-dark); }
+  .phase-card.phase-b .phase-label { color: #2A5FA8; }
+  .phase-age {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .phase-card.phase-a .phase-age { color: var(--gold-dark); }
+  .phase-card.phase-b .phase-age { color: #2A5FA8; }
+  .phase-amount {
+    font-size: 22px;
+    font-weight: 600;
+    font-family: 'Playfair Display', serif;
+    color: var(--charcoal);
+    margin-bottom: 6px;
+  }
+  .phase-note {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* ── SCENARIO SELECTOR ── */
+  .scenario-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .scenario-btn {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    border: 1.5px solid;
+    transition: all 0.2s;
+    font-weight: 500;
+  }
+  .scenario-btn.s1 { border-color: #888; color: #888; background: white; }
+  .scenario-btn.s1.active { background: #555; border-color: #555; color: white; }
+  .scenario-btn.s4 { border-color: var(--gold); color: var(--gold-dark); background: white; }
+  .scenario-btn.s4.active { background: var(--gold); border-color: var(--gold); color: white; }
+
+  /* ── CHART ── */
+  .chart-container {
+    position: relative;
+    height: 280px;
+    margin-bottom: 20px;
+  }
+
+  /* ── YEAR SLIDER ── */
+  .slider-section {
+    background: #F8F4ED;
+    border-radius: var(--radius-sm);
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+  .slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .slider-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .slider-year-badge {
+    background: var(--navy);
+    color: white;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  input[type=range] {
+    width: 100%;
+    -webkit-appearance: none;
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--gold) var(--pct, 0%), #DDD var(--pct, 0%));
+    outline: none;
+    cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 3px solid white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .metric-card {
+    background: white;
+    border-radius: 8px;
+    padding: 14px 12px;
+    border: 1px solid #EEE;
+    text-align: center;
+  }
+  .metric-icon { font-size: 18px; margin-bottom: 6px; }
+  .metric-label { font-size: 10px; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 4px; }
+  .metric-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    color: var(--navy);
+    font-weight: 600;
+  }
+  .metric-phase {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  /* ── WITHDRAWAL SIM ── */
+  .withdrawal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .wd-card {
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+    position: relative;
+  }
+  .wd-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+  .wd-card.active-wd {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 4px rgba(200,169,110,0.15);
+  }
+  .wd-card.type-a { background: linear-gradient(135deg, #F0FFF4 0%, #E6F9EE 100%); }
+  .wd-card.type-b { background: linear-gradient(135deg, #FFF8EE 0%, #FFF1D8 100%); }
+  .wd-card.type-c { background: linear-gradient(135deg, #EEF4FF 0%, #E0ECFF 100%); }
+  .wd-card.type-d { background: linear-gradient(135deg, #FFF0EE 0%, #FFE8E4 100%); }
+  .wd-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+  .wd-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 3px 10px;
+    border-radius: 12px;
+  }
+  .type-a .wd-badge { background: rgba(0,160,80,0.15); color: #006630; }
+  .type-b .wd-badge { background: rgba(200,169,110,0.2); color: var(--gold-dark); }
+  .type-c .wd-badge { background: rgba(42,95,168,0.15); color: #1A3F80; }
+  .type-d .wd-badge { background: rgba(200,60,50,0.15); color: #8A1A12; }
+  .wd-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--charcoal);
+    margin-bottom: 4px;
+  }
+  .wd-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+  .wd-impact {
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.6;
+  }
+  .type-a .wd-impact { color: #007040; }
+  .type-b .wd-impact { color: #8A6020; }
+  .type-c .wd-impact { color: #1A4090; }
+  .type-d .wd-impact { color: #8A2010; }
+
+  /* ── POLICY LOAN ── */
+  .loan-hero {
+    background: linear-gradient(135deg, #1A2744 0%, #243560 100%);
+    border-radius: var(--radius-sm);
+    padding: 28px;
+    color: white;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .loan-hero::after {
+    content: '保';
+    position: absolute;
+    right: 20px; top: 10px;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 120px;
+    color: rgba(255,255,255,0.04);
+    font-weight: 700;
+    line-height: 1;
+  }
+  .loan-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 20px;
+    color: white;
+    margin-bottom: 6px;
+  }
+  .loan-subtitle {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 20px;
+  }
+  .loan-rule-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .loan-rule {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(200,169,110,0.25);
+    border-radius: 8px;
+    padding: 14px;
+  }
+  .loan-rule-label {
+    font-size: 10px;
+    color: var(--gold-light);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .loan-rule-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: white;
+  }
+  .loan-rule-note {
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 2px;
+  }
+
+  /* ── LOAN CALCULATOR ── */
+  .loan-calc {
+    background: #F8F4ED;
+    border-radius: var(--radius-sm);
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .calc-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 16px;
+  }
+  .calc-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .calc-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    width: 120px;
+    flex-shrink: 0;
+  }
+  .calc-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1.5px solid #DDD;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: 'Playfair Display', serif;
+    color: var(--charcoal);
+    background: white;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .calc-input:focus { border-color: var(--gold); }
+  .calc-result {
+    background: white;
+    border: 1px solid #E8DFC8;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 8px;
+  }
+  .calc-result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #F0EAE0;
+    font-size: 13px;
+  }
+  .calc-result-row:last-child { border-bottom: none; }
+  .calc-result-row span:first-child { color: var(--text-secondary); }
+  .calc-result-row span:last-child {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--navy);
+  }
+  .calc-result-row.highlight span:last-child { color: var(--green); }
+
+  /* ── LOAN SCENARIOS ── */
+  .loan-scenarios {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 20px;
+  }
+  .loan-scene {
+    background: white;
+    border: 1px solid #E8E0D0;
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .loan-scene-icon { font-size: 22px; margin-bottom: 8px; }
+  .loan-scene-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--charcoal);
+    margin-bottom: 4px;
+  }
+  .loan-scene-desc {
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .loan-vs-surrender {
+    background: linear-gradient(135deg, #FFF8EE, #FFF1D8);
+    border: 1px solid #E8C878;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-top: 16px;
+  }
+  .vs-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gold-dark);
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  .vs-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+  .vs-item {
+    flex: 1;
+    background: rgba(255,255,255,0.6);
+    border-radius: 6px;
+    padding: 10px 12px;
+  }
+  .vs-item-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .vs-item-value {
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .vs-item.good .vs-item-value { color: var(--green); }
+  .vs-item.bad .vs-item-value { color: var(--red); }
+
+  /* ── DISCLAIMER ── */
+  .disclaimer {
+    margin-top: 24px;
+    padding: 14px 16px;
+    background: #F5F0E8;
+    border-radius: 6px;
+    border-left: 3px solid var(--gold);
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .outer-wrap { width: 95%; min-width: 0; }
+    .overview-grid { grid-template-columns: 1fr 1fr; }
+    .metrics-grid { grid-template-columns: 1fr 1fr; }
+    .withdrawal-grid { grid-template-columns: 1fr; }
+    .loan-scenarios { grid-template-columns: 1fr; }
+    .loan-rule-grid { grid-template-columns: 1fr 1fr; }
+    .phase-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="outer-wrap">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">
+      <div class="brand">
+        <div class="brand-logo">泰</div>
+        <div class="brand-name">TAIKANG INSURANCE GROUP</div>
+      </div>
+      <div class="badge">专属计划书 · 2026版</div>
+    </div>
+    <div class="header-title">岁月有约2026 养老年金</div>
+    <div class="header-subtitle">许黛女士 · 51岁 · 一次性趸交 · 保至106周岁</div>
+    <div class="header-stats">
+      <div class="stat-item">
+        <div class="stat-label">趸交保费</div>
+        <div class="stat-value">100<span style="font-size:14px">万</span></div>
+        <div class="stat-sub">一次性缴清</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">60岁起领</div>
+        <div class="stat-value">3.7<span style="font-size:14px">万/年</span></div>
+        <div class="stat-sub">基本养老金（60-69岁）</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">70岁升档</div>
+        <div class="stat-value">4.44<span style="font-size:14px">万/年</span></div>
+        <div class="stat-sub">基本养老金（70-105岁）</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">最优情景105岁</div>
+        <div class="stat-value">577<span style="font-size:14px">万</span></div>
+        <div class="stat-sub">退保总利益（红利+3%）</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABS BAR -->
+  <div class="tabs-bar">
+    <button class="tab-btn active" onclick="switchTab(0)">📋 产品概览</button>
+    <button class="tab-btn" onclick="switchTab(1)">📈 收益预览</button>
+    <button class="tab-btn" onclick="switchTab(2)">💰 领钱策略</button>
+    <button class="tab-btn" onclick="switchTab(3)">🏦 保单贷款</button>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content-area">
+
+    <!-- TAB 0: OVERVIEW -->
+    <div class="tab-panel active" id="panel-0">
+      <div class="section-title">产品组合结构</div>
+      <div class="section-desc">本计划由两个产品联动组成：主险提供确定性养老年金，附加万能账户沉淀红利复利增值。两者相互配合，构成"确定领 + 弹性积累"的双轨体系。</div>
+
+      <div class="product-structure">
+        <div class="structure-title">▸ 资金流向示意</div>
+        <div class="structure-flow">
+          <div class="flow-box">
+            <div class="flow-box-title">趸交保费</div>
+            <div class="flow-box-value">100万</div>
+            <div class="flow-box-note">一次性投入</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box">
+            <div class="flow-box-title">主险 岁月有约2026</div>
+            <div class="flow-box-value">99.999万</div>
+            <div class="flow-box-note">分红年金 · 保至106岁<br>基本保额37,000</div>
+          </div>
+          <div class="flow-arrow">⇌</div>
+          <div class="flow-box">
+            <div class="flow-box-title">附件 尊赢2026(B)</div>
+            <div class="flow-box-value">10元</div>
+            <div class="flow-box-note">万能账户<br>红利+未领年金入账</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box">
+            <div class="flow-box-title">最优结果（105岁）</div>
+            <div class="flow-box-value">577万</div>
+            <div class="flow-box-note">退保/身故总利益</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">养老金领取规则</div>
+      <div class="section-desc" style="margin-bottom:16px">养老金分两个阶段，70岁后自动升档，且保证给付25年（即便离世也会继续支付给家属）。</div>
+      <div class="phase-grid">
+        <div class="phase-card phase-a">
+          <div class="phase-label">第一阶段 · 60-69岁</div>
+          <div class="phase-age">60–69</div>
+          <div class="phase-amount">¥37,000/年</div>
+          <div class="phase-note">基本养老金固定给付<br>+ 交清增额养老金（随红利逐年增加）<br>= 实际可领金额 <strong>逐年递增</strong></div>
+        </div>
+        <div class="phase-card phase-b">
+          <div class="phase-label">第二阶段 · 70-105岁</div>
+          <div class="phase-age">70–105</div>
+          <div class="phase-amount">¥44,400/年</div>
+          <div class="phase-note">基本养老金自动升档（×1.2）<br>+ 交清增额养老金（持续增加）<br>= 实际可领金额更高</div>
+        </div>
+      </div>
+
+      <div class="overview-grid">
+        <div class="ov-card">
+          <div class="ov-card-icon">🛡️</div>
+          <div class="ov-card-label">保证给付</div>
+          <div class="ov-card-value">25年</div>
+          <div class="ov-card-note">60岁起无论是否在世，保证给付25年养老金，即保至85岁</div>
+        </div>
+        <div class="ov-card">
+          <div class="ov-card-icon">📊</div>
+          <div class="ov-card-label">红利机制</div>
+          <div class="ov-card-value">70%分配</div>
+          <div class="ov-card-note">泰康实际经营超出预定假设部分，70%比例返还投保人</div>
+        </div>
+        <div class="ov-card">
+          <div class="ov-card-icon">💹</div>
+          <div class="ov-card-label">万能最低保证</div>
+          <div class="ov-card-value">1.0%</div>
+          <div class="ov-card-note">万能账户最低保证利率1%，演示假设结算利率3%</div>
+        </div>
+      </div>
+
+      <div class="disclaimer">
+        ⚠ <strong>重要提示：</strong>红利分配不确定，万能结算利率演示基于3.0%假设，实际可能高于或低于演示水平。保证利益部分（基本年金）为合同确定权益，不受经营影响。具体以保险合同条款为准。
+      </div>
+    </div>
+
+    <!-- TAB 1: PROJECTIONS -->
+    <div class="tab-panel" id="panel-1">
+      <div class="section-title">收益成长路径</div>
+      <div class="section-desc">选择情景对比查看资产增长曲线。红利演示与万能3%为乐观情景，保证利益与万能1%为保守基础。</div>
+
+      <div class="scenario-bar">
+        <button class="scenario-btn s4 active" id="btn-s4" onclick="switchScenario('s4')">🌟 乐观情景（红利+万能3%）</button>
+        <button class="scenario-btn s1" id="btn-s1" onclick="switchScenario('s1')">🔒 保守情景（保证+万能1%）</button>
+      </div>
+
+      <div class="chart-container">
+        <canvas id="growthChart"></canvas>
+      </div>
+
+      <div class="slider-section">
+        <div class="slider-header">
+          <span class="slider-label">拖动查看任意年份详情</span>
+          <span class="slider-year-badge" id="slider-display">第10年 · 60岁</span>
+        </div>
+        <input type="range" id="yearSlider" min="1" max="55" value="10"
+          oninput="updateSlider(this.value)" style="--pct: 16.4%">
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-icon">💵</div>
+            <div class="metric-label">当年可领年金</div>
+            <div class="metric-value" id="m-pension">—</div>
+            <div class="metric-phase" id="m-phase">积累期</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon">📦</div>
+            <div class="metric-label">万能账户余额</div>
+            <div class="metric-value" id="m-wan">—</div>
+            <div class="metric-phase">可随时支取</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon">❤️</div>
+            <div class="metric-label">身故总利益</div>
+            <div class="metric-value" id="m-death">—</div>
+            <div class="metric-phase">传承保障</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon">🏦</div>
+            <div class="metric-label">退保总利益</div>
+            <div class="metric-value" id="m-surr">—</div>
+            <div class="metric-phase" id="m-roi">IRR参考</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="disclaimer">
+        📌 图表中"退保总利益"= 年金合同现金价值 + 万能合同账户价值，代表任意时点解约可拿回的金额。<strong>第1年退保约62.9万（亏损约37万）</strong>，建议持有至65岁以上。
+      </div>
+    </div>
+
+    <!-- TAB 2: WITHDRAWAL -->
+    <div class="tab-panel" id="panel-2">
+      <div class="section-title">领钱策略 · 四种方案对比</div>
+      <div class="section-desc">从60岁开始，每年领到的年金和万能账户都可以灵活规划。不同的领取方式对长期资产积累影响显著。</div>
+
+      <div class="withdrawal-grid">
+        <div class="wd-card type-a active-wd" onclick="selectWd(this)">
+          <div class="wd-card-head">
+            <div class="wd-badge">方案 A</div>
+          </div>
+          <div class="wd-title">🌱 全部留存·最大化积累</div>
+          <div class="wd-desc">年金不领，全部自动转入万能账户复利增值。万能账户也不提取。</div>
+          <div class="wd-impact">
+            ✅ 105岁退保总利益最高：<strong>577万</strong><br>
+            ✅ 万能账户持续复利至577万<br>
+            ✅ 身故传承金额最大<br>
+            ⚠ 生前现金流为零
+          </div>
+        </div>
+        <div class="wd-card type-b" onclick="selectWd(this)">
+          <div class="wd-card-head">
+            <div class="wd-badge">方案 B</div>
+          </div>
+          <div class="wd-title">💰 每年领取年金·正常消费</div>
+          <div class="wd-desc">每年领出养老金（60-69岁约4.1万+/年，70岁后约5.6万+/年），万能账户不动。</div>
+          <div class="wd-impact">
+            ✅ 每年有稳定现金流<br>
+            ✅ 万能账户仍在增值<br>
+            ⚠ 退保总利益相应减少<br>
+            📊 累计可领年金超170万（60-105岁）
+          </div>
+        </div>
+        <div class="wd-card type-c" onclick="selectWd(this)">
+          <div class="wd-card-head">
+            <div class="wd-badge">方案 C</div>
+          </div>
+          <div class="wd-title">🔧 仅动万能账户·应急首选</div>
+          <div class="wd-desc">年金留存继续滚入万能账户，只在需要时从万能账户部分提取。</div>
+          <div class="wd-impact">
+            ✅ 主险年金池不受任何影响<br>
+            ✅ 灵活应急，取多少灵活定<br>
+            ✅ 剩余万能账户继续增值<br>
+            📌 单次提取须≥1,000元
+          </div>
+        </div>
+        <div class="wd-card type-d" onclick="selectWd(this)">
+          <div class="wd-card-head">
+            <div class="wd-badge">方案 D</div>
+          </div>
+          <div class="wd-title">❌ 提前全部退保·慎重考虑</div>
+          <div class="wd-desc">全额退保，一次性拿回全部现金价值。资金归零，保障终止。</div>
+          <div class="wd-impact">
+            ⚠ 第1年退保：约62.9万（亏损37万）<br>
+            ⚠ 第10年退保：约106万（略超本金）<br>
+            ✅ 第15年退保：约126万（盈利26%）<br>
+            ❌ 保障和年金流永久终止
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#F8F4ED;border-radius:8px;padding:20px;margin-top:4px;">
+        <div style="font-size:13px;font-weight:600;color:var(--navy);margin-bottom:12px;">📊 累计可领年金估算（基于乐观情景）</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+          <div style="background:white;border-radius:6px;padding:12px;text-align:center;border:1px solid #EEE;">
+            <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">60-69岁（10年）</div>
+            <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--navy);">≈43万</div>
+            <div style="font-size:10px;color:var(--text-muted);">均含增额年金</div>
+          </div>
+          <div style="background:white;border-radius:6px;padding:12px;text-align:center;border:1px solid #EEE;">
+            <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">70-79岁（10年）</div>
+            <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--navy);">≈61万</div>
+            <div style="font-size:10px;color:var(--text-muted);">70岁升档至4.44万+</div>
+          </div>
+          <div style="background:white;border-radius:6px;padding:12px;text-align:center;border:1px solid #EEE;">
+            <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">80-89岁（10年）</div>
+            <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--navy);">≈67万</div>
+            <div style="font-size:10px;color:var(--text-muted);">增额持续累加</div>
+          </div>
+          <div style="background:white;border-radius:6px;padding:12px;text-align:center;border:1px solid #EEE;">
+            <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">90-105岁（16年）</div>
+            <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--navy);">≈115万</div>
+            <div style="font-size:10px;color:var(--text-muted);">长寿保障优势凸显</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="disclaimer">
+        💡 <strong>建议策略：</strong>60岁前不动，60岁后按实际生活需要领取年金，万能账户作为后备弹性池。若遇大额支出（医疗、赠与子女首付等），优先考虑保单贷款而非退保，详见"保单贷款"选项卡。
+      </div>
+    </div>
+
+    <!-- TAB 3: POLICY LOAN -->
+    <div class="tab-panel" id="panel-3">
+      <div class="loan-hero">
+        <div class="loan-title">保单贷款 · 以保险换流动性</div>
+        <div class="loan-subtitle">资金周转时无需退保，直接用保单贷款，利息成本低、保障不中断</div>
+        <div class="loan-rule-grid">
+          <div class="loan-rule">
+            <div class="loan-rule-label">最高可贷比例</div>
+            <div class="loan-rule-value">80%</div>
+            <div class="loan-rule-note">以当时现金价值为基础</div>
+          </div>
+          <div class="loan-rule">
+            <div class="loan-rule-label">参考年化利率</div>
+            <div class="loan-rule-value">~5%</div>
+            <div class="loan-rule-note">具体利率以泰康当期公告为准</div>
+          </div>
+          <div class="loan-rule">
+            <div class="loan-rule-label">最长贷款期限</div>
+            <div class="loan-rule-value">6个月</div>
+            <div class="loan-rule-note">到期可申请续贷</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="loan-calc">
+        <div class="calc-title">💡 保单贷款试算</div>
+        <div class="calc-row">
+          <span class="calc-label">参考年份（保单年度）</span>
+          <input type="range" id="loanYearSlider" min="1" max="55" value="10"
+            class="calc-input" style="padding:8px 0; border:none; background:transparent; width:auto; flex:1"
+            oninput="updateLoanCalc()">
+          <span id="loan-year-show" style="font-family:'Playfair Display',serif;font-size:16px;color:var(--navy);width:80px;text-align:right;">第10年</span>
+        </div>
+        <div class="calc-row">
+          <span class="calc-label">贷款比例</span>
+          <input type="number" id="loanPct" class="calc-input" value="80" min="10" max="80" step="5"
+            oninput="updateLoanCalc()">
+          <span style="font-size:13px;color:var(--text-muted);">%（≤80%）</span>
+        </div>
+        <div class="calc-row">
+          <span class="calc-label">贷款年化利率</span>
+          <input type="number" id="loanRate" class="calc-input" value="5" min="3" max="8" step="0.5"
+            oninput="updateLoanCalc()">
+          <span style="font-size:13px;color:var(--text-muted);">%/年</span>
+        </div>
+        <div class="calc-result">
+          <div class="calc-result-row">
+            <span>该年保单退保总利益（参考）</span>
+            <span id="lr-base">—</span>
+          </div>
+          <div class="calc-result-row">
+            <span>最高可贷金额（80%）</span>
+            <span id="lr-max">—</span>
+          </div>
+          <div class="calc-result-row highlight">
+            <span>按您设定比例可贷</span>
+            <span id="lr-loan">—</span>
+          </div>
+          <div class="calc-result-row">
+            <span>6个月利息成本</span>
+            <span id="lr-interest6">—</span>
+          </div>
+          <div class="calc-result-row">
+            <span>1年利息成本</span>
+            <span id="lr-interest12">—</span>
+          </div>
+          <div class="calc-result-row" style="background:#FFF8EE;margin:-4px;padding:10px 8px;border-radius:6px;">
+            <span style="color:var(--gold-dark);font-weight:500;">贷款期间保险保障状态</span>
+            <span style="color:var(--green);">✅ 全额有效</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="loan-vs-surrender">
+        <div class="vs-title">▸ 贷款 vs 退保 · 关键差异对比（以第10年60岁为例）</div>
+        <div class="vs-row">
+          <div class="vs-item good">
+            <div class="vs-item-label">✅ 保单贷款（推荐）</div>
+            <div class="vs-item-value">拿到约85万现金<br>保险继续有效<br>利息约2.2万/年<br>还清后保单恢复原状</div>
+          </div>
+          <div class="vs-item bad">
+            <div class="vs-item-label">❌ 全额退保（不推荐）</div>
+            <div class="vs-item-value">只拿回约106万<br>保障全部终止<br>未来年金全部失去<br>无法重新投保同款</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="loan-scenarios">
+        <div class="loan-scene">
+          <div class="loan-scene-icon">🏥</div>
+          <div class="loan-scene-title">大额医疗支出</div>
+          <div class="loan-scene-desc">遇到家庭重大医疗开支，贷款10-50万应急，6个月内解决后还款，年金和增值不中断。</div>
+        </div>
+        <div class="loan-scene">
+          <div class="loan-scene-icon">🏠</div>
+          <div class="loan-scene-title">子女购房首付</div>
+          <div class="loan-scene-desc">帮子女支付首付，通过保单贷款筹集100-200万，子女月供/奖金偿还，保障自己养老不动摇。</div>
+        </div>
+        <div class="loan-scene">
+          <div class="loan-scene-icon">💼</div>
+          <div class="loan-scene-title">临时资金周转</div>
+          <div class="loan-scene-desc">生意或投资临时需要流动性，保单贷款成本远低于信用贷款，且不影响征信和信用额度。</div>
+        </div>
+        <div class="loan-scene">
+          <div class="loan-scene-icon">🎓</div>
+          <div class="loan-scene-title">孙辈教育金</div>
+          <div class="loan-scene-desc">孙子女留学或高额教育费用，灵活贷款支持，保留自己的长期养老资产不受损。</div>
+        </div>
+      </div>
+
+      <div class="disclaimer">
+        ⚠ <strong>注意事项：</strong>贷款期间若到期未还，贷款本金和利息将从现金价值中扣除。若现金价值不足以覆盖贷款余额，保单可能失效。建议贷款金额不超过现金价值的60%以留有余量。具体操作请联系泰康客服或您的专属顾问刘敏（13901095217）。
+      </div>
+    </div>
+
+  </div><!-- end content-area -->
+</div><!-- end outer-wrap -->
+
+<script>
+// ─── DATA ──────────────────────────────────────────────────────────
+// [year, age, annualPension, wanAccount, deathBenefit, surrenderValue]
+// Source: 表四 (红利演示 + 万能3%) - Best case
+const dataOptimistic = [
+  [1,51,0,10,1012995,629995],[2,52,0,10,1021768,660767],[3,53,0,11,1031942,692942],
+  [4,54,0,11,1043388,726388],[5,55,0,11,1056226,763225],[6,56,0,12,1106470,1106470],
+  [7,57,0,12,1141509,1141509],[8,58,0,13,1177440,1177440],[9,59,0,13,1157295,1028295],
+  [10,60,41097,41920,1216170,1063170],[11,61,41618,86038,1240926,1099926],
+  [12,62,42143,132021,1267202,1137202],[13,63,42672,179929,1295033,1176033],
+  [14,64,43206,229823,1324462,1216462],[15,65,43744,281768,1355532,1257532],
+  [16,66,44285,335830,1388289,1300289],[17,67,44831,392075,1422770,1343770],
+  [18,68,45380,450573,1459032,1389032],[19,69,45933,511396,1497126,1435526],
+  [20,70,55788,584098,1537101,1483901],[21,71,56459,659766,1579182,1533382],
+  [22,72,57132,738398,1623353,1583953],[23,73,57806,820084,1669663,1636663],
+  [24,74,58483,904917,1718174,1691574],[25,75,59160,992992,1768940,1747740],
+  [26,76,59839,1084409,1822041,1805241],[27,77,60518,1179268,1877539,1865139],
+  [28,78,61197,1277671,1935510,1926510],[29,79,61876,1379726,1996041,1989441],
+  [30,80,62554,1485542,2059221,2055021],[31,81,63233,1595232,2125150,2123350],
+  [32,82,63912,1708911,2193918,2193518],[33,83,64592,1826702,2265642,2265642],
+  [34,84,65274,1948728,2340447,2340447],[35,85,65960,2075121,2462874,2462874],
+  [36,86,66651,2206018,2588635,2588635],[37,87,67348,2341560,2717827,2717827],
+  [38,88,68052,2481893,2850567,2850567],[39,89,68764,2627170,2986978,2986978],
+  [40,90,69485,2777547,3127182,3127182],[41,91,70216,2933189,3271307,3271307],
+  [42,92,70957,3094263,3419461,3419461],[43,93,71710,3260944,3571799,3571799],
+  [44,94,72477,3433416,3728411,3728411],[45,95,73257,3611865,3889457,3889457],
+  [46,96,74055,3796489,4055052,4055052],[47,97,74870,3987492,4225362,4225362],
+  [48,98,75706,4185085,4400506,4400506],[49,99,76564,4389490,4580602,4580602],
+  [50,100,77450,4600939,4765821,4765821],[51,101,78367,4819676,4956306,4956306],
+  [52,102,79322,5045957,5152138,5152138],[53,103,80322,5280058,5353466,5353466],
+  [54,104,81382,5522272,5560389,5560389],[55,105,82517,5772921,5772921,5772921]
+];
+
+// Source: 表一 (保证利益 + 万能1%) - Conservative
+const dataConservative = [
+  [1,51,0,10,1000010,617010],[2,52,0,10,1000010,639010],[3,53,0,10,1000010,661010],
+  [4,54,0,10,1000010,683010],[5,55,0,10,1000010,707010],[6,56,0,11,1012011,1012011],
+  [7,57,0,11,1027011,1027011],[8,58,0,11,1042011,1042011],[9,59,0,11,1000011,871011],
+  [10,60,37000,37007,1036007,883007],[11,61,37000,74747,1036747,895747],
+  [12,62,37000,112865,1037865,907865],[13,63,37000,151364,1039364,920364],
+  [14,64,37000,190247,1041247,933247],[15,65,37000,229520,1043520,945520],
+  [16,66,37000,269185,1046185,958185],[17,67,37000,309247,1049247,970247],
+  [18,68,37000,349709,1052709,982709],[19,69,37000,390576,1056576,994976],
+  [20,70,44400,439251,1060851,1007651],[21,71,44400,488488,1065688,1019888],
+  [22,72,44400,538217,1071017,1031617],[23,73,44400,588443,1076843,1043843],
+  [24,74,44400,639171,1083171,1056571],[25,75,44400,690407,1090007,1068807],
+  [26,76,44400,742155,1097355,1080555],[27,77,44400,794421,1105221,1092821],
+  [28,78,44400,847209,1113609,1104609],[29,79,44400,900525,1122525,1115925],
+  [30,80,44400,954374,1131974,1127774],[31,81,44400,1008762,1141962,1140162],
+  [32,82,44400,1063693,1152493,1152093],[33,83,44400,1119174,1163574,1163574],
+  [34,84,44400,1175210,1175210,1175210],[35,85,44400,1231806,1231806,1231806],
+  [36,86,44400,1288968,1288968,1288968],[37,87,44400,1346702,1346702,1346702],
+  [38,88,44400,1405013,1405013,1405013],[39,89,44400,1463907,1463907,1463907],
+  [40,90,44400,1523390,1523390,1523390],[41,91,44400,1583468,1583468,1583468],
+  [42,92,44400,1644147,1644147,1644147],[43,93,44400,1705432,1705432,1705432],
+  [44,94,44400,1767331,1767331,1767331],[45,95,44400,1829848,1829848,1829848],
+  [46,96,44400,1892990,1892990,1892990],[47,97,44400,1956764,1956764,1956764],
+  [48,98,44400,2021176,2021176,2021176],[49,99,44400,2086232,2086232,2086232],
+  [50,100,44400,2151938,2151938,2151938],[51,101,44400,2218301,2218301,2218301],
+  [52,102,44400,2285328,2285328,2285328],[53,103,44400,2353026,2353026,2353026],
+  [54,104,44400,2421400,2421400,2421400],[55,105,44400,2490458,2490458,2490458]
+];
+
+let currentScenario = 's4';
+let currentData = dataOptimistic;
+let growthChart = null;
+
+function fmt(n) {
+  if (n >= 10000) return (n/10000).toFixed(1) + '万';
+  return n.toLocaleString('zh-CN');
+}
+function fmtFull(n) { return '¥' + Math.round(n).toLocaleString('zh-CN'); }
+
+// ─── TABS ───────────────────────────────────────────────────────────
+function switchTab(i) {
+  document.querySelectorAll('.tab-btn').forEach((b,idx) => b.classList.toggle('active', idx===i));
+  document.querySelectorAll('.tab-panel').forEach((p,idx) => p.classList.toggle('active', idx===i));
+  if (i===1) { setTimeout(initChart, 50); }
+}
+
+// ─── SCENARIO ────────────────────────────────────────────────────────
+function switchScenario(s) {
+  currentScenario = s;
+  currentData = s === 's4' ? dataOptimistic : dataConservative;
+  document.getElementById('btn-s4').classList.toggle('active', s==='s4');
+  document.getElementById('btn-s1').classList.toggle('active', s==='s1');
+  initChart();
+  updateSlider(document.getElementById('yearSlider').value);
+}
+
+// ─── CHART ─────────────────────────────────────────────────────────
+function initChart() {
+  const ctx = document.getElementById('growthChart').getContext('2d');
+  const labels = currentData.map(d => `${d[1]}岁`);
+  const surr = currentData.map(d => d[5]/10000);
+  const death = currentData.map(d => d[4]/10000);
+  const baseline = new Array(55).fill(100);
+
+  if (growthChart) growthChart.destroy();
+  growthChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: '退保总利益（万）',
+          data: surr,
+          borderColor: '#C8A96E',
+          backgroundColor: 'rgba(200,169,110,0.08)',
+          borderWidth: 2,
+          fill: true,
+          tension: 0.4,
+          pointRadius: 0,
+          pointHoverRadius: 5,
+        },
+        {
+          label: '身故总利益（万）',
+          data: death,
+          borderColor: '#2A5FA8',
+          backgroundColor: 'rgba(42,95,168,0.04)',
+          borderWidth: 1.5,
+          fill: true,
+          tension: 0.4,
+          pointRadius: 0,
+          pointHoverRadius: 4,
+          borderDash: [4, 3],
+        },
+        {
+          label: '投入本金（万）',
+          data: baseline,
+          borderColor: '#CCC',
+          borderWidth: 1,
+          pointRadius: 0,
+          borderDash: [6, 4],
+          fill: false,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'top', labels: { font: { size: 11 }, color: '#555', boxWidth: 16 } },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}万`
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { font: { size: 10 }, color: '#999', maxTicksLimit: 12 }
+        },
+        y: {
+          grid: { color: 'rgba(0,0,0,0.04)' },
+          ticks: {
+            font: { size: 10 }, color: '#999',
+            callback: v => v + '万'
+          }
+        }
+      }
+    }
+  });
+}
+
+// ─── SLIDER ─────────────────────────────────────────────────────────
+function updateSlider(val) {
+  val = parseInt(val);
+  const d = currentData[val-1];
+  const pct = ((val-1)/54*100).toFixed(1);
+  document.getElementById('yearSlider').style.setProperty('--pct', pct+'%');
+
+  const phase = d[0] < 10 ? '积累期' : (d[1] < 70 ? '60-69岁领取期' : '70岁+升档期');
+  const pensionStr = d[2] > 0 ? fmtFull(d[2]) + '/年' : '—（积累中）';
+
+  document.getElementById('slider-display').textContent = `第${d[0]}年 · ${d[1]}岁`;
+  document.getElementById('m-pension').textContent = d[2] > 0 ? fmt(d[2]) + '/年' : '—';
+  document.getElementById('m-phase').textContent = phase;
+  document.getElementById('m-wan').textContent = fmt(d[3]);
+  document.getElementById('m-death').textContent = fmt(d[4]);
+  document.getElementById('m-surr').textContent = fmt(d[5]);
+
+  // Simple ROI
+  const roi = ((d[5]/1000010 - 1)*100).toFixed(1);
+  document.getElementById('m-roi').textContent = '本金' + (roi>=0?'+':'') + roi + '%';
+}
+
+// ─── LOAN CALC ──────────────────────────────────────────────────────
+function updateLoanCalc() {
+  const yr = parseInt(document.getElementById('loanYearSlider').value);
+  const pct = parseFloat(document.getElementById('loanPct').value) || 80;
+  const rate = parseFloat(document.getElementById('loanRate').value) || 5;
+  const d = dataOptimistic[yr-1];
+  document.getElementById('loan-year-show').textContent = `第${yr}年 ${d[1]}岁`;
+
+  const base = d[5];
+  const maxLoan = Math.floor(base * 0.8);
+  const myLoan = Math.floor(base * Math.min(pct,80)/100);
+  const int6 = Math.round(myLoan * rate/100 * 0.5);
+  const int12 = Math.round(myLoan * rate/100);
+
+  // Update slider background
+  const lyrSlider = document.getElementById('loanYearSlider');
+  lyrSlider.style.setProperty('--pct', ((yr-1)/54*100).toFixed(1)+'%');
+
+  document.getElementById('lr-base').textContent = fmtFull(base);
+  document.getElementById('lr-max').textContent = fmtFull(maxLoan);
+  document.getElementById('lr-loan').textContent = fmtFull(myLoan);
+  document.getElementById('lr-interest6').textContent = fmtFull(int6);
+  document.getElementById('lr-interest12').textContent = fmtFull(int12);
+}
+
+// Style loan year slider
+document.getElementById('loanYearSlider').style.cssText += `
+  -webkit-appearance: none; height: 4px; border-radius: 2px;
+  background: linear-gradient(90deg, #C8A96E 18.5%, #DDD 18.5%);
+  outline: none; cursor: pointer;
+`;
+
+// ─── INIT ────────────────────────────────────────────────────────────
+function selectWd(el) {
+  document.querySelectorAll('.wd-card').forEach(c => c.classList.remove('active-wd'));
+  el.classList.add('active-wd');
+}
+
+updateSlider(10);
+updateLoanCalc();
+</script>
+</body>
+</html>

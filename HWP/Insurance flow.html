@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>泰康岁月有约2026 · 十个核心概念关系全解</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0d1117;color:#e2e8f0;font-family:'PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif;min-height:100vh;padding:16px}
+h1{font-size:20px;font-weight:700;color:#f8fafc}
+.tabs{display:flex;gap:8px;justify-content:center;margin-bottom:16px;flex-wrap:wrap}
+.tab{cursor:pointer;border:1px solid #30363d;border-radius:8px;padding:8px 18px;font-size:13px;font-family:inherit;transition:all .2s;background:#161b22;color:#64748b}
+.tab.active{background:#1e3a5f;color:#93c5fd;border-color:#3b82f6}
+.view{display:none}
+.view.active{display:block;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.card{background:#161b22;border-radius:12px;border:1px solid #30363d;padding:16px}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.flex1{flex:1 1 0;min-width:0}
+.node{border-radius:10px;padding:10px 12px;cursor:pointer;transition:all .18s;text-align:center;border:1px solid transparent}
+.node:hover{transform:translateY(-2px);filter:brightness(1.12)}
+.detail-panel{background:#161b22;border-radius:12px;padding:16px;min-height:160px;border:1px solid #30363d}
+.formula-box{background:#0f172a;border-radius:8px;padding:12px;margin-top:10px}
+.cheatsheet{background:#0d1a2d;border-radius:12px;border:1px solid #1e3a5f;padding:14px;margin-top:10px}
+.legend-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;border-top:1px solid #30363d;padding-top:10px}
+.milestone-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:12px}
+.milestone{background:#161b22;border-radius:10px;border:1px solid #30363d;padding:12px}
+.adv-card{background:#161b22;border-radius:10px;padding:14px}
+.conclusion{background:#0a1628;border-radius:10px;border:1px solid #1e3a5f;padding:14px;margin-top:8px}
+table{border-collapse:collapse;width:100%}
+th,td{padding:5px 8px;font-size:11px}
+th{color:#64748b;border-bottom:1px solid #30363d}
+tr{border-bottom:1px solid #1e293b}
+.flow-grid{display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(4,auto);gap:8px 4px;min-width:520px}
+.arrow-h{display:flex;align-items:center;gap:2px;pointer-events:none}
+footer{text-align:center;color:#1e293b;font-size:11px;margin-top:20px}
+@media(max-width:680px){
+  .main-row{flex-direction:column}
+  .side-panel{width:100%!important;flex:unset!important}
+  .compare-row{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<div style="text-align:center;margin-bottom:16px">
+  <div style="color:#f59e0b;font-size:11px;letter-spacing:2px;margin-bottom:4px">泰康岁月有约2026 · 51岁投保 · 趸交100万</div>
+  <h1>十个核心概念关系全解</h1>
+  <div style="color:#64748b;font-size:12px;margin-top:4px">每笔钱从哪里来 · 流向哪里 · 可以怎么取</div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('tree')">🌳 衍生流向图</button>
+  <button class="tab" onclick="switchTab('chart')">📈 数值趋势</button>
+  <button class="tab" onclick="switchTab('compare')">⚖️ 红利策略对比</button>
+</div>
+
+<div id="view-tree" class="view active">
+  <div class="row main-row">
+    <div class="card flex1" style="overflow-x:auto">
+      <div style="color:#475569;font-size:11px;margin-bottom:12px">点击节点查看详情 · 实线=直接产生 · 虚线=加总到退保利益</div>
+      <div class="flow-grid" id="flow-grid"></div>
+      <div class="legend-row" id="legend-row"></div>
+      <div class="formula-box">
+        <div style="color:#94a3b8;font-size:11px;font-weight:bold;margin-bottom:6px">退保总利益 =</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12px" id="formula-line"></div>
+        <div style="margin-top:8px;color:#475569;font-size:11px">⚠️ 主险现金价值 与 增额现价 是两笔独立的钱，不要混淆</div>
+      </div>
+    </div>
+    <div class="side-panel" style="flex:0 0 220px;display:flex;flex-direction:column;gap:10px">
+      <div class="detail-panel" id="detail-panel">
+        <div style="font-size:32px;margin-bottom:8px;text-align:center">👈</div>
+        <div style="font-size:13px;color:#334155;text-align:center">点击左侧任意节点<br>查看详细说明</div>
+      </div>
+      <div class="cheatsheet" id="cheatsheet"></div>
+    </div>
+  </div>
+</div>
+
+<div id="view-chart" class="view">
+  <div class="card" style="margin-bottom:12px">
+    <div style="font-weight:bold;margin-bottom:4px">各项数值随年龄增长（红利演示 + 万能3.0%）</div>
+    <div style="color:#64748b;font-size:11px;margin-bottom:12px">投入100万 · 60岁开始领生存金 · 70岁升档至4.44万/年</div>
+    <canvas id="chart-main" height="280"></canvas>
+  </div>
+  <div class="milestone-grid" id="milestone-grid"></div>
+</div>
+
+<div id="view-compare" class="view">
+  <div class="row compare-row">
+    <div class="card flex1">
+      <div style="font-weight:bold;font-size:14px;margin-bottom:4px">退保总利益对比：买增额 vs 现金领取</div>
+      <div style="font-size:11px;color:#64748b;margin-bottom:4px">
+        <span style="color:#f472b6">●</span> 红利买交清增额（默认）　
+        <span style="color:#94a3b8">●</span> 红利改为现金领取（估算）
+      </div>
+      <div style="font-size:10px;color:#475569;margin-bottom:12px">注：现金领取的曲线为合理估算，仅供对比参考</div>
+      <canvas id="chart-compare" height="240"></canvas>
+      <div class="formula-box" style="margin-top:12px">
+        <div style="color:#94a3b8;font-size:11px;font-weight:bold;margin-bottom:8px">差距随时间拉大（退保总利益）</div>
+        <table>
+          <thead><tr><th>年龄</th><th style="color:#f472b6">买增额</th><th style="color:#64748b">现金领取</th><th style="color:#22c55e">差距</th></tr></thead>
+          <tbody id="compare-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="side-panel" style="flex:0 0 270px;display:flex;flex-direction:column;gap:10px">
+      <div style="color:#e2e8f0;font-weight:bold;font-size:13px">为什么买增额比领现金更划算？</div>
+      <div id="adv-cards"></div>
+      <div class="conclusion">
+        <div style="color:#60a5fa;font-weight:bold;font-size:12px;margin-bottom:8px">结论</div>
+        <div style="font-size:12px;line-height:1.9;color:#cbd5e1">
+          <span style="color:#f472b6">红利买增额</span>：利滚利，越滚越大，适合长期持有养老规划<br>
+          <span style="color:#64748b">红利改现金</span>：当下拿到手，但切断了复利循环，长期价值大幅缩水<br><br>
+          <span style="color:#475569;font-size:11px">若近5年内有确定性用钱需求，可考虑改为现金；否则建议保持默认的买增额模式。</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>数据来源：泰康岁月有约2026保险产品计划书（表四）· 红利演示+万能3.0%结息演示 · 以实际合同为准</footer>
+
+<script>
+var C = {
+  premium:"#f59e0b", base:"#60a5fa", cashval:"#475569",
+  survival:"#34d399", dividend:"#a78bfa", addon:"#f472b6",
+  addonSurv:"#e879f9", addonCV:"#c084fc", universal:"#fb7185",
+  surrender:"#94a3b8", bg:"#0d1117", card:"#161b22", border:"#30363d"
+};
+
+function fmt(n) { return n >= 10000 ? (n/10000).toFixed(1)+'万' : n.toLocaleString(); }
+
+var NODES = [
+  {id:"premium",  icon:"💳", color:C.premium,  label:"保费投入",    sub:"100万（趸交）",
+   body:"你实际掏出的钱。一次性缴清，之后不再交费。这笔钱直接换成两样东西：\n① 主险保额（决定你以后每年领多少钱）\n② 在保司资产池里产生现金价值。"},
+  {id:"base",     icon:"📐", color:C.base,     label:"基本保额",    sub:"37,000元（仅是计算基数）",
+   body:"⚠️ 不是你能取的钱！\n它是一把「计算尺」，合同约定的固定数字（本例=37,000元），所有收益都从它派生。它本身不会随利率变化。"},
+  {id:"cashval",  icon:"🏛", color:C.cashval,  label:"现金价值",    sub:"第1年61.7万\n随年龄先涨后降归零",
+   body:"主险退保可拿的钱。投入100万但第1年只有61.7万，前期亏损是因为扣除了保障成本和费用。随年龄先上涨，60岁开始领生存金后逐年下降，最终归零。\n\n⚠️ 注意：交清增额有独立的「增额现价」，两者完全分开核算，不要混淆！"},
+  {id:"survival", icon:"💚", color:C.survival, label:"基础生存金",  sub:"60-69岁：3.7万/年\n70-105岁：4.44万/年",
+   body:"保额 × 固定比例，合同写死，保证给付（无论利率怎么变）。25年保证给付期（即便身故，未领完部分会一次性给付）。\n\n生存金不直接打给你，而是自动流入万能账户（尊赢2026）按3%复利滚存。"},
+  {id:"dividend", icon:"📊", color:C.dividend, label:"年度红利",    sub:"第1年约1.3万（非保证）",
+   body:"泰康把超出精算假设的盈余，按70%分配给投保人。非保证，差年景可能为0。\n\n有两种用法：\n① 默认：买交清增额（利滚利模式）\n② 可改：直接打现金到你银行卡\n\n两种选择的长期差异很大，见「红利策略对比」tab。"},
+  {id:"addon",    icon:"🏗", color:C.addon,    label:"交清增额保额", sub:"用红利买来的额外保额\n（每年累积叠加）",
+   body:"红利的去向（默认模式）。保司用红利帮你买「交清增额养老险」，每年叠加累积，给你扩建出一栋「附楼」。\n\n关键：这个附楼也有自己独立的三样东西：\n① 增额生存金（附楼的租金）→ 自动进万能账户\n② 增额现价（附楼的变现价格）→ 退保时可取\n③ 保额越大，后续增额生存金越多，正反馈循环\n\n这就是为什么买增额比直接拿现金更合算。"},
+  {id:"addonSurv",icon:"💜", color:C.addonSurv,label:"增额生存金",  sub:"附楼产出的额外租金\n随累积增额保额增大",
+   body:"增额保额 × 固定比例，与基础生存金同步发放。\n\n同样：不直接打给你，自动流入万能账户复利滚存。\n\n保额越来越大 → 增额生存金越来越多 → 万能账户积累越来越快，形成正反馈循环。"},
+  {id:"addonCV",  icon:"🔮", color:C.addonCV,  label:"增额现价",    sub:"附楼的变现价格（独立核算）",
+   body:"交清增额这栋「附楼」，退保时能单独换回多少钱。\n\n⚠️ 与主险「现金价值」完全独立，不要混淆！\n\n• 主险现金价值：主楼的卖价，随年龄先增后降\n• 增额现价：附楼的卖价，随累积增额越来越大\n\n退保总利益 = 主险现金价值 + 增额现价 + 万能账户 + 当年红利"},
+  {id:"universal",icon:"🏦", color:C.universal,label:"万能账户",    sub:"尊赢2026 | 3%复利（演示）\n合同保底利率1%",
+   body:"唯一的「活钱」蓄水池！\n\n流入来源：\n① 基础生存金（每年约3.7-4.44万）\n② 增额生存金（随年龄逐年递增）\n\n规则：\n• 复利滚存，演示3%，合同保证最低1%\n• 可随时申请部分领取\n• 第1-5年取钱有手续费(3%→1%)，第6年起0费用\n• 账户须保留100元底线"},
+  {id:"surrender",icon:"🏧", color:C.surrender,label:"退保总利益",  sub:"= 现金价值 + 增额现价\n+ 万能账户 + 当年红利",
+   body:"彻底退保时能拿走的所有钱。\n\n第10年（60岁）：约106万\n第20年（70岁）：约148万\n第30年（80岁）：约206万\n第55年（105岁）：约577万\n\n注意：退保=万能账户清零+主险终止，以后不再有生存金。一般不建议全部退保。"},
+];
+
+var chartData = [
+  {age:51,cashVal:617000, addonCV:0,      universal:10,     surrender:629995},
+  {age:53,cashVal:661000, addonCV:17497,  universal:11,     surrender:692942},
+  {age:55,cashVal:707000, addonCV:39441,  universal:11,     surrender:763225},
+  {age:58,cashVal:1042000,addonCV:116214, universal:13,     surrender:1177440},
+  {age:60,cashVal:809000, addonCV:151387, universal:41920,  surrender:1063170},
+  {age:65,cashVal:679000, addonCV:233706, universal:281768, surrender:1257532},
+  {age:70,cashVal:524000, addonCV:301585, universal:584098, surrender:1483901},
+  {age:75,cashVal:334000, addonCV:345050, universal:992992, surrender:1747740},
+  {age:80,cashVal:129000, addonCV:363649, universal:1485542,surrender:2055021},
+  {age:85,cashVal:0,      addonCV:354152, universal:2075121,surrender:2462874},
+  {age:90,cashVal:0,      addonCV:314654, universal:2777547,surrender:3127182},
+  {age:95,cashVal:0,      addonCV:241273, universal:3611865,surrender:3889457},
+  {age:100,cashVal:0,     addonCV:127381, universal:4600939,surrender:4765821},
+  {age:105,cashVal:0,     addonCV:0,      universal:5772921,surrender:5772921},
+];
+
+var compData = [
+  {age:60, buy:1063170,cash:920000},{age:65, buy:1257532,cash:1050000},
+  {age:70, buy:1483901,cash:1180000},{age:75, buy:1747740,cash:1300000},
+  {age:80, buy:2055021,cash:1420000},{age:85, buy:2462874,cash:1530000},
+  {age:90, buy:3127182,cash:1640000},{age:95, buy:3889457,cash:1740000},
+  {age:100,buy:4765821,cash:1830000},{age:105,buy:5772921,cash:1910000},
+];
+
+// ── Tab switching ─────────────────────────────────────────
+var chartsBuilt = {};
+function switchTab(name) {
+  var names = ['tree','chart','compare'];
+  document.querySelectorAll('.tab').forEach(function(b,i){
+    b.classList.toggle('active', names[i]===name);
+  });
+  document.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
+  document.getElementById('view-'+name).classList.add('active');
+  if(name==='chart' && !chartsBuilt.chart){ buildChartMain(); chartsBuilt.chart=true; }
+  if(name==='compare' && !chartsBuilt.compare){ buildChartCompare(); chartsBuilt.compare=true; }
+}
+
+// ── Flow Tree ─────────────────────────────────────────────
+var activeNodeId = null;
+
+function nodeHTML(id, size) {
+  var n = NODES.find(function(x){return x.id===id;});
+  var small = size==='small', micro = size==='micro';
+  var p = micro?'4px 6px':small?'6px 9px':'9px 12px';
+  var iSize = micro?'13px':small?'16px':'20px';
+  var lSize = micro?'9px':small?'10px':'11.5px';
+  var mw = micro?50:small?78:110;
+  var xw = micro?70:small?108:155;
+  return '<div class="node" id="node-'+id+'" onclick="selectNode(\''+id+'\')" '+
+    'style="background:'+C.card+';border-color:'+n.color+';padding:'+p+';min-width:'+mw+'px;max-width:'+xw+'px">'+
+    '<div style="font-size:'+iSize+'">'+n.icon+'</div>'+
+    '<div style="color:'+n.color+';font-size:'+lSize+';font-weight:bold;line-height:1.3;margin-top:2px">'+n.label+'</div>'+
+    (!micro?'<div style="font-size:9px;color:#475569;margin-top:2px;line-height:1.3;white-space:pre-line">'+n.sub+'</div>':'')+
+    '</div>';
+}
+
+function arrowH(color, label, tiny) {
+  var w = tiny?16:22;
+  return '<div class="arrow-h" style="margin:0 '+(tiny?2:4)+'px">'+
+    '<div style="height:1.5px;width:'+w+'px;background:'+color+';opacity:.6"></div>'+
+    '<div style="font-size:'+(tiny?8:10)+'px;color:'+color+';opacity:.7;white-space:nowrap">'+label+'</div>'+
+    '<div style="width:0;height:0;border-top:4px solid transparent;border-bottom:4px solid transparent;border-left:5px solid '+color+';opacity:.6"></div>'+
+    '</div>';
+}
+
+function buildFlowGrid() {
+  var grid = document.getElementById('flow-grid');
+
+  function cell(col, row, html, jc, ai, pe) {
+    var d = document.createElement('div');
+    d.style.gridColumn = col;
+    d.style.gridRow = row;
+    d.style.display = 'flex';
+    d.style.alignItems = ai || 'center';
+    d.style.justifyContent = jc || 'center';
+    if(pe) d.style.pointerEvents = 'none';
+    d.innerHTML = html;
+    grid.appendChild(d);
+  }
+
+  var connDown = function(color,label){
+    return '<div style="text-align:center"><div style="width:2px;height:20px;background:'+color+';opacity:.5;margin:0 auto"></div>'+
+           '<div style="color:'+color+';font-size:9px;margin-top:2px">'+label+'</div></div>';
+  };
+  var connUp = function(color,label){
+    return '<div style="text-align:center"><div style="color:'+color+';font-size:9px;margin-bottom:2px">'+label+'</div>'+
+           '<div style="width:2px;height:20px;background:'+color+';opacity:.5;margin:0 auto"></div></div>';
+  };
+
+  // Col 0 R2: 保费
+  cell(1,'2/3', nodeHTML('premium'));
+  cell(1,'2/3', arrowH(C.premium,'决定'), 'flex-end','center',true);
+  // Col 1 R1: 保额→现金价值 up connector
+  cell(2,'1/2', connUp(C.cashval,'形成'), 'center','flex-end',true);
+  // Col 1 R2: 保额
+  cell(2,'2/3', nodeHTML('base'));
+  // Col 1 R3: 保额→红利 down connector
+  cell(2,'3/4', connDown(C.dividend,'盈余分红'), 'center','flex-start',true);
+
+  // Col 2 R1: 现金价值
+  cell(3,'1/2', nodeHTML('cashval','small'));
+  cell(3,'1/2', '<span style="color:'+C.cashval+';font-size:9px;opacity:.6">···+ 退保</span>', 'flex-end','center',true);
+  // Col 2 R2: 基础生存金
+  cell(3,'2/3', nodeHTML('survival','small'));
+  cell(3,'2/3', arrowH(C.survival,'自动转入',true), 'flex-end','center',true);
+  // Col 2 R3: 红利
+  cell(3,'3/4', nodeHTML('dividend','small'));
+  cell(3,'3/4', arrowH(C.addon,'购买',true), 'flex-end','center',true);
+
+  // Col 3 R2: 万能账户
+  cell(4,'2/3', nodeHTML('universal'));
+  cell(4,'2/3', arrowH(C.universal,'···+',true), 'flex-end','center',true);
+  cell(4,'2/3', '<span style="color:'+C.addonSurv+';font-size:9px;opacity:.8">↑租金</span>', 'center','flex-end',true);
+  // Col 3 R3: 交清增额
+  cell(4,'3/4', nodeHTML('addon','small'));
+  // Col 3 R4: 增额现价
+  cell(4,'4/5', nodeHTML('addonCV','micro'), 'center','flex-start');
+
+  // Col 4 R2: 增额生存金
+  cell(5,'2/3', nodeHTML('addonSurv','small'));
+  cell(5,'2/3', '<span style="color:'+C.addonSurv+';font-size:9px;opacity:.7">←转入万能</span>', 'flex-start','center',true);
+
+  // Col 5 R2: 退保总利益
+  cell(6,'2/3', nodeHTML('surrender'));
+}
+
+function selectNode(id) {
+  if(activeNodeId) {
+    var prev = document.getElementById('node-'+activeNodeId);
+    if(prev){ prev.style.background=C.card; prev.style.boxShadow='none'; }
+  }
+  if(activeNodeId===id){ activeNodeId=null; resetDetail(); return; }
+  activeNodeId = id;
+  var el = document.getElementById('node-'+id);
+  var n = NODES.find(function(x){return x.id===id;});
+  el.style.background = n.color+'20';
+  el.style.boxShadow = '0 0 14px '+n.color+'44';
+  document.getElementById('detail-panel').innerHTML =
+    '<div style="font-size:26px;margin-bottom:6px">'+n.icon+'</div>'+
+    '<div style="color:'+n.color+';font-weight:bold;font-size:14px;margin-bottom:4px">'+n.label+'</div>'+
+    '<div style="color:#64748b;font-size:11px;margin-bottom:10px;border-bottom:1px solid #30363d;padding-bottom:8px;white-space:pre-line">'+n.sub+'</div>'+
+    '<div style="color:#cbd5e1;font-size:11.5px;line-height:1.8;white-space:pre-line">'+n.body+'</div>';
+}
+
+function resetDetail() {
+  document.getElementById('detail-panel').innerHTML =
+    '<div style="font-size:32px;margin-bottom:8px;text-align:center">👈</div>'+
+    '<div style="font-size:13px;color:#334155;text-align:center">点击左侧任意节点<br>查看详细说明</div>';
+}
+
+function buildLegend() {
+  var el = document.getElementById('legend-row');
+  [['实线箭头 →','直接产生/转入关系','#e2e8f0'],
+   ['虚线 ···+','加总进退保总利益','#64748b'],
+   ['交清增额','由红利购买，非保费直接产生',C.addon],
+   ['增额现价','独立于主险现金价值',C.addonCV]
+  ].forEach(function(r){
+    el.innerHTML += '<div style="font-size:11px"><span style="color:'+r[2]+';font-weight:bold">'+r[0]+'</span><span style="color:#475569">：'+r[1]+'</span></div>';
+  });
+}
+
+function buildFormula() {
+  var el = document.getElementById('formula-line');
+  [['主险现金价值',C.cashval],['+','#475569'],['增额现价',C.addonCV],['+','#475569'],
+   ['万能账户余额',C.universal],['+','#475569'],['当年红利',C.dividend]
+  ].forEach(function(r){
+    el.innerHTML += '<span style="color:'+r[1]+';font-weight:'+(r[0]==='+'?'bold':'normal')+'">'+r[0]+'</span>';
+  });
+}
+
+function buildCheatsheet() {
+  var el = document.getElementById('cheatsheet');
+  el.innerHTML = '<div style="color:#60a5fa;font-size:12px;font-weight:bold;margin-bottom:10px">核心关系速记</div>';
+  [{f:'保费',t:'保额',note:'决定基数',fc:C.premium,tc:C.base},
+   {f:'保额',t:'生存金',note:'×固定比例',fc:C.base,tc:C.survival},
+   {f:'保额',t:'红利',note:'盈余分配',fc:C.base,tc:C.dividend},
+   {f:'红利',t:'交清增额',note:'默认自动买',fc:C.dividend,tc:C.addon},
+   {f:'增额',t:'增额生存金',note:'产出额外租金',fc:C.addon,tc:C.addonSurv},
+   {f:'增额',t:'增额现价',note:'退保可变现',fc:C.addon,tc:C.addonCV},
+   {f:'生存金×2',t:'万能账户',note:'全部自动流入',fc:C.survival,tc:C.universal},
+  ].forEach(function(r){
+    el.innerHTML += '<div style="display:flex;align-items:center;gap:4px;margin-bottom:5px;font-size:10px">'+
+      '<span style="color:'+r.fc+';font-weight:bold;min-width:46px">'+r.f+'</span>'+
+      '<span style="color:#334155">→</span>'+
+      '<span style="color:'+r.tc+';font-weight:bold;min-width:50px">'+r.t+'</span>'+
+      '<span style="color:#334155;font-style:italic">'+r.note+'</span></div>';
+  });
+}
+
+// ── Charts ────────────────────────────────────────────────
+function chartOpts(callbacks) {
+  return {
+    responsive:true,
+    interaction:{mode:'index',intersect:false},
+    plugins:{
+      legend:{labels:{color:'#94a3b8',font:{size:12}}},
+      tooltip:{
+        backgroundColor:'#1e293b',borderColor:'#334155',borderWidth:1,
+        titleColor:'#94a3b8',bodyColor:'#e2e8f0',
+        callbacks: callbacks
+      }
+    }
+  };
+}
+
+function buildChartMain() {
+  var ctx = document.getElementById('chart-main').getContext('2d');
+  var opts = chartOpts({
+    title:function(items){return '年龄 '+items[0].label+' 岁';},
+    label:function(item){return item.dataset.label+'：'+fmt(item.raw);}
+  });
+  opts.scales = {
+    x:{ticks:{color:'#64748b',font:{size:11}},grid:{color:'#1e293b'},title:{display:true,text:'年龄',color:'#475569',font:{size:11}}},
+    y:{ticks:{color:'#64748b',font:{size:10},callback:function(v){return v>=10000?(v/10000).toFixed(0)+'万':v;}},grid:{color:'#1e293b'}},
+  };
+  new Chart(ctx, {
+    type:'line',
+    data:{
+      labels: chartData.map(function(d){return d.age;}),
+      datasets:[
+        {label:'退保总利益',data:chartData.map(function(d){return d.surrender;}),borderColor:C.surrender,borderWidth:2.5,tension:.3,pointRadius:0,fill:false},
+        {label:'万能账户',  data:chartData.map(function(d){return d.universal;}),borderColor:C.universal,borderWidth:2,tension:.3,pointRadius:0,fill:false},
+        {label:'主险现金价值',data:chartData.map(function(d){return d.cashVal;}),borderColor:C.cashval,borderWidth:1.5,tension:.3,pointRadius:0,borderDash:[5,3],fill:false},
+        {label:'增额现价',  data:chartData.map(function(d){return d.addonCV;}),borderColor:C.addonCV,borderWidth:1.5,tension:.3,pointRadius:0,fill:false},
+      ]
+    },
+    options: opts
+  });
+
+  var milestones = [
+    {age:51,label:'购入第1年',note:'主险现金价值仅61.7万\n损失约38万（前期成本高）',warn:true, d:chartData[0]},
+    {age:60,label:'60岁开始领钱',note:'万能账户余额约4.2万\n正式开始每年领3.7万',warn:false,d:chartData[4]},
+    {age:70,label:'70岁升档',note:'生存金从3.7升到4.44万\n万能账户已积累58.4万',warn:false,d:chartData[6]},
+    {age:80,label:'80岁',note:'退保总利益206万\n万能账户148.5万为主力',warn:false,d:chartData[8]},
+    {age:90,label:'90岁',note:'主险现金价值归零\n退保完全靠万能+增额',warn:false,d:chartData[10]},
+    {age:105,label:'105岁（满期）',note:'退保577万\n万能账户577万',warn:false,d:chartData[13]},
+  ];
+  var mg = document.getElementById('milestone-grid');
+  milestones.forEach(function(m){
+    var rows = [
+      ['退保总利益',m.d.surrender,C.surrender],
+      ['万能账户',  m.d.universal,C.universal],
+      ['增额现价',  m.d.addonCV,  C.addonCV],
+      ['主险现金价值',m.d.cashVal,C.cashval],
+    ].map(function(r){
+      return '<div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px">'+
+        '<span style="color:#475569">'+r[0]+'</span>'+
+        '<span style="color:'+r[2]+'">'+( r[1]>0?fmt(r[1]):'—')+'</span></div>';
+    }).join('');
+    mg.innerHTML += '<div class="milestone" style="border-color:'+(m.warn?'#ef444433':'#30363d')+'">'+
+      '<div style="color:'+(m.warn?'#ef4444':'#f59e0b')+';font-size:12px;font-weight:bold;margin-bottom:4px">'+m.label+'</div>'+
+      '<div style="color:#64748b;font-size:11px;margin-bottom:8px;white-space:pre-line">'+m.note+'</div>'+
+      rows+'</div>';
+  });
+}
+
+function buildChartCompare() {
+  var ctx = document.getElementById('chart-compare').getContext('2d');
+  var opts = chartOpts({
+    title:function(items){return '年龄 '+items[0].label+' 岁';},
+    label:function(item){return item.dataset.label+'：'+fmt(item.raw);}
+  });
+  opts.scales = {
+    x:{ticks:{color:'#64748b',font:{size:11}},grid:{color:'#1e293b'},title:{display:true,text:'年龄',color:'#475569',font:{size:11}}},
+    y:{ticks:{color:'#64748b',font:{size:10},callback:function(v){return (v/10000).toFixed(0)+'万';}},grid:{color:'#1e293b'}},
+  };
+  new Chart(ctx, {
+    type:'line',
+    data:{
+      labels: compData.map(function(d){return d.age;}),
+      datasets:[
+        {label:'买增额（退保总利益）', data:compData.map(function(d){return d.buy;}), borderColor:C.addon,  borderWidth:2.5,tension:.3,pointRadius:0,fill:false},
+        {label:'现金领取（退保总利益）',data:compData.map(function(d){return d.cash;}),borderColor:'#64748b',borderWidth:1.5,tension:.3,pointRadius:0,borderDash:[6,3],fill:false},
+      ]
+    },
+    options: opts
+  });
+
+  var tbody = document.getElementById('compare-tbody');
+  compData.filter(function(_,i){return i%2===0;}).forEach(function(r){
+    tbody.innerHTML += '<tr>'+
+      '<td style="color:#94a3b8">'+r.age+'岁</td>'+
+      '<td style="color:'+C.addon+'">'+fmt(r.buy)+'</td>'+
+      '<td style="color:#64748b">'+fmt(r.cash)+'</td>'+
+      '<td style="color:#22c55e;font-weight:bold">+'+fmt(r.buy-r.cash)+'</td></tr>';
+  });
+
+  var adv = document.getElementById('adv-cards');
+  [{icon:"📈",warn:false,title:"保额越来越大，生存金越来越多",
+    detail:"每年红利换成增额保额后，下一年的增额生存金就变多，更多的钱流入万能账户，形成正反馈复利循环。直接拿现金的话，保额永远不增长，生存金永远只有3.7万/年，没有这个循环。"},
+   {icon:"🔄",warn:false,title:"复利滚存 vs 单次领取",
+    detail:"增额生存金进入万能账户后按3%复利滚存，相当于每年红利被「放大」了。直接拿走的红利只有面值，不再产生收益。"},
+   {icon:"🏗",warn:false,title:"增额现价是额外的退保资产",
+    detail:"用红利积累的交清增额保额，本身也有独立的「增额现价」。退保时这笔钱可以额外取出，而直接拿红利现金的话这笔资产根本不存在。"},
+   {icon:"⚠️",warn:true,title:"何时选现金领取更合适？",
+    detail:"如果你确定近期需要用钱（如5年内要用），且不需要长期养老积累，可以改为现金领取。但若是长期持有（20年以上），买增额的复利效果远超直接领现金。"},
+  ].forEach(function(a){
+    adv.innerHTML += '<div class="adv-card" style="border:1px solid '+(a.warn?'#f9731644':'#30363d')+';margin-bottom:8px">'+
+      '<div style="display:flex;gap:8px;margin-bottom:6px">'+
+      '<span style="font-size:18px">'+a.icon+'</span>'+
+      '<div style="color:'+(a.warn?'#f97316':C.addon)+';font-weight:bold;font-size:12px;line-height:1.4">'+a.title+'</div></div>'+
+      '<div style="color:#94a3b8;font-size:11.5px;line-height:1.7">'+a.detail+'</div></div>';
+  });
+}
+
+// ── Init ──────────────────────────────────────────────────
+buildFlowGrid();
+buildLegend();
+buildFormula();
+buildCheatsheet();
+</script>
+</body>
+</html>

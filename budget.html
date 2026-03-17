@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>品质生活预算提升方案 · 花光资产至105岁</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap');
+:root{
+  --bg:#fafaf7; --white:#fff; --ink:#1a1c28; --ink2:#3a3d52;
+  --muted:#8b8fa8; --border:#e4dfd6; --border2:#cec9be;
+  --p1:#3b5bdb; --p2:#2f9e44; --p3:#e67700; --p4:#c92a2a; --p5:#862e9c;
+  --old:#94a3b8; --new:#2563eb; --extra:#f59e0b;
+  --wan:#7048e8; --sur:#2f9e44; --draw:#ef4444;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:'Noto Sans SC',sans-serif;font-size:13px;line-height:1.6}
+
+/* HEADER */
+.hdr{background:linear-gradient(135deg,#1a2a6c,#2563eb 55%,#0ea5e9);padding:32px 56px 24px}
+.h-tag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;
+  color:rgba(255,255,255,.6);margin-bottom:7px}
+.h-title{font-family:'Noto Serif SC',serif;font-size:24px;font-weight:700;color:#fff;
+  line-height:1.2;margin-bottom:5px}
+.h-sub{font-size:12px;color:rgba(255,255,255,.6);margin-bottom:22px}
+.hcards{display:flex;gap:0;flex-wrap:wrap}
+.hc{padding:13px 24px;border-right:1px solid rgba(255,255,255,.15)}
+.hc:last-child{border-right:none}
+.hcl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(255,255,255,.5);margin-bottom:3px}
+.hcv{font-family:'DM Mono',monospace;font-size:20px;font-weight:600;color:#fff}
+.hcs{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px}
+
+/* ANSWER BANNER */
+.answer{background:linear-gradient(135deg,#f0fdf4,#dcfce7);
+  border-bottom:2px solid #86efac;padding:20px 56px;
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px}
+.ans-card{background:var(--white);border:1px solid #86efac;border-radius:4px;padding:16px 20px}
+.ans-phase{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ans-old{font-size:12px;color:var(--muted);text-decoration:line-through;margin-bottom:2px}
+.ans-new{font-family:'DM Mono',monospace;font-size:26px;font-weight:700;color:#166534;line-height:1}
+.ans-sub{font-size:11px;color:#14532d;margin-top:5px}
+.ans-extra{display:inline-block;background:#fef3c7;color:#92400e;
+  font-family:'DM Mono',monospace;font-size:11px;padding:2px 10px;border-radius:3px;margin-top:6px}
+
+/* METHOD BOX */
+.method{background:#f8faff;border-bottom:1px solid var(--border);
+  padding:12px 56px;font-size:12px;color:var(--ink2);line-height:1.8;
+  display:flex;align-items:center;gap:32px;flex-wrap:wrap}
+.mitem{display:flex;align-items:center;gap:8px}
+.mbadge{font-family:'DM Mono',monospace;font-size:11px;padding:3px 10px;
+  border-radius:3px;font-weight:600;white-space:nowrap}
+
+/* PHASE BAR */
+.phase-bar{display:flex;height:28px}
+.pb{display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;
+  font-size:9px;text-transform:uppercase;color:rgba(255,255,255,.9);overflow:hidden;white-space:nowrap}
+
+/* MAIN */
+.main{padding:24px 56px;display:grid;gap:22px}
+
+/* KPI */
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.kpi{padding:15px 18px;background:var(--white);border:1px solid var(--border);position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.kpi.g::before{background:var(--sur)} .kpi.b::before{background:var(--new)}
+.kpi.o::before{background:var(--extra)} .kpi.r::before{background:var(--draw)}
+.kpi.p::before{background:var(--wan)}
+.kl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.kv{font-family:'DM Mono',monospace;font-size:22px;font-weight:600;line-height:1}
+.ks{font-size:11px;color:var(--muted);margin-top:4px}
+
+/* SECTIONS */
+.sec{background:var(--white);border:1px solid var(--border);padding:24px 30px}
+.sh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.st{font-family:'Noto Serif SC',serif;font-size:15px;font-weight:600}
+.sn{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace}
+.leg-row{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px}
+.leg{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--ink2)}
+.lf{width:12px;height:12px;border-radius:2px;flex-shrink:0}
+.ll{width:24px;height:0;border-top:2.5px solid;flex-shrink:0}
+.ld{width:24px;height:0;border-top:2.5px dashed;flex-shrink:0}
+.ldc{width:24px;height:0;border-top:2.5px dotted;flex-shrink:0}
+
+/* NOTE */
+.note{padding:14px 20px;font-size:12px;color:var(--ink2);line-height:1.9;margin-top:16px;border-radius:3px}
+.note strong{color:var(--ink)}
+.note-green{background:#f0fdf4;border-left:3px solid var(--sur)}
+.note-blue{background:#eff6ff;border-left:3px solid var(--new)}
+.note-amber{background:#fffbeb;border-left:3px solid var(--extra)}
+
+/* TABLE */
+.twrap{max-height:420px;overflow-y:auto;margin-top:10px}
+.dt{width:100%;border-collapse:collapse;font-size:12px}
+.dt thead th{background:#f0eee8;padding:8px 14px;font-family:'DM Mono',monospace;
+  font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink2);
+  text-align:right;border-bottom:2px solid var(--border2);white-space:nowrap}
+.dt thead th:first-child{text-align:left}
+.dt tbody td{padding:7px 14px;border-bottom:1px solid #f0ede6;text-align:right;
+  font-family:'DM Mono',monospace;font-variant-numeric:tabular-nums;white-space:nowrap}
+.dt tbody td:first-child{text-align:left;font-family:'Noto Sans SC',sans-serif}
+.dt tbody tr:hover td{background:#f8f6f2}
+.dt tbody tr.ev td{background:#fffbef}
+.dt tbody tr.draw td{background:#fff0f0}
+.dt tbody tr.acc td{background:#f0fdf4}
+.dt tbody tr.psep td{background:#f0eee8;font-family:'DM Mono',monospace;font-size:9px;
+  letter-spacing:2px;text-transform:uppercase;color:#888;border-bottom:1px solid var(--border2);
+  text-align:left!important;padding:5px 14px}
+.sv{color:var(--sur);font-weight:600} .dv{color:var(--draw);font-weight:600}
+.nv{color:var(--new);font-weight:600} .ov{color:var(--extra);font-weight:500}
+.wv{color:var(--wan);font-weight:600}
+.ptag{display:inline-block;font-family:'DM Mono',monospace;font-size:9px;
+  padding:1px 6px;border-radius:2px;margin-left:5px;font-weight:600}
+.tp1{background:#dbe4ff;color:#2b4cbe} .tp2{background:#d3f9d8;color:#1a6630}
+.tp3{background:#ffe8cc;color:#b35a00} .tp4{background:#ffe0e0;color:#9b1c1c}
+.tp5{background:#f3d9fa;color:#6a1c82}
+.tgl-grp{display:flex;gap:5px}
+.tgl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;
+  padding:5px 12px;background:transparent;border:1px solid var(--border);
+  color:var(--muted);cursor:pointer;transition:.15s;border-radius:2px}
+.tgl:hover,.tgl.on{background:var(--new);border-color:var(--new);color:#fff}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="h-tag">品质生活预算提升方案 · 花光资产至105岁</div>
+  <div class="h-title">每年额外增加 3.5万元（2029年基准），随通胀递增</div>
+  <div class="h-sub">夫人 & 先生 · 丁克 · 别墅年金+保险+社保 · 万能账户盈余滚存2.5%</div>
+  <div class="hcards">
+    <div class="hc"><div class="hcl">2029年额外增加</div><div class="hcv">+3.5万/年</div><div class="hcs">即+2,900元/月</div></div>
+    <div class="hc"><div class="hcl">55–64岁品质月均</div><div class="hcv">约3.0万</div><div class="hcs">原2.7万→升至3.0万</div></div>
+    <div class="hc"><div class="hcl">65–74岁品质月均</div><div class="hcv">约4.7万</div><div class="hcs">原4.3万→升至4.7万</div></div>
+    <div class="hc"><div class="hcl">燕园护理区月均</div><div class="hcv">约10.3万</div><div class="hcs">原10.0万→升至10.3万</div></div>
+    <div class="hc"><div class="hcl">105岁万能余额</div><div class="hcv" style="color:#fde68a">≈ 0</div><div class="hcs">精确清零</div></div>
+  </div>
+</div>
+
+<!-- ANSWER CARDS -->
+<div class="answer">
+  <div class="ans-card">
+    <div class="ans-phase">🏠 居家 & 活跃退休（55–74岁）</div>
+    <div class="ans-old">原品质档：原27,000–43,000/月</div>
+    <div class="ans-new">+2,900元/月</div>
+    <div class="ans-sub">2029年起每月多花约2,900元<br>可用于：更好的餐厅、出行升级、兴趣课程</div>
+    <div class="ans-extra">55岁实际月预算 ≈ 29,700元</div>
+  </div>
+  <div class="ans-card">
+    <div class="ans-phase">🌿 燕园独立生活区（75–82岁）</div>
+    <div class="ans-old">原品质档：原59,000/月</div>
+    <div class="ans-new">+5,200元/月</div>
+    <div class="ans-sub">通胀后额外增量更多<br>可用于：燕园内升级套房、私人管家服务</div>
+    <div class="ans-extra">75岁实际月预算 ≈ 59,200元</div>
+  </div>
+  <div class="ans-card">
+    <div class="ans-phase">🏥 燕园护理区（83–105岁）</div>
+    <div class="ans-old">原品质档：原85,000–230,000/月</div>
+    <div class="ans-new">+6,600–12,700元/月</div>
+    <div class="ans-sub">通胀后额外增量大幅提升<br>可用于：专属护工、高端医疗器械、临终关怀</div>
+    <div class="ans-extra">83岁实际月预算 ≈ 102,900元</div>
+  </div>
+</div>
+
+<!-- METHOD -->
+<div class="method">
+  <div class="mitem"><div class="mbadge" style="background:#dbeafe;color:#1e40af">算法</div>
+    二分法求解：在原品质档基础上叠加固定增量（2029基准价），按3%通胀递增，使105岁万能账户余额精确归零
+  </div>
+  <div class="mitem"><div class="mbadge" style="background:#fef3c7;color:#92400e">关键前提</div>
+    82岁前盈余全部转入万能账户（2.5%复利），82岁后按需提取
+  </div>
+  <div class="mitem"><div class="mbadge" style="background:#f0fdf4;color:#166534">结论</div>
+    增量只需 3.5万/年（2029价），约每月2,900元，即可花光全部资产
+  </div>
+</div>
+
+<!-- PHASE BAR -->
+<div class="phase-bar">
+  <div class="pb" style="width:24.1%;background:#3b5bdb">居家活跃 52–64</div>
+  <div class="pb" style="width:18.5%;background:#2f9e44">活跃退休 65–74</div>
+  <div class="pb" style="width:14.8%;background:#e67700">燕园独立 75–82</div>
+  <div class="pb" style="width:22.2%;background:#c92a2a">燕园护理 83–94</div>
+  <div class="pb" style="width:20.4%;background:#862e9c">全护理 95–105</div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<!-- KPI ROW -->
+<div class="kpis">
+  <div class="kpi b"><div class="kl">2029基准额外年预算</div><div class="kv" style="color:var(--new)">+3.5万/元</div><div class="ks">月均+2,900元，随通胀涨</div></div>
+  <div class="kpi o"><div class="kl">82岁万能账户峰值</div><div class="kv" style="color:var(--extra)">1,591万</div><div class="ks">比原版（1,793万）少202万</div></div>
+  <div class="kpi r"><div class="kl">83–105岁累计提取</div><div class="kv" style="color:var(--draw)">1,591万</div><div class="ks">与峰值基本持平</div></div>
+  <div class="kpi p"><div class="kl">52–54岁前期缺口</div><div class="kv" style="color:var(--wan)">44.2万</div><div class="ks">由投资组合523万覆盖</div></div>
+  <div class="kpi g"><div class="kl">105岁剩余</div><div class="kv" style="color:var(--sur)">≈ 0</div><div class="ks">精确归零，完美花光</div></div>
+</div>
+
+<!-- CHART 1: Budget comparison -->
+<div class="sec">
+  <div class="sh">
+    <div class="st">年度品质生活预算：原版 vs 新版</div>
+    <div class="sn">蓝色面积 = 提升部分（通胀后递增）</div>
+  </div>
+  <div class="leg-row">
+    <div class="leg"><div class="lf" style="background:rgba(148,163,184,.5)"></div>原品质档支出</div>
+    <div class="leg"><div class="lf" style="background:rgba(37,99,235,.65)"></div>新品质档支出（+3.5万/年起，通胀递增）</div>
+    <div class="leg"><div class="ll" style="border-color:#f59e0b"></div>额外增量（2029价值恒定，名义值随通胀上涨）</div>
+    <div class="leg"><div class="lf" style="background:rgba(112,72,232,.5)"></div>万能账户余额（右轴）</div>
+  </div>
+  <canvas id="c1" height="240"></canvas>
+</div>
+
+<!-- CHART 2: 万能账户 & gap -->
+<div class="sec">
+  <div class="sh">
+    <div class="st">万能账户余额走势（原版 vs 新版）</div>
+    <div class="sn">新版积累少→峰值低→提取多→精确归零</div>
+  </div>
+  <div class="leg-row">
+    <div class="leg"><div class="ll" style="border-color:var(--wan)"></div>新版余额（+3.5万/年）</div>
+    <div class="leg"><div class="ld" style="border-color:#94a3b8"></div>原版余额（对比）</div>
+    <div class="leg"><div class="lf" style="background:rgba(47,158,68,.25)"></div>年度盈余→万能流入</div>
+    <div class="leg"><div class="lf" style="background:rgba(239,68,68,.25)"></div>年度缺口←万能流出</div>
+  </div>
+  <canvas id="c2" height="200"></canvas>
+  <div class="note note-blue">
+    <strong>关键洞察</strong>：每年只多花3.5万（2029价约2,900元/月），听起来不多，但因为万能账户复利效应，55–82岁的27年积累减少了约202万峰值，82岁后提取阶段也相应减少，最终在105岁精确归零。<br>
+    实际感知：65–74岁活跃退休期每月多花约4,000元（通胀后），可以每年多安排1–2次高品质国内游，或把海外游升级到商务舱。护理区阶段每月多6,600元，足够配置一名专属日间护工。
+  </div>
+</div>
+
+<!-- CHART 3: Monthly budget by age -->
+<div class="sec">
+  <div class="sh">
+    <div class="st">逐年月均品质预算（含通胀）</div>
+    <div class="sn">实际购买力以2029年不变价为参考基准</div>
+  </div>
+  <canvas id="c3" height="180"></canvas>
+  <div class="note note-amber">
+    <strong>注意通胀视觉</strong>：图中金额是名义值（含3%通胀），实际购买力恒定。83岁"护理区"跳升是真实费用结构变化（两人专业护理服务），而非生活变差。95岁"全护理"进一步上升反映专业护理人员比例增加。
+  </div>
+</div>
+
+<!-- TABLE -->
+<div class="sec">
+  <div class="sh">
+    <div class="st">逐年明细</div>
+    <div class="tgl-grp">
+      <button class="tgl on" onclick="setTbl('key',this)">关键节点</button>
+      <button class="tgl" onclick="setTbl('all',this)">全部年份</button>
+    </div>
+  </div>
+  <div class="twrap"><table class="dt">
+    <thead><tr>
+      <th>年龄</th><th>年份</th>
+      <th>常规收入</th>
+      <th>原品质档/月</th><th>新品质档/月</th><th>额外增量/月</th>
+      <th>年度缺口</th><th>万能余额</th>
+    </tr></thead>
+    <tbody id="tb"></tbody>
+  </table></div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+// ══════════════════════════════════════════════════════════
+// DATA (pre-computed from Python simulation)
+// [age, year, reg, lump, qual_old, qual_new, extra_nominal, gap_old, gap_new, wbal, drawn]
+// ══════════════════════════════════════════════════════════
+const D=[
+[52,2026,112237,0,294000,294000,0,-181763,-181763,0,0],
+[53,2027,119079,0,302820,302820,0,-183741,-183741,0,0],
+[54,2028,235512,0,311905,311905,0,-76393,-76393,0,0],
+[55,2029,721009,0,321262,356063,34801,399747,364946,364946,0],
+[56,2030,733778,0,330900,366745,35845,402878,367033,741103,0],
+[57,2031,742346,0,340827,377747,36920,401519,364599,1124229,0],
+[58,2032,844153,540000,351051,389079,38028,1033102,995074,2147409,0],
+[59,2033,855287,0,361583,400752,39169,493704,454535,2655629,0],
+[60,2034,875934,0,372430,412774,40344,503504,463160,3185180,0],
+[61,2035,907572,585000,383603,425157,41554,1108969,1067415,4332224,0],
+[62,2036,910354,0,395111,437912,42801,515243,472442,4912972,0],
+[63,2037,913182,0,406965,451050,44085,506217,462132,5497928,0],
+[64,2038,919594,0,419174,464581,45407,500420,455013,6090390,0],
+[65,2039,925192,0,513987,560757,46770,411205,364435,6607084,0],
+[66,2040,927046,0,529406,577579,48173,397640,349467,7121728,0],
+[67,2041,928955,0,545289,594907,49618,383666,334048,7633820,0],
+[68,2042,930919,0,561647,612753,51106,369272,318166,8142831,0],
+[69,2043,1003939,0,578497,631137,52640,425442,372802,8719204,0],
+[70,2044,1006015,0,595852,650071,54219,410163,355944,9293128,0],
+[71,2045,1008148,0,613727,669572,55845,394421,338576,9864032,0],
+[72,2046,1010340,0,632139,689660,57521,378201,320680,10431313,0],
+[73,2047,1012270,0,651103,710349,59246,361167,301921,10994017,0],
+[74,2048,1014272,0,670636,731660,61024,343636,282612,11551479,0],
+[75,2049,991514,0,647336,710190,62854,344178,281324,12121590,0],
+[76,2050,993659,0,666756,731496,64740,326903,262163,12686793,0],
+[77,2051,995879,0,686759,753441,66682,309120,242438,13246401,0],
+[78,2052,1052117,124943,707362,776045,68683,469698,401015,13978576,0],
+[79,2053,1012494,0,728583,799326,70743,283911,213168,14541208,0],
+[80,2054,930983,0,750440,823306,72866,180543,107677,15012415,0],
+[81,2055,925047,0,772953,848005,75052,152094,77042,15464768,0],
+[82,2056,927191,0,796142,873445,77303,131049,53746,15905133,0],
+[83,2057,894428,0,1155037,1234659,79622,-260609,-340231,15962530,340231],
+[84,2058,896760,0,1189688,1271699,82011,-292928,-374939,15986655,374939],
+[85,2059,898770,0,1225379,1309850,84471,-326609,-411080,15975241,411080],
+[86,2060,896955,0,1262140,1349145,87005,-365185,-452190,15922432,452190],
+[87,2061,899581,0,1300004,1389619,89615,-400423,-490038,15830455,490038],
+[88,2062,902300,0,1339005,1431309,92304,-436705,-529009,15697207,529009],
+[89,2063,904277,0,1379175,1474248,95073,-474898,-569971,15519666,569971],
+[90,2064,906410,0,1420550,1518475,97925,-514140,-612065,15295593,612065],
+[91,2065,908695,0,1463166,1564029,100863,-554471,-655334,15022649,655334],
+[92,2066,911130,0,1507061,1610950,103889,-595931,-699820,14698395,699820],
+[93,2067,913711,0,1552273,1659279,107006,-638562,-745568,14320287,745568],
+[94,2068,916433,0,1598842,1709058,110216,-682409,-792625,13885669,792625],
+[95,2069,918355,0,1953355,2066877,113522,-1035000,-1148522,13084289,1148522],
+[96,2070,920398,0,2011956,2128884,116928,-1091558,-1208486,12202910,1208486],
+[97,2071,922557,0,2072315,2192751,120436,-1149758,-1270194,11237789,1270194],
+[98,2072,924830,0,2134484,2258533,124049,-1209654,-1333703,10185030,1333703],
+[99,2073,927215,0,2198518,2326288,127770,-1271303,-1399073,9040583,1399073],
+[100,2074,929708,0,2264474,2396077,131603,-1334766,-1466369,7800229,1466369],
+[101,2075,932306,0,2332408,2467959,135551,-1400102,-1535653,6459581,1535653],
+[102,2076,935006,0,2402380,2541998,139618,-1467374,-1606992,5014079,1606992],
+[103,2077,937807,0,2474452,2618258,143806,-1536645,-1680451,3458980,1680451],
+[104,2078,940707,0,2548685,2696806,148121,-1607978,-1756099,1789355,1756099],
+[105,2079,943703,0,2625146,2777710,152564,-1681443,-1834007,82,1834007],
+];
+
+// Original wbal data for comparison
+const ORIG_WBAL=[0,0,0,399747,812619,1234453,2298416,2849581,3424324,4618902,5249617,5887074,6534671,7109243,7684614,8260396,8836177,9482524,10129750,10777415,11425051,12071844,12717276,13379386,14040774,14700913,15538134,16210499,16796304,17368306,17933562,18121292,18281397,18411823,18506933,18569183,18596708,18586728,18537256,18446216,18311441,18130665,17901522,17314060,16655354,15921980,15110375,14216832,13237487,12168322,11005156,9743640,8379253,6907291];
+
+const EVENTS={55:'别墅年金+3.5万/年额外预算均从此起',58:'先生退休+安享人生(先生)54万',61:'安享人生(夫人)58.5万→万能账户',75:'进入燕园独立生活区',78:'百万护驾+泰盈人生7到账',82:'万能账户封顶，次年开始提取',83:'★进入燕园护理区',95:'★全护理阶段',105:'万能账户精确归零'};
+const PHASE_C={p1:'#3b5bdb',p2:'#2f9e44',p3:'#e67700',p4:'#c92a2a',p5:'#862e9c'};
+const PHASE_S={p1:'居家',p2:'活跃退休',p3:'燕园独立',p4:'燕园护理',p5:'全护理'};
+const PTAG_C={p1:'tp1',p2:'tp2',p3:'tp3',p4:'tp4',p5:'tp5'};
+function phOf(a){if(a<65)return'p1';if(a<75)return'p2';if(a<83)return'p3';if(a<95)return'p4';return'p5';}
+
+// ── CHART 1: Budget comparison ──
+const C1=document.getElementById('c1').getContext('2d');
+const ages=D.map(r=>r[0]);
+new Chart(C1,{
+  data:{labels:ages.map(a=>a+'岁'),datasets:[
+    {type:'bar',label:'原品质档',data:D.map(r=>+(r[4]/10000).toFixed(1)),
+      backgroundColor:'rgba(148,163,184,.4)',stack:'a',order:2},
+    {type:'bar',label:'额外增量',data:D.map(r=>+(r[6]/10000).toFixed(2)),
+      backgroundColor:'rgba(37,99,235,.65)',stack:'a',order:2},
+    {type:'line',label:'万能余额（右轴）',data:D.map(r=>+(r[9]/10000).toFixed(0)),
+      borderColor:'#7048e8',borderWidth:2,pointRadius:0,fill:false,yAxisID:'y2',order:0,tension:.3},
+  ]},
+  options:{responsive:true,interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false},tooltip:{callbacks:{
+      title:its=>`${D[its[0].dataIndex][0]}岁 · ${D[its[0].dataIndex][1]}年`,
+      afterBody:its=>{
+        const i=its[0].dataIndex,r=D[i];
+        const lines=[];
+        if(EVENTS[r[0]])lines.push('📌 '+EVENTS[r[0]]);
+        lines.push(`原品质档: ${(r[4]/10000).toFixed(1)}万/年 (${Math.round(r[4]/12).toLocaleString()}/月)`);
+        lines.push(`新品质档: ${(r[5]/10000).toFixed(1)}万/年 (${Math.round(r[5]/12).toLocaleString()}/月)`);
+        lines.push(`额外增量: +${(r[6]/10000).toFixed(2)}万/年 (+${Math.round(r[6]/12).toLocaleString()}/月)`);
+        return lines;
+      }
+    }}},
+    scales:{
+      x:{stacked:true,grid:{display:false},ticks:{color:'#8b8fa8',font:{size:10},
+        callback:(v,i)=>D[i][0]%5===0?D[i][0]+'岁':''}},
+      y:{stacked:true,grid:{color:'#e8e4dc'},ticks:{color:'#8b8fa8',font:{size:10},callback:v=>v+'万'},
+        title:{display:true,text:'年支出（万元）',color:'#8b8fa8',font:{size:10}}},
+      y2:{position:'right',grid:{display:false},ticks:{color:'#7048e8',font:{size:10},callback:v=>v+'万'},
+        title:{display:true,text:'万能余额（万元）',color:'#7048e8',font:{size:10}}}
+    }
+  }
+});
+
+// ── CHART 2: 万能余额对比 ──
+const C2=document.getElementById('c2').getContext('2d');
+const surplusNew=D.map(r=>r[8]>0?+(r[8]/10000).toFixed(1):0);
+const deficitNew=D.map(r=>r[8]<0?+(r[8]/10000).toFixed(1):0);
+new Chart(C2,{
+  data:{labels:ages.map(a=>a+'岁'),datasets:[
+    {type:'bar',label:'年度盈余',data:surplusNew,backgroundColor:'rgba(47,158,68,.25)',stack:'f',order:2},
+    {type:'bar',label:'年度缺口',data:deficitNew,backgroundColor:'rgba(239,68,68,.2)',stack:'f',order:2},
+    {type:'line',label:'新版余额',data:D.map(r=>+(r[9]/10000).toFixed(0)),
+      borderColor:'#2563eb',borderWidth:2.5,pointRadius:0,fill:{target:'origin',above:'rgba(37,99,235,.05)',below:'rgba(239,68,68,.05)'},tension:.3,order:0},
+    {type:'line',label:'原版余额（对比）',data:ORIG_WBAL.map(v=>+(v/10000).toFixed(0)),
+      borderColor:'#94a3b8',borderWidth:1.5,pointRadius:0,fill:false,tension:.3,borderDash:[5,3],order:0},
+  ]},
+  options:{responsive:true,interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false},tooltip:{callbacks:{
+      title:its=>`${D[its[0].dataIndex][0]}岁 · ${D[its[0].dataIndex][1]}年`,
+      afterBody:its=>{
+        const i=its[0].dataIndex,r=D[i];
+        return [
+          `新版余额: ${(r[9]/10000).toFixed(0)}万`,
+          `原版余额: ${(ORIG_WBAL[i]/10000).toFixed(0)}万`,
+          r[10]>0?`当年从万能提取: ${(r[10]/10000).toFixed(1)}万`:'',
+          EVENTS[r[0]]?'📌 '+EVENTS[r[0]]:'',
+        ].filter(Boolean);
+      }
+    }}},
+    scales:{
+      x:{grid:{display:false},ticks:{color:'#8b8fa8',font:{size:10},callback:(v,i)=>D[i][0]%5===0?D[i][0]+'岁':''}},
+      y:{grid:{color:'#e8e4dc'},ticks:{color:'#8b8fa8',font:{size:10},callback:v=>v+'万'},
+        title:{display:true,text:'万能账户余额（万元）',color:'#8b8fa8',font:{size:10}}}
+    }
+  }
+});
+
+// ── CHART 3: Monthly budget ──
+const C3=document.getElementById('c3').getContext('2d');
+new Chart(C3,{
+  type:'line',
+  data:{labels:ages.map(a=>a+'岁'),datasets:[
+    {label:'原品质档月均',data:D.map(r=>+(r[4]/12/10000).toFixed(2)),
+      borderColor:'#94a3b8',borderWidth:1.5,pointRadius:0,fill:false,borderDash:[5,3],tension:.3},
+    {label:'新品质档月均',data:D.map(r=>+(r[5]/12/10000).toFixed(2)),
+      borderColor:'#2563eb',borderWidth:2.5,pointRadius:0,
+      fill:{target:0,above:'rgba(37,99,235,.08)'},tension:.3},
+  ]},
+  options:{responsive:true,interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false},tooltip:{callbacks:{
+      title:its=>`${D[its[0].dataIndex][0]}岁 · ${D[its[0].dataIndex][1]}年`,
+      afterBody:its=>{
+        const i=its[0].dataIndex,r=D[i];
+        return [
+          `原品质档: ${Math.round(r[4]/12).toLocaleString()}元/月`,
+          `新品质档: ${Math.round(r[5]/12).toLocaleString()}元/月`,
+          `增量: +${Math.round(r[6]/12).toLocaleString()}元/月`,
+        ];
+      }
+    }}},
+    scales:{
+      x:{grid:{display:false},ticks:{color:'#8b8fa8',font:{size:10},callback:(v,i)=>D[i][0]%5===0?D[i][0]+'岁':''}},
+      y:{grid:{color:'#e8e4dc'},ticks:{color:'#8b8fa8',font:{size:10},callback:v=>v+'万'},
+        title:{display:true,text:'月均预算（万元/月）',color:'#8b8fa8',font:{size:10}}}
+    }
+  }
+});
+
+// ── TABLE ──
+let tblMode='key';
+function renderTable(mode){
+  const KEY=new Set([52,55,58,60,61,65,70,75,78,82,83,90,95,100,105,...Object.keys(EVENTS).map(Number)]);
+  let html='',lph='';
+  D.forEach(r=>{
+    const [age,yr,reg,lump,qo,qn,ex,go,gn,wb,dr]=r;
+    if(mode==='key'&&!KEY.has(age))return;
+    const ph=phOf(age);
+    if(ph!==lph){
+      const pn={p1:'居家活跃期 52–64',p2:'活跃退休期 65–74',p3:'燕园独立生活区 75–82',p4:'燕园护理区 83–94',p5:'全护理期 95–105'};
+      html+=`<tr class="psep"><td colspan="8">${pn[ph]}</td></tr>`;
+      lph=ph;
+    }
+    const isAcc=age<82&&gn>0, isDraw=age>=82&&gn<0, hasEv=!!EVENTS[age];
+    html+=`<tr class="${hasEv?'ev':isDraw?'draw':isAcc?'acc':''}">
+      <td>${age} / ${age+2}<span class="ptag ${PTAG_C[ph]}">${PHASE_S[ph]}</span>
+        ${hasEv?`<br><small style="color:#7a6010;font-size:10px">📌 ${EVENTS[age]}</small>`:''}
+      </td>
+      <td style="color:#8b8fa8">${yr}</td>
+      <td class="nv">${((reg+lump)/10000).toFixed(1)}万</td>
+      <td style="color:var(--muted)">${Math.round(qo/12).toLocaleString()}元</td>
+      <td class="nv">${Math.round(qn/12).toLocaleString()}元</td>
+      <td class="ov">+${Math.round(ex/12).toLocaleString()}元</td>
+      <td class="${gn>=0?'sv':'dv'}">${gn>=0?'+':''}${(gn/10000).toFixed(1)}万</td>
+      <td class="wv">${(wb/10000).toFixed(0)}万</td>
+    </tr>`;
+  });
+  document.getElementById('tb').innerHTML=html;
+}
+renderTable('key');
+function setTbl(m,btn){document.querySelectorAll('.tgl').forEach(b=>b.classList.remove('on'));btn.classList.add('on');tblMode=m;renderTable(m);}
+</script>
+</body>
+</html>

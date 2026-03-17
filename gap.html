@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>养老资金规划 v2 · 夫人 & 先生</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap');
+:root {
+  --bg:#f5f6f9; --white:#fff; --ink:#1c1e2a; --ink2:#3d4058; --muted:#8b8fa8;
+  --border:#e2ddd4; --border2:#ccc9be;
+  --p1:#3b5bdb; --p2:#2f9e44; --p3:#e67700; --p4:#c92a2a; --p5:#862e9c;
+  --income:#2b6cb0; --villa:#0b7285; --basic:#e67700; --quality:#c92a2a;
+  --surplus:#2f9e44; --deficit:#e03131;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:'Noto Sans SC',sans-serif;font-size:13px;line-height:1.6}
+
+.header{background:var(--ink);padding:32px 56px 24px;position:relative;overflow:hidden}
+.header::after{content:'';position:absolute;top:0;right:0;bottom:0;width:35%;
+  background:linear-gradient(90deg,transparent,rgba(11,114,133,.2));pointer-events:none}
+.h-eye{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#5b7db8;margin-bottom:8px}
+.h-title{font-family:'Noto Serif SC',serif;font-size:25px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:5px}
+.h-sub{font-size:12px;color:#7888a8;margin-bottom:22px}
+.h-cards{display:flex;gap:0;flex-wrap:wrap}
+.h-card{padding:14px 22px;border-right:1px solid rgba(255,255,255,.1)}
+.h-card:last-child{border-right:none}
+.hcl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#5b7db8;margin-bottom:4px}
+.hcv{font-family:'DM Mono',monospace;font-size:19px;font-weight:500}
+.hcs{font-size:11px;color:#5b7db8;margin-top:2px}
+
+.villa-banner{background:linear-gradient(135deg,#0b7285,#1098ad);padding:12px 56px;
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.vb-icon{font-size:22px}
+.vb-text{color:#fff;font-size:13px}
+.vb-text strong{color:#a5f3fc}
+.vb-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);
+  color:#fff;font-family:'DM Mono',monospace;font-size:11px;padding:4px 12px;border-radius:3px;
+  white-space:nowrap}
+
+.phase-bar{display:flex;height:32px;overflow:hidden;border-bottom:1px solid var(--border)}
+.pb-seg{display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.5px;text-transform:uppercase;
+  color:rgba(255,255,255,.9);white-space:nowrap;overflow:hidden}
+
+.assumptions{background:#f0fff4;border-bottom:1px solid #b2f5c8;
+  padding:9px 56px;display:flex;gap:28px;flex-wrap:wrap}
+.ass-item{font-size:11px;color:#1a5c32;font-family:'DM Mono',monospace}
+.ass-item strong{color:#155724}
+
+.main{padding:28px 56px;display:grid;gap:24px}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.kpi{padding:16px 20px;border:1px solid var(--border);background:var(--white);position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.kpi.good::before{background:var(--surplus)}
+.kpi.warn::before{background:var(--basic)}
+.kpi.ok::before{background:var(--villa)}
+.kpi.info::before{background:var(--p1)}
+.kl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.kv{font-family:'DM Mono',monospace;font-size:23px;font-weight:600;line-height:1}
+.ks{font-size:11px;color:var(--muted);margin-top:5px}
+
+.section{background:var(--white);border:1px solid var(--border);padding:26px 32px}
+.sh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px}
+.st{font-family:'Noto Serif SC',serif;font-size:15px;font-weight:600;color:var(--ink)}
+.sn{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace}
+
+.legend-row{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:12px}
+.leg{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--ink2)}
+.lf{width:14px;height:14px;border-radius:2px;flex-shrink:0}
+.ll{width:26px;height:0;border-top:2.5px solid;flex-shrink:0}
+.ld{width:26px;height:0;border-top:2.5px dashed;flex-shrink:0}
+.ls{width:26px;height:0;border-top:2.5px dotted;flex-shrink:0}
+
+.tgl-grp{display:flex;gap:5px}
+.tgl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;
+  padding:5px 13px;background:transparent;border:1px solid var(--border);
+  color:var(--muted);cursor:pointer;transition:.15s;border-radius:2px}
+.tgl:hover{border-color:var(--p1);color:var(--p1)}
+.tgl.on{background:var(--p1);border-color:var(--p1);color:#fff}
+
+.note-box{background:#f0f9ff;border-left:3px solid var(--villa);
+  padding:14px 20px;font-size:12px;color:var(--ink2);line-height:1.9;margin-top:20px}
+.note-box strong{color:var(--ink)}
+
+.table-wrap{max-height:420px;overflow-y:auto;margin-top:8px}
+.dt{width:100%;border-collapse:collapse;font-size:12px}
+.dt thead th{background:#f0eee8;padding:8px 14px;font-family:'DM Mono',monospace;
+  font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink2);
+  text-align:right;border-bottom:2px solid var(--border2)}
+.dt thead th:first-child{text-align:left}
+.dt tbody td{padding:7px 14px;border-bottom:1px solid #f0ede6;text-align:right;
+  font-family:'DM Mono',monospace;font-variant-numeric:tabular-nums}
+.dt tbody td:first-child{text-align:left;font-family:'Noto Sans SC',sans-serif}
+.dt tbody tr:hover td{background:#f8f6f2}
+.dt tbody tr.ev td{background:#fffbf0}
+.sv{color:var(--surplus);font-weight:600} .dv{color:var(--deficit);font-weight:600}
+.iv{color:var(--income);font-weight:500}  .vv{color:var(--villa);font-weight:500}
+.ptag{display:inline-block;font-family:'DM Mono',monospace;font-size:9px;
+  padding:1px 6px;border-radius:2px;margin-left:5px;font-weight:600}
+.tp1{background:#dbe4ff;color:#2b4cbe} .tp2{background:#d3f9d8;color:#1a6630}
+.tp3{background:#ffe8cc;color:#b35a00} .tp4{background:#ffe0e0;color:#9b1c1c}
+.tp5{background:#f3d9fa;color:#6a1c82}
+.psep{background:#f0eee8;font-family:'DM Mono',monospace;font-size:9px;
+  letter-spacing:2px;text-transform:uppercase;color:#888;font-weight:600}
+.psep td{text-align:left!important;padding:6px 14px;border-bottom:1px solid var(--border2)}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="h-eye">养老资金规划 v2 · 含别墅出售年金 · 2026–2079</div>
+  <div class="h-title">收入 vs 支出 · 资金缺口全景（修订版）</div>
+  <div class="h-sub">夫人（1974年生）& 先生（1972年生）· 北京 · 泰康之家燕园 · 别墅1000万→年金险</div>
+  <div class="h-cards">
+    <div class="h-card"><div class="hcl">规划寿命</div><div class="hcv" style="color:#7eb8ff">105岁</div><div class="hcs">2026–2079，54年</div></div>
+    <div class="h-card"><div class="hcl">别墅变现</div><div class="hcv" style="color:#a5f3fc">1000万</div><div class="hcs">2029年出售→年金险</div></div>
+    <div class="h-card"><div class="hcl">年金险回报</div><div class="hcv" style="color:#a5f3fc">3% 复利</div><div class="hcs">年均领取38.5万（51年均摊）</div></div>
+    <div class="h-card"><div class="hcl">燕园护理区</div><div class="hcv" style="color:#fda4af">83岁起</div><div class="hcs">护理后不再出行旅游</div></div>
+  </div>
+</div>
+
+<!-- VILLA BANNER -->
+<div class="villa-banner">
+  <div class="vb-icon">🏡</div>
+  <div class="vb-text">
+    <strong>别墅1000万</strong> 于2029年（夫人55岁）出售，全额购入年金分红险，按年复利3%计算。
+    每年领取 <strong>38.5万元</strong>（水平年金，51年至105岁）；另持有本金方案：每年领息<strong>30万</strong>，本金终身保留。
+  </div>
+  <div class="vb-badge">+38.5万/年 · 从2029年起</div>
+</div>
+
+<!-- PHASE BAR -->
+<div class="phase-bar" id="phaseBar"></div>
+
+<!-- ASSUMPTIONS -->
+<div class="assumptions">
+  <div class="ass-item"><strong>修订①</strong> 护理区（83岁+）品质档删除旅游支出，仅保留燕园内升级服务</div>
+  <div class="ass-item"><strong>修订②</strong> 别墅1000万→3%年金险，年领38.5万（水平年金法），2029年55岁起</div>
+  <div class="ass-item"><strong>修订③</strong> 百万医疗覆盖住院/治疗，支出中仅含护理服务费+个人开销</div>
+  <div class="ass-item"><strong>修订④</strong> 重疾险：夫人+先生各20万触发后计入缓冲</div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<!-- KPI -->
+<div class="kpi-grid">
+  <div class="kpi good"><div class="kl">基本档·54年总结余</div><div class="kv" style="color:var(--surplus)" id="k1">—</div><div class="ks">收入全程覆盖基本档</div></div>
+  <div class="kpi ok"><div class="kl">品质档·54年总结余</div><div class="kv" style="color:var(--villa)" id="k2">—</div><div class="ks">含别墅年金后品质档情况</div></div>
+  <div class="kpi warn"><div class="kl">品质档·缺口高峰年</div><div class="kv" style="color:var(--quality)" id="k3">—</div><div class="ks" id="k3s">单年最大缺口</div></div>
+  <div class="kpi info"><div class="kl">两档均盈余年数</div><div class="kv" style="color:var(--p1)" id="k4">—</div><div class="ks">年份数 / 共54年</div></div>
+</div>
+
+<!-- CHART 1 -->
+<div class="section">
+  <div class="sh">
+    <div class="st">年度收入（含别墅年金）vs 支出</div>
+    <div class="tgl-grp">
+      <button class="tgl on" onclick="setView('bar',this)">收支图</button>
+      <button class="tgl" onclick="setView('line',this)">趋势线</button>
+    </div>
+  </div>
+  <div class="legend-row">
+    <div class="leg"><div class="lf" style="background:rgba(43,108,176,.6)"></div>保单+社保收入</div>
+    <div class="leg"><div class="lf" style="background:rgba(11,114,133,.75)"></div>别墅年金（38.5万/年）</div>
+    <div class="leg"><div class="ld" style="border-color:var(--basic)"></div>基本档支出</div>
+    <div class="leg"><div class="ld" style="border-color:var(--quality)"></div>品质档支出（修订）</div>
+  </div>
+  <canvas id="c1" height="230"></canvas>
+</div>
+
+<!-- CHART 2: GAP -->
+<div class="section">
+  <div class="sh">
+    <div class="st">年度资金缺口（含别墅年金后）</div>
+    <div class="sn">绿色=盈余 · 橙色=品质档小缺口 · 红色=两档均缺口</div>
+  </div>
+  <div class="legend-row">
+    <div class="leg"><div class="lf" style="background:#2f9e44"></div>两档均盈余</div>
+    <div class="leg"><div class="lf" style="background:#fd7e14"></div>品质档缺口（基本档仍盈余）</div>
+    <div class="leg"><div class="lf" style="background:#e03131"></div>两档均缺口</div>
+    <div class="leg"><div class="ld" style="border-color:#888"></div>未含别墅年金的品质档缺口（对比）</div>
+  </div>
+  <canvas id="c2" height="200"></canvas>
+  <div class="note-box" id="noteBox"></div>
+</div>
+
+<!-- CHART 3: CUMULATIVE -->
+<div class="section">
+  <div class="sh">
+    <div class="st">累计结余 / 缺口（52岁起算）</div>
+    <div class="sn">正值=累计盈余，负值=需动用投资组合填补</div>
+  </div>
+  <div class="legend-row">
+    <div class="leg"><div class="ll" style="border-color:var(--surplus)"></div>基本档累计（含别墅年金）</div>
+    <div class="leg"><div class="ll" style="border-color:var(--villa)"></div>品质档累计（含别墅年金）</div>
+    <div class="leg"><div class="ld" style="border-color:#aaa"></div>品质档累计（不含别墅年金，对比）</div>
+  </div>
+  <canvas id="c3" height="200"></canvas>
+</div>
+
+<!-- TABLE -->
+<div class="section">
+  <div class="sh">
+    <div class="st">逐年明细表</div>
+    <div class="tgl-grp">
+      <button class="tgl on" onclick="setTbl('key',this)">关键节点</button>
+      <button class="tgl" onclick="setTbl('all',this)">全部年份</button>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table class="dt">
+      <thead><tr>
+        <th>年龄（夫人/先生）</th><th>年份</th>
+        <th>保单+社保</th><th>别墅年金</th><th>合计收入</th>
+        <th>基本档</th><th>品质档</th>
+        <th>基本差额</th><th>品质差额</th>
+      </tr></thead>
+      <tbody id="tb"></tbody>
+    </table>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+// ═══════════════ INCOME DATA ═══════════════
+const RI={
+52:[68860,7770,35607,0,0,0],53:[69893,7770,41416,0,0,0],
+54:[70941,117390,47181,0,0,0],55:[72005,210720,52946,0,0,0],
+56:[73085,218341,57014,0,0,0],57:[74182,218341,64485,0,0,0],
+58:[170409,218341,70065,0,0,540000],59:[172965,223741,73243,0,0,0],
+60:[175559,239494,75543,0,0,0],61:[178193,239494,69547,35000,0,585000],
+62:[180866,239494,69656,35000,0,0],63:[183579,239494,69771,35000,0,0],
+64:[186332,239494,73430,35000,0,0],65:[189127,243842,71885,35000,0,0],
+66:[191964,243842,70902,35000,0,0],67:[194844,243842,69931,35000,0,0],
+68:[197766,243842,68973,35000,0,0],69:[200733,243842,68026,35000,71000,0],
+70:[203744,243842,67091,35000,71000,0],71:[206800,243842,66168,35000,71000,0],
+72:[209902,243842,65258,35000,71000,0],73:[213050,243842,64040,35000,71000,0],
+74:[216246,243842,62846,35000,71000,0],75:[219490,220712,59974,35000,71000,0],
+76:[222782,220712,58827,35000,71000,0],77:[226124,220712,57705,35000,71000,0],
+78:[229516,220712,56608,35000,124943,124943],79:[232959,220712,55022,35000,83463,0],
+80:[236453,220712,53480,35000,0,0],81:[240000,212729,51980,35000,0,0],
+82:[243600,212729,50524,35000,0,0],83:[247254,212729,49107,0,0,0],
+84:[250962,212729,47731,0,0,0],85:[254727,212729,45976,0,0,0],
+86:[258548,208381,44688,0,0,0],87:[262426,208381,43436,0,0,0],
+88:[266362,208381,42219,0,0,0],89:[270358,208381,40200,0,0,0],
+90:[274413,208381,38278,0,0,0],91:[278529,208381,36447,0,0,0],
+92:[282707,208381,34704,0,0,0],93:[286948,208381,33044,0,0,0],
+94:[291252,208381,31462,0,0,0],
+};
+let p=291252,d=31462;
+for(let a=95;a<=105;a++){p=Math.round(p*1.012);d=Math.round(d*0.95);RI[a]=[p,208381,d,0,0,0];}
+
+// Villa annuity: 10M @ 3%, 51 years level payment = 385,338/year
+// Starts age 55 (2029)
+const VILLA_ANNUAL = 385338;
+function villaIncome(age){ return age>=55 ? VILLA_ANNUAL : 0; }
+
+// Spending model – revised: no travel from age 83+
+function base2026(age){
+  if(age<65)  return 144000;
+  if(age<75)  return 180000;
+  if(age<83)  return 228000;   // 燕园独立区：含活动费
+  if(age<95)  return 432000;   // 燕园护理区
+  return       528000;
+}
+function qualityAdd2026(age){
+  if(age<65)  return 150000;   // 出境游3次+品质
+  if(age<75)  return 170000;   // 退休黄金期
+  if(age<83)  return 100000;   // 燕园内短途+升级
+  if(age<95)  return 30000;    // ★护理区：无旅游，仅升级服务
+  return       20000;           // ★全护理：无旅游
+}
+// Previous (no villa, with travel in nursing) for comparison
+function qualityAdd2026Old(age){
+  if(age<65)  return 150000;
+  if(age<75)  return 170000;
+  if(age<83)  return 100000;
+  if(age<95)  return 80000;
+  return       60000;
+}
+
+function phaseOf(a){
+  if(a<65) return {id:'p1',c:'#3b5bdb',s:'居家活跃',t:'tp1'};
+  if(a<75) return {id:'p2',c:'#2f9e44',s:'活跃退休',t:'tp2'};
+  if(a<83) return {id:'p3',c:'#e67700',s:'燕园独立',t:'tp3'};
+  if(a<95) return {id:'p4',c:'#c92a2a',s:'燕园护理',t:'tp4'};
+  return          {id:'p5',c:'#862e9c',s:'全护理',t:'tp5'};
+}
+
+const EVENTS={
+55:'别墅1000万出售→年金险，年领38.5万开始',
+58:'先生退休·安享人生(先生)54万到账',
+61:'安享人生(夫人)58.5万到账→万能账户',
+69:'尊享世家减保7.1万/年',
+75:'进入燕园独立生活区',
+78:'百万护驾+泰盈人生7到账',
+83:'★转入燕园护理区（不再出行旅游）',
+95:'★全护理阶段',
+};
+
+// BUILD ARRAYS
+const A=[],Y=[],INS=[],VIL=[],TOT=[],BASIC=[],QUAL=[],QUAL_OLD=[],
+      GB=[],GQ=[],GQ_OLD=[],LUMP=[];
+for(let a=52;a<=105;a++){
+  const yr=2026+(a-52), inf=Math.pow(1.03,a-52);
+  const ri=RI[a];
+  const ins=ri[0]+ri[1]+ri[2]+ri[3]+ri[4];
+  const lp=ri[5];
+  const vil=villaIncome(a);
+  const tot=ins+vil+lp;
+  const reg=ins+vil; // regular (no lump)
+  const bas=Math.round(base2026(a)*inf);
+  const qua=Math.round((base2026(a)+qualityAdd2026(a))*inf);
+  const qua_old=Math.round((base2026(a)+qualityAdd2026Old(a))*inf);
+
+  A.push(a); Y.push(yr); INS.push(ins); VIL.push(vil); TOT.push(tot);
+  BASIC.push(bas); QUAL.push(qua); QUAL_OLD.push(qua_old); LUMP.push(lp);
+  GB.push(reg-bas); GQ.push(reg-qua); GQ_OLD.push(ins-qua_old);
+}
+
+// KPIs
+const totalReg = A.map((_,i)=>INS[i]+VIL[i]).reduce((s,v)=>s+v,0);
+const totalBasic = BASIC.reduce((s,v)=>s+v,0);
+const totalQual  = QUAL.reduce((s,v)=>s+v,0);
+const surpB = totalReg - totalBasic;
+const surpQ = totalReg - totalQual;
+let maxDef=0,maxDefAge=0;
+GQ.forEach((g,i)=>{if(g<maxDef){maxDef=g;maxDefAge=A[i];}});
+const both = GB.filter(g=>g>0).length;
+
+document.getElementById('k1').textContent=(surpB/10000).toFixed(0)+'万';
+document.getElementById('k2').textContent=(surpQ>=0?'+':''+(surpQ/10000).toFixed(0))+'万';
+document.getElementById('k3').textContent=maxDef<0?Math.abs(maxDef/10000).toFixed(0)+'万/年':'无';
+document.getElementById('k3s').textContent=maxDef<0?`${maxDefAge}岁（${2026+(maxDefAge-52)}年）`:'全程盈余';
+document.getElementById('k4').textContent=both+'年';
+
+// Change color for k2 if positive
+if(surpQ>=0) document.querySelector('.kpi.ok .kv').style.color='var(--surplus)';
+
+// Phase bar
+const pd=[{a:52,e:64,c:'#3b5bdb'},{a:65,e:74,c:'#2f9e44'},
+  {a:75,e:82,c:'#e67700'},{a:83,e:94,c:'#c92a2a'},{a:95,e:105,c:'#862e9c'}];
+const pn={52:'居家活跃期 52–64',65:'活跃退休 65–74',75:'燕园独立区 75–82',83:'燕园护理区 83–94',95:'全护理 95–105'};
+const pb=document.getElementById('phaseBar');
+pd.forEach(p=>{
+  const w=((p.e-p.a+1)/54*100).toFixed(1);
+  const el=document.createElement('div');
+  el.className='pb-seg';
+  el.style.cssText=`width:${w}%;background:${p.c}`;
+  el.textContent=pn[p.a];
+  pb.appendChild(el);
+});
+
+// Note box
+const noteText = surpQ>=0
+  ? `📗 <strong>品质档（含别墅年金）全程盈余${(surpQ/10000).toFixed(0)}万</strong>：别墅1000万变现后，即使按品质档全程消费，54年总收入仍有${(surpQ/10000).toFixed(0)}万盈余。这意味着无需额外动用投资组合，保险+社保+别墅年金已完全覆盖。`
+  : `📙 <strong>品质档（含别墅年金）54年累计缺口${Math.abs(surpQ/10000).toFixed(0)}万</strong>：护理阶段通胀复利叠加，晚年支出仍有一定缺口，可用投资组合523万覆盖。`;
+
+document.getElementById('noteBox').innerHTML = `
+${noteText}<br><br>
+📗 <strong>基本档全程无缺口</strong>：保单+社保+别墅年金共同托底，基本养老完全自足，54年累计盈余 <strong>${(surpB/10000).toFixed(0)}万</strong>。<br>
+🏡 <strong>别墅年金贡献</strong>：1000万→年金险每年稳定贡献38.5万，51年总领取约 <strong>1,965万元</strong>，较本金翻近2倍。若选择利息不动本（30万/年），则原始资产保全。<br>
+📌 <strong>护理区品质档修订</strong>：进入燕园护理区（83岁+）后取消旅游预算，品质档支出较原版每年节省 <strong>${((qualityAdd2026Old(83)-qualityAdd2026(83))*2.5/10000).toFixed(1)}万+</strong>（通胀后），显著改善缺口。
+`;
+
+// ═══ CHART 1 ═══
+const C1=document.getElementById('c1').getContext('2d');
+let ch1;
+function buildC1(){
+  if(ch1)ch1.destroy();
+  ch1=new Chart(C1,{
+    data:{labels:A.map(a=>a+'岁'),datasets:[
+      {type:'bar',label:'保单+社保',data:INS.map(v=>+(v/10000).toFixed(1)),
+        backgroundColor:'rgba(43,108,176,.6)',stack:'s',order:2},
+      {type:'bar',label:'别墅年金',data:VIL.map(v=>+(v/10000).toFixed(1)),
+        backgroundColor:'rgba(11,114,133,.75)',stack:'s',order:2},
+      {type:'bar',label:'一次性',data:LUMP.map(v=>+(v/10000).toFixed(1)),
+        backgroundColor:'rgba(43,108,176,.25)',stack:'s',order:2},
+      {type:'line',label:'基本档',data:BASIC.map(v=>+(v/10000).toFixed(1)),
+        borderColor:'#e67700',borderWidth:2.5,borderDash:[6,3],pointRadius:0,fill:false,order:0},
+      {type:'line',label:'品质档',data:QUAL.map(v=>+(v/10000).toFixed(1)),
+        borderColor:'#c92a2a',borderWidth:2.5,borderDash:[4,2],pointRadius:0,fill:false,order:0},
+    ]},
+    options:{responsive:true,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},tooltip:{callbacks:{
+        title:items=>`${A[items[0].dataIndex]}岁 / 先生${A[items[0].dataIndex]+2}岁 · ${Y[items[0].dataIndex]}年`,
+        afterBody:items=>{
+          const i=items[0].dataIndex;
+          const lines=[];
+          if(EVENTS[A[i]])lines.push('📌 '+EVENTS[A[i]]);
+          lines.push(`基本档: ${GB[i]>=0?'✅ +':' '}${(GB[i]/10000).toFixed(1)}万`);
+          lines.push(`品质档: ${GQ[i]>=0?'✅ +':'🔴 '}${(GQ[i]/10000).toFixed(1)}万`);
+          return lines;
+        }
+      }}},
+      scales:{
+        x:{stacked:true,grid:{display:false},ticks:{color:'#8b8fa8',font:{size:10},
+           callback:(v,i)=>A[i]%5===0?A[i]+'岁':''}},
+        y:{stacked:true,grid:{color:'#e8e4dc'},ticks:{color:'#8b8fa8',font:{size:10},callback:v=>v+'万'},
+           title:{display:true,text:'万元/年',color:'#8b8fa8',font:{size:10}}}
+      }
+    }
+  });
+}
+buildC1();
+function setView(v,btn){document.querySelectorAll('.tgl').forEach(b=>b.classList.remove('on'));btn.classList.add('on');buildC1();}
+
+// ═══ CHART 2: GAP ═══
+const C2=document.getElementById('c2').getContext('2d');
+const gC=GB.map((gb,i)=>{
+  if(gb>=0&&GQ[i]>=0)return 'rgba(47,158,68,.75)';
+  if(gb>=0&&GQ[i]<0) return 'rgba(253,126,20,.8)';
+  return 'rgba(224,49,49,.8)';
+});
+new Chart(C2,{
+  type:'bar',
+  data:{labels:A.map(a=>a+'岁'),datasets:[
+    {label:'基本档缺口（含年金）',data:GB.map(v=>+(v/10000).toFixed(1)),backgroundColor:gC,order:1},
+    {type:'line',label:'品质档缺口（含年金）',data:GQ.map(v=>+(v/10000).toFixed(1)),
+      borderColor:'#c92a2a',borderWidth:2,pointRadius:0,fill:false,order:0,borderDash:[4,2]},
+    {type:'line',label:'品质档缺口（不含年金，对比）',data:GQ_OLD.map(v=>+(v/10000).toFixed(1)),
+      borderColor:'#aaa',borderWidth:1.5,pointRadius:0,fill:false,order:0,borderDash:[2,4]},
+  ]},
+  options:{responsive:true,interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false},tooltip:{callbacks:{
+      title:items=>`${A[items[0].dataIndex]}岁 · ${Y[items[0].dataIndex]}年`,
+      afterBody:items=>{
+        const i=items[0].dataIndex;
+        return [
+          `基本档: ${GB[i]>=0?'✅ 盈余+':' 缺口'}${Math.abs(GB[i]/10000).toFixed(1)}万`,
+          `品质档(含年金): ${GQ[i]>=0?'✅ 盈余+':'🔴 缺口'}${Math.abs(GQ[i]/10000).toFixed(1)}万`,
+          `品质档(原版对比): ${GQ_OLD[i]>=0?'+'  :'缺口'}${Math.abs(GQ_OLD[i]/10000).toFixed(1)}万`,
+          EVENTS[A[i]]?'📌 '+EVENTS[A[i]]:''
+        ].filter(Boolean);
+      }
+    }}},
+    scales:{
+      x:{grid:{display:false},ticks:{color:'#8b8fa8',font:{size:10},callback:(v,i)=>A[i]%5===0?A[i]+'岁':''}},
+      y:{grid:{color:'#e8e4dc'},ticks:{color:'#8b8fa8',font:{size:10},callback:v=>v+'万'},
+         title:{display:true,text:'万元（正=盈余 负=缺口）',color:'#8b8fa8',font:{size:10}}}
+    }
+  }
+});
+
+// ═══ CHART 3: CUMULATIVE ═══
+const C3=document.getElementById('c3').getContext('2d');
+let cB=0,cQ=0,cQO=0; const CB=[],CQ=[],CQO=[];
+GB.forEach((g,i)=>{cB+=g;CB.push(+(cB/10000).toFixed(1));});
+GQ.forEach((g,i)=>{cQ+=g;CQ.push(+(cQ/10000).toFixed(1));});
+GQ_OLD.forEach((g,i)=>{cQO+=g;CQO.push(+(cQO/10000).toFixed(1));});
+
+new Chart(C3,{type:'line',
+  data:{labels:A.map(a=>a+'岁'),datasets:[
+    {label:'基本档累计',data:CB,borderColor:'#2f9e44',borderWidth:2.5,
+      fill:{target:'origin',above:'rgba(47,158,68,.06)',below:'rgba(224,49,49,.06)'},
+      pointRadius:0,tension:.3},
+    {label:'品质档累计（含年金）',data:CQ,borderColor:'#0b7285',borderWidth:2.5,
+      fill:{target:'origin',above:'rgba(11,114,133,.06)',below:'rgba(224,49,49,.08)'},
+      pointRadius:0,tension:.3},
+    {label:'品质档累计（不含年金）',data:CQO,borderColor:'#bbb',borderWidth:1.5,
+      fill:false,pointRadius:0,tension:.3,borderDash:[4,3]},
+    {label:'零线',data:A.map(()=>0),borderColor:'#ccc',borderWidth:1,pointRadius:0,borderDash:[2,2]},
+  ]},
+  options:{responsive:true,interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false},tooltip:{callbacks:{
+      title:items=>`${A[items[0].dataIndex]}岁 · ${Y[items[0].dataIndex]}年`,
+      afterBody:items=>{
+        const i=items[0].dataIndex;
+        return [`基本档累计: ${CB[i]>0?'+':''}${CB[i]}万`,
+                `品质档累计(含年金): ${CQ[i]>0?'+':''}${CQ[i]}万`,
+                `品质档累计(不含年金): ${CQO[i]>0?'+':''}${CQO[i]}万`];
+      }
+    }}},
+    scales:{
+      x:{grid:{display:false},ticks:{color:'#8b8fa8',font:{size:10},callback:(v,i)=>A[i]%5===0?A[i]+'岁':''}},
+      y:{grid:{color:'#e8e4dc'},ticks:{color:'#8b8fa8',font:{size:10},callback:v=>v+'万'},
+         title:{display:true,text:'累计万元',color:'#8b8fa8',font:{size:10}}}
+    }
+  }
+});
+
+// ═══ TABLE ═══
+function renderTable(mode){
+  const keyAges=new Set([52,55,58,60,61,65,69,75,78,80,83,85,90,95,100,105,...Object.keys(EVENTS).map(Number)]);
+  let html='', lastPh='';
+  A.forEach((a,i)=>{
+    if(mode==='key'&&!keyAges.has(a))return;
+    const ph=phaseOf(a);
+    if(ph.id!==lastPh){
+      const pname={p1:'居家活跃期 52–64',p2:'活跃退休期 65–74',p3:'燕园独立生活区 75–82',p4:'燕园护理区 83–94',p5:'全护理期 95–105'};
+      html+=`<tr class="psep"><td colspan="9">${pname[ph.id]}</td></tr>`;
+      lastPh=ph.id;
+    }
+    const reg=INS[i]+VIL[i];
+    const gB=GB[i],gQ=GQ[i];
+    html+=`<tr class="${EVENTS[a]?'ev':''}">
+      <td>${a} / ${a+2}<span class="ptag ${ph.t}">${ph.s}</span>
+        ${EVENTS[a]?`<br><small style="color:#7a6010;font-size:10px">📌 ${EVENTS[a]}</small>`:''}
+      </td>
+      <td>${Y[i]}</td>
+      <td class="iv">${(INS[i]/10000).toFixed(1)}万</td>
+      <td class="vv">${VIL[i]?'+'+(VIL[i]/10000).toFixed(1)+'万':'—'}</td>
+      <td class="iv" style="font-weight:700">${(reg/10000).toFixed(1)}万${LUMP[i]?`<br><small style="color:#6b2d8e">(+${(LUMP[i]/10000).toFixed(1)}万一次性)</small>`:''}</td>
+      <td class="basic-val" style="color:#b35a00">${(BASIC[i]/10000).toFixed(1)}万</td>
+      <td class="quality-val" style="color:#8b1c1c">${(QUAL[i]/10000).toFixed(1)}万</td>
+      <td class="${gB>=0?'sv':'dv'}">${gB>=0?'+':''}${(gB/10000).toFixed(1)}万</td>
+      <td class="${gQ>=0?'sv':'dv'}">${gQ>=0?'+':''}${(gQ/10000).toFixed(1)}万</td>
+    </tr>`;
+  });
+  document.getElementById('tb').innerHTML=html;
+}
+renderTable('key');
+function setTbl(m,btn){document.querySelectorAll('.tgl').forEach(b=>b.classList.remove('on'));btn.classList.add('on');renderTable(m);}
+</script>
+</body>
+</html>

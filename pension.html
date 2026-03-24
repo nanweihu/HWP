@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>年度领取明细 v2 · 夫人 & 先生</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+:root {
+  --bg:#f5f7fa; --surface:#ffffff; --surface2:#eef1f6; --border:#d8dde8;
+  --text:#1a2038; --muted:#6b7696; --faint:#e2e7f0;
+  --accent:#2d5be3; --accent-dim:#dce5fb;
+  --pension:#1971c2; --annuity:#2f9e44; --dividend:#e67700;
+  --wanneng:#7048e8; --zunjie:#d6336c; --lumpsum:#0c8599;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans SC',sans-serif;font-size:13px;line-height:1.6}
+
+/* HEADER */
+.hdr{padding:24px 48px 18px;border-bottom:2px solid var(--border);background:linear-gradient(135deg,#1a2a6c 0%,#2d5be3 60%,#1971c2 100%)}
+.hdr-tag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:6px}
+.hdr h1{font-size:21px;font-weight:600;color:#ffffff;margin-bottom:14px;text-shadow:0 1px 3px rgba(0,0,0,.2)}
+.legend{display:flex;gap:20px;flex-wrap:wrap;align-items:center;padding-top:12px;border-top:1px solid rgba(255,255,255,.2)}
+.li{display:flex;align-items:center;gap:7px;font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,.85)}
+.ld{width:10px;height:10px;border-radius:2px;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+
+/* NOTICE */
+.notice{background:#fffbf0;border-left:4px solid #e67700;padding:10px 48px;font-size:11px;color:#5c4000;font-family:'DM Mono',monospace;line-height:1.8;border-bottom:1px solid #fde8b0}
+
+/* CHART */
+.chart-area{padding:20px 48px;border-bottom:1px solid var(--border);background:var(--surface)}
+.chart-lbl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+
+/* CONTROLS */
+.ctrl{padding:10px 48px;display:flex;gap:8px;align-items:center;background:var(--surface2);border-bottom:1px solid var(--border);flex-wrap:wrap}
+.btn{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:6px 14px;background:var(--surface);border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:.15s;border-radius:3px;font-weight:500}
+.btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+.btn.on{border-color:var(--accent);color:var(--surface);background:var(--accent)}
+
+/* TABLE */
+.twrap{overflow-x:auto;max-height:540px;overflow-y:auto;padding-left:20px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead{position:sticky;top:0;z-index:10}
+thead tr.h1 th{background:#1e3a8a;padding:9px 14px 3px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.65);text-align:right;white-space:nowrap}
+thead tr.h2 th{background:#1e3a8a;padding:3px 14px 9px;font-family:'DM Mono',monospace;font-size:9px;color:rgba(255,255,255,.4);text-align:right;border-bottom:2px solid var(--border)}
+thead .la{text-align:left!important}
+td{padding:8px 14px;border-bottom:1px solid var(--faint);text-align:right;font-variant-numeric:tabular-nums;font-family:'DM Mono',monospace;vertical-align:middle;white-space:nowrap}
+td.la{text-align:left;font-family:'Noto Sans SC',sans-serif}
+tr:hover td{background:#edf2ff}
+
+/* Row types */
+tr.ev td{background:#fff9e6}
+tr.ev td.age-c::before{content:'◆ ';color:#e67700;font-size:8px}
+tr.phase-sep td{background:#e8edf8;color:#2d5be3;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;border-bottom:2px solid #bfcbf5;text-align:left!important;padding:7px 28px;font-weight:600}
+
+/* Value colors */
+.cp{color:var(--pension);font-weight:500} .ca{color:var(--annuity);font-weight:500} .cd{color:var(--dividend);font-weight:500}
+.cw{color:var(--wanneng);font-weight:500} .cz{color:var(--zunjie);font-weight:500} .cl{color:var(--lumpsum);font-weight:700}
+.ct{color:var(--text);font-weight:700;font-size:13px} .czr{color:#c8cdd8}
+
+/* Age cell */
+.age-c{text-align:left!important}
+.aliu{font-weight:700;font-size:13px;color:var(--text)}
+.ahu{font-size:10px;color:var(--muted);margin-left:4px}
+
+/* Stacked bar */
+.sbar{display:flex;height:6px;width:100px;border-radius:3px;overflow:hidden;background:var(--faint)}
+.sbar div{height:100%}
+
+/* SUMMARY */
+.sumrow{display:grid;grid-template-columns:repeat(6,1fr);border-top:2px solid var(--border);background:var(--surface)}
+.sc{padding:16px 18px;border-right:1px solid var(--border)}
+.sc:last-child{border-right:none}
+.sl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.sv{font-family:'DM Mono',monospace;font-size:20px;font-weight:600}
+.ss{font-size:10px;color:var(--muted);margin-top:3px}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-tag">年度领取明细 v2 · 2026–2068</div>
+  <h1>夫人 & 先生 · 逐年收入规划（含万能账户 & 尊享世家减保）</h1>
+  <div class="legend">
+    <div class="li"><div class="ld" style="background:var(--pension)"></div>社保退休金</div>
+    <div class="li"><div class="ld" style="background:var(--annuity)"></div>年金/生存金</div>
+    <div class="li"><div class="ld" style="background:var(--dividend)"></div>分红</div>
+    <div class="li"><div class="ld" style="background:var(--wanneng)"></div>万能减保（安享人生(夫人)→万能账户）</div>
+    <div class="li"><div class="ld" style="background:var(--zunjie)"></div>尊享世家增额减保</div>
+    <div class="li"><div class="ld" style="background:var(--lumpsum)"></div>一次性到账（另计）</div>
+  </div>
+</div>
+
+<div class="notice">
+  ▸ 万能账户：安享人生（夫人）58.5万（2035年强制到期）→ 全额存入万能账户 → 每年提取3.5万（61–82岁，共22年，总提取77万）&nbsp;&nbsp;
+  ▸ 尊享世家增额（46152841）：69岁起每年减保7.1万（先生71岁+），78岁12.5万、79岁8.3万清账，79岁后归零&nbsp;&nbsp;
+  ▸ 永福人生年金至夫人74岁止&nbsp;&nbsp;▸ 松鹤延年①60-80岁 松鹤延年②65-85岁
+</div>
+
+<div class="chart-area">
+  <div class="chart-lbl">年度收入结构（万元）· 一次性到账单独标注</div>
+  <canvas id="chart" height="160"></canvas>
+</div>
+
+<div class="ctrl">
+  <button class="btn on" onclick="fil('all',this)">全部</button>
+  <button class="btn" onclick="fil('p1',this)">过渡期 52–57</button>
+  <button class="btn" onclick="fil('p2',this)">启动期 58–64</button>
+  <button class="btn" onclick="fil('p3',this)">稳定期 65–82</button>
+  <button class="btn" onclick="fil('p4',this)">晚年期 83–94</button>
+</div>
+
+<div class="twrap">
+<table>
+<thead>
+  <tr class="h1">
+    <th class="la">年龄</th><th class="la">年份</th>
+    <th>社保</th><th>年金/生存金</th><th>分红</th>
+    <th>万能减保</th><th>尊享减保</th>
+    <th>年度小计</th><th>另：一次性</th><th>含一次性合计</th>
+    <th>收入构成</th><th class="la">事件</th>
+  </tr>
+  <tr class="h2">
+    <th class="la">夫人/先生</th><th class="la"></th>
+    <th>元/年</th><th>元/年</th><th>元/年</th>
+    <th>元/年</th><th>元/年</th>
+    <th>元/年</th><th>元（当年）</th><th>元/年</th>
+    <th></th><th class="la"></th>
+  </tr>
+</thead>
+<tbody id="tb"></tbody>
+</table>
+</div>
+
+<div class="sumrow" id="sumrow">
+  <div class="sc"><div class="sl">43年总计（含一次性）</div><div class="sv" style="color:var(--text)" id="s0">—</div><div class="ss">2026–2068</div></div>
+  <div class="sc"><div class="sl">社保总计</div><div class="sv" style="color:var(--pension)" id="s1">—</div><div class="ss">两人合计</div></div>
+  <div class="sc"><div class="sl">年金/生存金总计</div><div class="sv" style="color:var(--annuity)" id="s2">—</div><div class="ss">各保单年领</div></div>
+  <div class="sc"><div class="sl">分红总计</div><div class="sv" style="color:var(--dividend)" id="s3">—</div><div class="ss">年复利分红</div></div>
+  <div class="sc"><div class="sl">万能+尊享减保总计</div><div class="sv" style="color:var(--wanneng)" id="s4">—</div><div class="ss">61–79岁</div></div>
+  <div class="sc"><div class="sl">一次性到账总计</div><div class="sv" style="color:var(--lumpsum)" id="s5">—</div><div class="ss">安享人生×2·百万护驾等</div></div>
+</div>
+
+<script>
+// ============================================================
+// DATA: [liu_age, hu_age, year, pension, annuity, dividend,
+//        wanneng_jianb, zunjie_jianb, lumpsum_one_time, note, phase]
+// col2=pension+annuity+dividend+wanneng+zunjie (年度小计)
+// lumpsum_one_time = col4 (separate, NOT in 年度小计)
+// 安享人生(夫人)585K at age 61 → reinvested to 万能, NOT counted as lumpsum
+// ============================================================
+const D=[
+//liu,hu, year, pension,  annuity,  dividend, wanneng, zunjie, lump,    note,                                          phase
+[52,54,2026,  68860,   7770,  35607,  0,     0,     0,     '保费高峰·王韶生40万回款(另计)','p1'],
+[53,55,2027,  69893,   7770,  41416,  0,     0,     0,     '','p1'],
+[54,56,2028,  70941, 117390,  47181,  0,     0,     0,     '惠赢1/2/3年金开始','p1'],
+[55,57,2029,  72005, 210720,  52946,  0,     0,     0,     '永福人生年金开始·惠赢4开始','p1'],
+[56,58,2030,  73085, 218341,  57014,  0,     0,     0,     '惠赢5/6年金开始','p1'],
+[57,59,2031,  74182, 218341,  64485,  0,     0,     0,     '保费缴清倒计时','p1'],
+[58,60,2032, 170409, 218341,  70065,  0,     0, 540000,    '★先生退休·安享人生(先生)强制到期54万','p2'],
+[59,61,2033, 172965, 223741,  73243,  0,     0,     0,     '泰盈人生8生存金·保费基本缴清','p2'],
+[60,62,2034, 175559, 239494,  75543,  0,     0,     0,     '松鹤延年①年金开始(7,982/年)','p2'],
+[61,63,2035, 178193, 239494,  69547,  35000, 0,   585000,  '★安享人生(夫人)强制到期58.5万→全额存入万能账户','p2'],
+[62,64,2036, 180866, 239494,  69656,  35000, 0,     0,     '万能账户每年提取3.5万','p2'],
+[63,65,2037, 183579, 239494,  69771,  35000, 0,     0,     '','p2'],
+[64,66,2038, 186332, 239494,  73430,  35000, 0,     0,     '惠赢5/6分红启动','p2'],
+[65,67,2039, 189127, 243842,  71885,  35000, 0,     0,     '松鹤延年②年金开始(4,348/年)','p3'],
+[66,68,2040, 191964, 243842,  70902,  35000, 0,     0,     '','p3'],
+[67,69,2041, 194844, 243842,  69931,  35000, 0,     0,     '','p3'],
+[68,70,2042, 197766, 243842,  68973,  35000, 0,     0,     '','p3'],
+[69,71,2043, 200733, 243842,  68026,  35000, 71000, 0,     '★尊享世家增额开始减保7.1万/年','p3'],
+[70,72,2044, 203744, 243842,  67091,  35000, 71000, 0,     '','p3'],
+[71,73,2045, 206800, 243842,  66168,  35000, 71000, 0,     '','p3'],
+[72,74,2046, 209902, 243842,  65258,  35000, 71000, 0,     '','p3'],
+[73,75,2047, 213050, 243842,  64040,  35000, 71000, 0,     '','p3'],
+[74,76,2048, 216246, 243842,  62846,  35000, 71000, 0,     '永福人生年金最后一年','p3'],
+[75,77,2049, 219490, 220712,  59974,  35000, 71000, 0,     '永福人生年金止（−2.3万/年）','p3'],
+[76,78,2050, 222782, 220712,  58827,  35000, 71000, 0,     '','p3'],
+[77,79,2051, 226124, 220712,  57705,  35000, 71000, 0,     '','p3'],
+[78,80,2052, 229516, 220712,  56608,  35000,124943,124943, '★百万护驾6.93万+泰盈7 5.56万到账·尊享世家加速减保','p3'],
+[79,81,2053, 232959, 220712,  55022,  35000, 83463, 0,     '尊享世家增额减保收尾','p3'],
+[80,82,2054, 236453, 220712,  53480,  35000, 0,     0,     '松鹤延年①年金满20年结束','p3'],
+[81,83,2055, 240000, 212729,  51980,  35000, 0,     0,     '松鹤延年①结束；松鹤延年②延续至85岁','p3'],
+[82,84,2056, 243600, 212729,  50524,  35000, 0,     0,     '万能账户最后一年提取（共22年）','p3'],
+[83,85,2057, 247254, 212729,  49107,  0,     0,     0,     '万能账户清零','p4'],
+[84,86,2058, 250962, 212729,  47731,  0,     0,     0,     '','p4'],
+[85,87,2059, 254727, 212729,  45976,  0,     0,     0,     '松鹤延年②年金满20年结束','p4'],
+[86,88,2060, 258548, 208381,  44688,  0,     0,     0,     '松鹤延年②止（−4,348/年）','p4'],
+[87,89,2061, 262426, 208381,  43436,  0,     0,     0,     '','p4'],
+[88,90,2062, 266362, 208381,  42219,  0,     0,     0,     '','p4'],
+[89,91,2063, 270358, 208381,  40200,  0,     0,     0,     '','p4'],
+[90,92,2064, 274413, 208381,  38278,  0,     0,     0,     '','p4'],
+[91,93,2065, 278529, 208381,  36447,  0,     0,     0,     '','p4'],
+[92,94,2066, 282707, 208381,  34704,  0,     0,     0,     '','p4'],
+[93,95,2067, 286948, 208381,  33044,  0,     0,     0,     '','p4'],
+[94,96,2068, 291252, 208381,  31462,  0,     0,     0,     '','p4'],
+];
+
+const PHASES={
+  p1:'▸ 过渡期 2026–2031 · 保费高峰，夫人社保5,653/月已在领',
+  p2:'▸ 启动期 2032–2038 · 先生退休，安享人生一次性到账，万能账户启动',
+  p3:'▸ 稳定期 2039–2082 · 年金全开，尊享减保，万能持续',
+  p4:'▸ 晚年期 2083–2094 · 社保+年金，收入稳定无减保'
+};
+
+const maxG = Math.max(...D.map(r=>r[3]+r[4]+r[5]+r[6]+r[7]+r[8]));
+
+function M(n){ return n?((n>=10000?(n/10000).toFixed(1)+'<s>万</s>':n.toLocaleString())):'' }
+function MA(n){ return n?((n>=10000?(n/10000).toFixed(1)+'万':n.toLocaleString())):'—' }
+function col(n,c){ return n?`<span class="${c}">${M(n)}</span>`:`<span class="czr">—</span>` }
+
+function render(data){
+  let h='', lp='';
+  data.forEach(r=>{
+    const [liu,hu,yr,pe,an,di,wn,zj,lp_,note,ph]=r;
+    const sub = pe+an+di+wn+zj;
+    const grand = sub+lp_;
+    const isEv = note.startsWith('★') || lp_>0 || zj>0;
+    if(ph!==lp){ h+=`<tr class="phase-sep"><td colspan="12">${PHASES[ph]}</td></tr>`; lp=ph; }
+
+    const tot = pe+an+di+wn+zj+lp_;
+    const pp=tot?Math.round(pe/tot*100):0;
+    const ap=tot?Math.round(an/tot*100):0;
+    const dp=tot?Math.round(di/tot*100):0;
+    const wp=tot?Math.round(wn/tot*100):0;
+    const zp=tot?Math.round(zj/tot*100):0;
+    const lpp=tot?Math.round(lp_/tot*100):0;
+
+    h+=`<tr class="${isEv?'ev':''}">
+      <td class="age-c"><span class="aliu">${liu}</span><span class="ahu">/ ${hu}</span></td>
+      <td class="la" style="color:var(--muted);font-family:'DM Mono',monospace">${yr}</td>
+      ${col(pe,'cp')}${col(an,'ca')}${col(di,'cd')}
+      ${col(wn,'cw')}${col(zj,'cz')}
+      <td class="ct">${M(sub)}</td>
+      ${lp_?`<td class="cl">${M(lp_)}</td>`:`<td class="czr">—</td>`}
+      <td class="ct" style="font-size:14px">${M(grand)}</td>
+      <td><div class="sbar">
+        <div style="width:${pp}%;background:var(--pension)"></div>
+        <div style="width:${ap}%;background:var(--annuity)"></div>
+        <div style="width:${dp}%;background:var(--dividend)"></div>
+        <div style="width:${wp}%;background:var(--wanneng)"></div>
+        <div style="width:${zp}%;background:var(--zunjie)"></div>
+        <div style="width:${lpp}%;background:var(--lumpsum)"></div>
+      </div></td>
+      <td class="la" style="font-size:11px;color:${isEv?'#b45309':'var(--muted)'};max-width:200px;overflow:hidden;text-overflow:ellipsis" title="${note}">${note.replace('★','')}</td>
+    </tr>`;
+  });
+  document.getElementById('tb').innerHTML=h;
+  updSum(data);
+}
+
+function updSum(data){
+  const s=data.reduce((a,r)=>({
+    pe:a.pe+r[3],an:a.an+r[4],di:a.di+r[5],wn:a.wn+r[6],zj:a.zj+r[7],lp:a.lp+r[8]
+  }),{pe:0,an:0,di:0,wn:0,zj:0,lp:0});
+  const tot=s.pe+s.an+s.di+s.wn+s.zj+s.lp;
+  document.getElementById('s0').textContent=MA(tot);
+  document.getElementById('s1').textContent=MA(s.pe);
+  document.getElementById('s2').textContent=MA(s.an);
+  document.getElementById('s3').textContent=MA(s.di);
+  document.getElementById('s4').textContent=MA(s.wn+s.zj);
+  document.getElementById('s5').textContent=MA(s.lp);
+}
+
+let cur=[...D];
+function fil(phase,btn){
+  document.querySelectorAll('.btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  cur=phase==='all'?[...D]:D.filter(r=>r[10]===phase);
+  render(cur); updChart(cur);
+}
+
+// ===== CHART =====
+let ch;
+function buildChart(){
+  const ctx=document.getElementById('chart').getContext('2d');
+  ch=new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:D.map(r=>`${r[0]}岁`),
+      datasets:[
+        {label:'社保',data:D.map(r=>+(r[3]/10000).toFixed(1)),backgroundColor:'rgba(25,113,194,.75)',stack:'s'},
+        {label:'年金',data:D.map(r=>+(r[4]/10000).toFixed(1)),backgroundColor:'rgba(47,158,68,.75)',stack:'s'},
+        {label:'分红',data:D.map(r=>+(r[5]/10000).toFixed(1)),backgroundColor:'rgba(230,119,0,.8)',stack:'s'},
+        {label:'万能减保',data:D.map(r=>+(r[6]/10000).toFixed(1)),backgroundColor:'rgba(112,72,232,.75)',stack:'s'},
+        {label:'尊享减保',data:D.map(r=>+(r[7]/10000).toFixed(1)),backgroundColor:'rgba(214,51,108,.8)',stack:'s'},
+        {label:'一次性',data:D.map(r=>+(r[8]/10000).toFixed(1)),backgroundColor:'rgba(12,133,153,.85)',stack:'s',borderRadius:2},
+      ]
+    },
+    options:{
+      responsive:true,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{
+          title:items=>{const r=D[items[0].dataIndex];return`${r[0]}岁（先生${r[1]}岁）· ${r[2]}年`},
+          afterBody:items=>{
+            const r=D[items[0].dataIndex];
+            const sub=r[3]+r[4]+r[5]+r[6]+r[7];
+            const g=sub+r[8];
+            const lines=[`年度小计: ${(sub/10000).toFixed(1)}万`];
+            if(r[8])lines.push(`★一次性: ${(r[8]/10000).toFixed(1)}万（不含在常规小计内）`);
+            lines.push(`含一次性合计: ${(g/10000).toFixed(1)}万`);
+            if(r[9])lines.push(`📌 ${r[9].replace('★','')}`);
+            return lines;
+          }
+        }}
+      },
+      scales:{
+        x:{stacked:true,grid:{display:false},ticks:{color:'#6b7696',font:{size:10},maxRotation:0,callback:(v,i)=>D[i]&&D[i][0]%5===0?D[i][0]+'岁':''}},
+        y:{stacked:true,grid:{color:'#e2e7f0'},ticks:{color:'#6b7696',font:{size:10},callback:v=>v+'万'},title:{display:true,text:'万元/年',color:'#6b7696',font:{size:10}}}
+      }
+    }
+  });
+}
+
+function updChart(data){
+  if(!ch)return;
+  ch.data.labels=data.map(r=>`${r[0]}岁`);
+  [3,4,5,6,7,8].forEach((col,i)=>{ch.data.datasets[i].data=data.map(r=>+(r[col]/10000).toFixed(1))});
+  ch.update();
+}
+
+buildChart();
+render(D);
+</script>
+</body>
+</html>

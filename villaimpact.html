@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>别墅出售时机对比 · 三情景分析</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap');
+:root{
+  --bg:#f5f6f9; --white:#fff; --ink:#1a1c28; --ink2:#3a3d52;
+  --muted:#8b8fa8; --border:#e4dfd6; --border2:#cec9be;
+  --c0:#2563eb;   /* 2029 baseline - blue  */
+  --c1:#16a34a;   /* 2039 late    - green */
+  --c2:#dc2626;   /* no sale      - red   */
+  --wan:#7048e8;
+  --sur:#16a34a; --def:#dc2626; --warn:#ea580c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:'Noto Sans SC',sans-serif;font-size:13px;line-height:1.6}
+
+/* HEADER */
+.hdr{background:var(--ink);padding:32px 56px 24px}
+.h-tag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#5b7db8;margin-bottom:7px}
+.h-title{font-family:'Noto Serif SC',serif;font-size:24px;font-weight:700;color:#fff;margin-bottom:5px}
+.h-sub{font-size:12px;color:#7888a8;margin-bottom:22px}
+.hcards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.hc{padding:18px 22px;border-radius:4px;border:1px solid rgba(255,255,255,.15)}
+.hcl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+.hcv{font-family:'DM Mono',monospace;font-size:22px;font-weight:600;margin-bottom:4px}
+.hcs{font-size:11px;opacity:.7}
+.hc-0{background:rgba(37,99,235,.2);border-color:rgba(37,99,235,.4)}
+.hc-1{background:rgba(22,163,74,.2);border-color:rgba(22,163,74,.4)}
+.hc-2{background:rgba(220,38,38,.2);border-color:rgba(220,38,38,.4)}
+
+/* PHASE BAR */
+.phase-bar{display:flex;height:28px}
+.pb{display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;
+  font-size:9px;text-transform:uppercase;color:rgba(255,255,255,.9);overflow:hidden;white-space:nowrap}
+
+/* KEY CALLOUT */
+.callout{display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+  border-bottom:2px solid var(--border);background:var(--white)}
+.co{padding:20px 32px;border-right:1px solid var(--border)}
+.co:last-child{border-right:none}
+.co-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.co-main{font-family:'Noto Serif SC',serif;font-size:22px;font-weight:700;margin-bottom:4px}
+.co-sub{font-size:12px;color:var(--muted)}
+.co-verdict{display:inline-flex;align-items:center;gap:6px;margin-top:8px;
+  font-family:'DM Mono',monospace;font-size:11px;font-weight:600;
+  padding:4px 12px;border-radius:3px}
+
+/* MAIN */
+.main{padding:24px 56px;display:grid;gap:22px}
+
+/* SECTION */
+.sec{background:var(--white);border:1px solid var(--border);padding:24px 30px}
+.sh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.st{font-family:'Noto Serif SC',serif;font-size:15px;font-weight:600}
+.sn{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace}
+.leg-row{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:12px}
+.leg{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--ink2)}
+.ll{width:26px;height:0;border-top:2.5px solid;flex-shrink:0}
+.ld{width:26px;height:0;border-top:2.5px dashed;flex-shrink:0}
+.ldt{width:26px;height:0;border-top:2.5px dotted;flex-shrink:0}
+.lf{width:12px;height:12px;border-radius:2px;flex-shrink:0}
+
+/* NOTE */
+.note{padding:14px 20px;font-size:12px;line-height:1.9;margin-top:16px}
+.note strong{color:var(--ink)}
+.n0{background:#eff6ff;border-left:3px solid var(--c0)}
+.n1{background:#f0fdf4;border-left:3px solid var(--c1)}
+.n2{background:#fef2f2;border-left:3px solid var(--c2)}
+.ng{background:#fafafa;border-left:3px solid #aaa;color:var(--ink2)}
+
+/* TABLE */
+.twrap{max-height:400px;overflow-y:auto;margin-top:10px}
+.dt{width:100%;border-collapse:collapse;font-size:12px}
+.dt thead th{background:#f0eee8;padding:8px 12px;font-family:'DM Mono',monospace;
+  font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink2);
+  text-align:right;border-bottom:2px solid var(--border2);white-space:nowrap}
+.dt thead th:first-child{text-align:left}
+.dt tbody td{padding:7px 12px;border-bottom:1px solid #f0ede6;text-align:right;
+  font-family:'DM Mono',monospace;font-variant-numeric:tabular-nums;white-space:nowrap}
+.dt tbody td:first-child{text-align:left;font-family:'Noto Sans SC',sans-serif}
+.dt tbody tr:hover td{background:#f8f6f2}
+.dt tbody tr.psep td{background:#f0eee8;font-family:'DM Mono',monospace;font-size:9px;
+  letter-spacing:2px;text-transform:uppercase;color:#888;border-bottom:1px solid var(--border2);
+  text-align:left!important;padding:5px 12px}
+.dt tbody tr.ev td{background:#fffbef}
+.dt tbody tr.crit td{background:#fff0f0}
+.sv{color:var(--sur);font-weight:600} .dv{color:var(--def);font-weight:600}
+.wv{color:var(--wan);font-weight:600}
+.tgl-grp{display:flex;gap:5px}
+.tgl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;
+  padding:5px 12px;background:transparent;border:1px solid var(--border);
+  color:var(--muted);cursor:pointer;transition:.15s;border-radius:2px}
+.tgl:hover,.tgl.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.tag-ok{background:#dcfce7;color:#166534;font-family:'DM Mono',monospace;font-size:10px;
+  padding:2px 8px;border-radius:3px;font-weight:600}
+.tag-warn{background:#fef3c7;color:#92400e;font-family:'DM Mono',monospace;font-size:10px;
+  padding:2px 8px;border-radius:3px;font-weight:600}
+.tag-crit{background:#fee2e2;color:#991b1b;font-family:'DM Mono',monospace;font-size:10px;
+  padding:2px 8px;border-radius:3px;font-weight:600}
+.ptag{display:inline-block;font-family:'DM Mono',monospace;font-size:9px;
+  padding:1px 6px;border-radius:2px;margin-left:5px;font-weight:600}
+.tp1{background:#dbe4ff;color:#2b4cbe} .tp2{background:#d3f9d8;color:#1a6630}
+.tp3{background:#ffe8cc;color:#b35a00} .tp4{background:#ffe0e0;color:#9b1c1c}
+.tp5{background:#f3d9fa;color:#6a1c82}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="h-tag">别墅出售时机对比分析 · 三情景 · 花光资产至105岁</div>
+  <div class="h-title">卖早 vs 卖晚 vs 不卖 — 对养老资金的影响</div>
+  <div class="h-sub">品质档支出（含+3.5万/年额外提升）· 82岁前盈余→万能账户2.5%复利 · 82岁后提取</div>
+  <div class="hcards">
+    <div class="hc hc-0">
+      <div class="hcl" style="color:rgba(147,197,253,1)">情景 ①</div>
+      <div class="hcv" style="color:#93c5fd">2029年出售（55岁）</div>
+      <div class="hcs" style="color:rgba(255,255,255,.7)">年金38.5万/年起 · 105岁精确归零 ✅</div>
+    </div>
+    <div class="hc hc-1">
+      <div class="hcl" style="color:rgba(134,239,172,1)">情景 ②</div>
+      <div class="hcv" style="color:#86efac">2039年出售（65岁）</div>
+      <div class="hcs" style="color:rgba(255,255,255,.7)">年金42.7万/年起 · 100岁万能耗尽 · 5年缺口⚠️</div>
+    </div>
+    <div class="hc hc-2">
+      <div class="hcl" style="color:rgba(252,165,165,1)">情景 ③</div>
+      <div class="hcv" style="color:#fca5a5">不卖别墅</div>
+      <div class="hcs" style="color:rgba(255,255,255,.7)">无年金 · 86岁万能耗尽 · 20年严重缺口❌</div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE BAR -->
+<div class="phase-bar">
+  <div class="pb" style="width:24.1%;background:#3b5bdb">居家活跃 52–64</div>
+  <div class="pb" style="width:18.5%;background:#2f9e44">活跃退休 65–74</div>
+  <div class="pb" style="width:14.8%;background:#e67700">燕园独立 75–82</div>
+  <div class="pb" style="width:22.2%;background:#c92a2a">燕园护理 83–94</div>
+  <div class="pb" style="width:20.4%;background:#862e9c">全护理 95–105</div>
+</div>
+
+<!-- THREE-WAY CALLOUT -->
+<div class="callout">
+  <div class="co">
+    <div class="co-label">① 2029出售（基准方案）</div>
+    <div class="co-main" style="color:var(--c0)">全程无缺口</div>
+    <div class="co-sub">万能82岁峰值 <strong>1,591万</strong>，105岁精确归零。<br>别墅年金51年共领 <strong>1,965万</strong>（本金10倍增）</div>
+    <div class="co-verdict" style="background:#dbeafe;color:#1e40af">✅ 推荐方案</div>
+  </div>
+  <div class="co">
+    <div class="co-label">② 2039出售（晚10年）</div>
+    <div class="co-main" style="color:var(--c1)">100岁后缺口 834万</div>
+    <div class="co-sub">万能82岁峰值 <strong>1,022万</strong>，100岁耗尽。<br>100–105岁需额外资金 <strong>834万</strong>（现有投资组合覆盖）</div>
+    <div class="co-verdict" style="background:#dcfce7;color:#166534">⚠️ 尚可接受</div>
+  </div>
+  <div class="co">
+    <div class="co-label">③ 不卖别墅</div>
+    <div class="co-main" style="color:var(--c2)">86岁起持续缺口 3,153万</div>
+    <div class="co-sub">万能82岁峰值仅 <strong>256万</strong>，86岁耗尽。<br>65–105岁共需额外资金 <strong>3,153万</strong>，远超现有投资组合</div>
+    <div class="co-verdict" style="background:#fee2e2;color:#991b1b">❌ 资金严重不足</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<!-- CHART 1: 万能账户余额对比 -->
+<div class="sec">
+  <div class="sh">
+    <div class="st">万能账户余额走势对比（三情景）</div>
+    <div class="sn">82岁后开始提取 · 余额归零即出现无法覆盖的硬缺口</div>
+  </div>
+  <div class="leg-row">
+    <div class="leg"><div class="ll" style="border-color:var(--c0)"></div>① 2029出售（105岁归零）</div>
+    <div class="leg"><div class="ld" style="border-color:var(--c1)"></div>② 2039出售（100岁归零）</div>
+    <div class="leg"><div class="ldt" style="border-color:var(--c2)"></div>③ 不卖别墅（86岁归零）</div>
+    <div class="leg"><div class="lf" style="background:rgba(220,38,38,.15)"></div>红色区域 = 资金缺口（万能已空）</div>
+  </div>
+  <canvas id="c1" height="240"></canvas>
+  <div class="note ng">
+    <strong>读图方法</strong>：竖线以上是安全区域（万能账户有余额可提取）。曲线碰到零线后进入「硬缺口」区——钱没了，必须动用其他资产（别墅保留价值、投资账户、借款等）或降低消费档次。情景① 蓝线贴着零线在105岁才结束，是最优路径。
+  </div>
+</div>
+
+<!-- CHART 2: 年度缺口对比（82岁后） -->
+<div class="sec">
+  <div class="sh">
+    <div class="st">年度「硬缺口」（万能耗尽后的无法覆盖金额）</div>
+    <div class="sn">只显示万能账户耗尽后的真实缺口 · 情景① 全程为零</div>
+  </div>
+  <div class="leg-row">
+    <div class="leg"><div class="lf" style="background:rgba(37,99,235,.6)"></div>① 2029出售（无缺口）</div>
+    <div class="leg"><div class="lf" style="background:rgba(22,163,74,.6)"></div>② 2039出售（100岁后）</div>
+    <div class="leg"><div class="lf" style="background:rgba(220,38,38,.7)"></div>③ 不卖别墅（86岁后）</div>
+  </div>
+  <canvas id="c2" height="200"></canvas>
+</div>
+
+<!-- CHART 3: CUMULATIVE DEFICIT -->
+<div class="sec">
+  <div class="sh">
+    <div class="st">累计「硬缺口」总额（需动用其他资产）</div>
+    <div class="sn">投资组合现值约523万 · 情景② 超出约311万 · 情景③ 超出约2,630万</div>
+  </div>
+  <canvas id="c3" height="180"></canvas>
+  <div class="note n2" id="n2">
+    <strong>情景③（不卖别墅）严峻性</strong>：86–105岁共20年累计缺口 <strong>3,153万</strong>，而你们现有投资组合约523万（含赵华欠款420万需收回），即使全部动用也只能覆盖约 <strong>1/6</strong>。这意味着86岁后每年缺口将无法填补，须大幅降低生活档次，护理区品质档将无法维持。
+  </div>
+  <div class="note n1" style="margin-top:12px">
+    <strong>情景②（2039出售）尚在可控范围</strong>：100–105岁缺口 <strong>834万</strong>，尽管超过523万投资组合，但差额约311万。如能在此前（比如95岁前）将部分别墅价值（或其他资产）先行变现入账，完全可以覆盖。实际上此时别墅已持有约80年，若市值有所增长，完全有可能覆盖。
+  </div>
+</div>
+
+<!-- TABLE -->
+<div class="sec">
+  <div class="sh">
+    <div class="st">逐年三情景对比明细</div>
+    <div class="tgl-grp">
+      <button class="tgl on" onclick="setTbl('key',this)">关键节点</button>
+      <button class="tgl" onclick="setTbl('post82',this)">82岁后</button>
+      <button class="tgl" onclick="setTbl('all',this)">全部年份</button>
+    </div>
+  </div>
+  <div class="twrap"><table class="dt">
+    <thead><tr>
+      <th>年龄（夫人）</th>
+      <th>万能① 余额</th><th>万能② 余额</th><th>万能③ 余额</th>
+      <th>① 年度流向</th><th>② 年度流向</th><th>③ 年度流向</th>
+      <th>② 硬缺口</th><th>③ 硬缺口</th>
+    </tr></thead>
+    <tbody id="tb"></tbody>
+  </table></div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+// ══ DATA ══
+// [age, year, wbal0(2029), wbal1(nosale), wbal2(2039), gap0, gap1, gap2, res1, res2]
+const D=[
+[52,2026,0,0,0,-181763,-181763,-181763,-181763,-181763],
+[53,2027,0,0,0,-183741,-183741,-183741,-183741,-183741],
+[54,2028,0,0,0,-76393,-76393,-76393,-76393,-76393],
+[55,2029,364946,0,0,364946,-20392,-20392,-20392,-20392],
+[56,2030,741103,0,0,367033,-18305,-18305,-18305,-18305],
+[57,2031,1124230,0,0,364599,-20739,-20739,-20739,-20739],
+[58,2032,2147410,609736,609736,995074,609736,609736,0,0],
+[59,2033,2655630,694176,694176,454535,69197,69197,0,0],
+[60,2034,3185181,789353,789353,463160,77822,77822,0,0],
+[61,2035,4332226,1491164,1491164,1067415,682077,682077,0,0],
+[62,2036,4912974,1615547,1615547,472442,87104,87104,0,0],
+[63,2037,5497931,1732729,1732729,462132,76794,76794,0,0],
+[64,2038,6090392,1845723,1845723,455013,69675,69675,0,0],
+[65,2039,6607087,1891866,2298087,364435,-20903,406221,-20903,0],
+[66,2040,7121732,1939162,2746792,349467,-35871,391253,-35871,0],
+[67,2041,7633823,1987641,3191296,334048,-51290,375834,-51290,0],
+[68,2042,8142835,2037332,3631030,318166,-67172,359952,-67172,0],
+[69,2043,8719208,2088266,4136394,372802,-12536,414588,-12536,0],
+[70,2044,9293132,2140472,4637534,355944,-29394,397730,-29394,0],
+[71,2045,9864037,2193984,5133835,338576,-46762,380362,-46762,0],
+[72,2046,10431318,2248834,5624647,320680,-64658,362466,-64658,0],
+[73,2047,10994022,2305055,6108970,301921,-83417,343707,-83417,0],
+[74,2048,11551485,2362681,6586092,282612,-102726,324398,-102726,0],
+[75,2049,12121596,2421748,7073855,281324,-104014,323110,-104014,0],
+[76,2050,12686800,2482292,7554650,262163,-123175,303949,-123175,0],
+[77,2051,13246408,2544349,8027740,242438,-142900,284224,-142900,0],
+[78,2052,13978583,2623635,8671235,401015,15677,442801,0,0],
+[79,2053,14541216,2689226,9142970,213168,-172170,254954,-172170,0],
+[80,2054,15012424,2756456,9521007,107677,-277661,149463,-277661,0],
+[81,2055,15464777,2825368,9877861,77042,-308296,118828,-308296,0],
+[82,2056,15905142,2564410,10220339,53746,-331592,95532,0,0],
+[83,2057,15962540,1902951,10177403,-340231,-725569,-298445,0,0],
+[84,2058,15986665,1190248,10098685,-374939,-760277,-333153,0,0],
+[85,2059,15975252,423586,9981858,-411080,-796418,-369294,0,0],
+[86,2060,15922443,0,9821001,-452190,-837528,-410404,-403352,0],
+[87,2061,15830466,0,9618274,-490038,-875376,-448252,-875376,0],
+[88,2062,15697219,0,9371508,-529009,-914347,-487223,-914347,0],
+[89,2063,15519679,0,9077610,-569971,-955309,-528185,-955309,0],
+[90,2064,15295606,0,8734272,-612065,-997403,-570279,-997403,0],
+[91,2065,15022663,0,8339081,-655334,-1040672,-613548,-1040672,0],
+[92,2066,14698409,0,7889524,-699820,-1085158,-658034,-1085158,0],
+[93,2067,14320302,0,7382980,-745568,-1130906,-703782,-1130906,0],
+[94,2068,13885685,0,6816716,-792625,-1177963,-750839,-1177963,0],
+[95,2069,13084305,0,5880398,-1148522,-1533860,-1106736,-1533860,0],
+[96,2070,12202927,0,4860708,-1208486,-1593824,-1166700,-1593824,0],
+[97,2071,11237806,0,3753817,-1270194,-1655532,-1228408,-1655532,0],
+[98,2072,10185049,0,2555746,-1333703,-1719041,-1291917,-1719041,0],
+[99,2073,9040602,0,1262353,-1399073,-1784411,-1357287,-1784411,0],
+[100,2074,7800248,0,0,-1466369,-1851707,-1424583,-1851707,-130672],
+[101,2075,6459602,0,0,-1535653,-1920991,-1493867,-1920991,-1493867],
+[102,2076,5014100,0,0,-1606992,-1992330,-1565206,-1992330,-1565206],
+[103,2077,3459002,0,0,-1680451,-2065789,-1638665,-2065789,-1638665],
+[104,2078,1789378,0,0,-1756099,-2141437,-1714313,-2141437,-1714313],
+[105,2079,82,0,0,-1834007,-2219345,-1792221,-2219345,-1792221],
+];
+
+const EVENTS={
+55:'① 2029出售，别墅38.5万/年开始',
+65:'② 2039出售，别墅42.7万/年开始',
+82:'三情景均进入提取阶段',
+83:'③ 缺口年年扩大',
+86:'③ 万能耗尽，硬缺口开始',
+100:'② 万能耗尽，硬缺口开始',
+105:'① 精确归零（花光方案）',
+};
+
+function phOf(a){if(a<65)return'p1';if(a<75)return'p2';if(a<83)return'p3';if(a<95)return'p4';return'p5';}
+const PTAG={p1:'tp1',p2:'tp2',p3:'tp3',p4:'tp4',p5:'tp5'};
+const PNAMES={p1:'居家活跃',p2:'活跃退休',p3:'燕园独立',p4:'燕园护理',p5:'全护理'};
+const PSECNAMES={p1:'居家活跃 52–64',p2:'活跃退休 65–74',p3:'燕园独立 75–82',p4:'燕园护理 83–94',p5:'全护理 95–105'};
+
+// ── CHART 1: 万能账户余额 ──
+new Chart(document.getElementById('c1').getContext('2d'),{
+  type:'line',
+  data:{labels:D.map(r=>r[0]+'岁'),datasets:[
+    // shade: deficit zones
+    {label:'③ 不卖余额',data:D.map(r=>+(r[3]/10000).toFixed(0)),
+      borderColor:'var(--c2)',borderWidth:2,pointRadius:0,
+      fill:{target:0,below:'rgba(220,38,38,.08)'},tension:.3,borderDash:[3,3]},
+    {label:'② 2039余额',data:D.map(r=>+(r[2]/10000).toFixed(0)),
+      borderColor:'var(--c1)',borderWidth:2,pointRadius:0,
+      fill:{target:0,below:'rgba(22,163,74,.05)'},tension:.3,borderDash:[6,3]},
+    {label:'① 2029余额',data:D.map(r=>+(r[1]/10000).toFixed(0)),
+      borderColor:'var(--c0)',borderWidth:2.5,pointRadius:0,
+      fill:{target:0,below:'rgba(37,99,235,.05)'},tension:.3},
+  ]},
+  options:{responsive:true,interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false},tooltip:{callbacks:{
+      title:its=>`${D[its[0].dataIndex][0]}岁 · ${D[its[0].dataIndex][1]}年`,
+      afterBody:its=>{
+        const i=its[0].dataIndex,r=D[i];
+        const lines=[];
+        if(EVENTS[r[0]])lines.push('📌 '+EVENTS[r[0]]);
+        lines.push(`① 2029: ${(r[1]/10000).toFixed(0)}万`);
+        lines.push(`② 2039: ${(r[2]/10000).toFixed(0)}万`);
+        lines.push(`③ 不卖: ${(r[3]/10000).toFixed(0)}万`);
+        return lines;
+      }
+    }}},
+    scales:{
+      x:{grid:{display:false},ticks:{color:'#8b8fa8',font:{size:10},
+        callback:(v,i)=>D[i][0]%5===0?D[i][0]+'岁':''}},
+      y:{grid:{color:'#e8e4dc'},ticks:{color:'#8b8fa8',font:{size:10},callback:v=>v+'万'},
+        title:{display:true,text:'万能账户余额（万元）',color:'#8b8fa8',font:{size:10}}}
+    }
+  }
+});
+
+// ── CHART 2: Annual hard deficit ──
+const def1=D.map(r=>r[8]<0?+(r[8]/10000).toFixed(1):0); // nosale residual
+const def2=D.map(r=>r[9]<0?+(r[9]/10000).toFixed(1):0); // late residual
+new Chart(document.getElementById('c2').getContext('2d'),{
+  type:'bar',
+  data:{labels:D.map(r=>r[0]+'岁'),datasets:[
+    {label:'③ 不卖硬缺口',data:def1,backgroundColor:'rgba(220,38,38,.65)',order:1},
+    {label:'② 2039硬缺口',data:def2,backgroundColor:'rgba(22,163,74,.7)',order:1},
+    {label:'① 零缺口',data:D.map(()=>0),borderColor:'rgba(37,99,235,.5)',borderWidth:2,
+      type:'line',pointRadius:0,fill:false,order:0},
+  ]},
+  options:{responsive:true,interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false},tooltip:{callbacks:{
+      title:its=>`${D[its[0].dataIndex][0]}岁 · ${D[its[0].dataIndex][1]}年`,
+      afterBody:its=>{
+        const i=its[0].dataIndex,r=D[i];
+        const d1=r[8],d2=r[9];
+        return [
+          `① 2029: 无硬缺口 ✅`,
+          d2<0?`② 2039: 硬缺口 ${(d2/10000).toFixed(1)}万`:`② 2039: 无硬缺口 ✅`,
+          d1<0?`③ 不卖: 硬缺口 ${(d1/10000).toFixed(1)}万`:`③ 不卖: 无硬缺口 ✅`,
+          EVENTS[r[0]]?'📌 '+EVENTS[r[0]]:'',
+        ].filter(Boolean);
+      }
+    }}},
+    scales:{
+      x:{grid:{display:false},ticks:{color:'#8b8fa8',font:{size:10},
+        callback:(v,i)=>D[i][0]%5===0?D[i][0]+'岁':''}},
+      y:{grid:{color:'#e8e4dc'},ticks:{color:'#8b8fa8',font:{size:10},callback:v=>v+'万'},
+        title:{display:true,text:'年度硬缺口（万元，负值）',color:'#8b8fa8',font:{size:10}}}
+    }
+  }
+});
+
+// ── CHART 3: Cumulative deficit ──
+let cum1=0,cum2=0;
+const cDef1=[],cDef2=[];
+D.forEach(r=>{cum1+=Math.abs(Math.min(0,r[8]));cDef1.push(+(cum1/10000).toFixed(0));});
+D.forEach(r=>{cum2+=Math.abs(Math.min(0,r[9]));cDef2.push(+(cum2/10000).toFixed(0));});
+
+new Chart(document.getElementById('c3').getContext('2d'),{
+  type:'line',
+  data:{labels:D.map(r=>r[0]+'岁'),datasets:[
+    {label:'③ 不卖累计缺口',data:cDef1,borderColor:'var(--c2)',borderWidth:2.5,
+      fill:{target:'origin',above:'rgba(220,38,38,.08)'},pointRadius:0,tension:.3,borderDash:[3,3]},
+    {label:'② 2039累计缺口',data:cDef2,borderColor:'var(--c1)',borderWidth:2.5,
+      fill:{target:'origin',above:'rgba(22,163,74,.06)'},pointRadius:0,tension:.3,borderDash:[6,3]},
+    {label:'① 2029零缺口',data:D.map(()=>0),borderColor:'var(--c0)',borderWidth:2,
+      pointRadius:0,fill:false},
+    {type:'line',label:'投资组合上限',
+      data:D.map(r=>r[0]>=55?523:null),
+      borderColor:'#f59e0b',borderWidth:1.5,pointRadius:0,fill:false,
+      borderDash:[4,4],spanGaps:true},
+  ]},
+  options:{responsive:true,interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false},tooltip:{callbacks:{
+      title:its=>`${D[its[0].dataIndex][0]}岁 · ${D[its[0].dataIndex][1]}年`,
+      afterBody:its=>{
+        const i=its[0].dataIndex;
+        return [
+          `① 累计: 0万 ✅`,
+          `② 累计: ${cDef2[i]}万${cDef2[i]>523?' ⚠️>投资组合':''}`,
+          `③ 累计: ${cDef1[i]}万${cDef1[i]>523?' ❌远超投资组合':''}`,
+          `投资组合上限: ~523万`,
+        ];
+      }
+    }}},
+    scales:{
+      x:{grid:{display:false},ticks:{color:'#8b8fa8',font:{size:10},
+        callback:(v,i)=>D[i][0]%5===0?D[i][0]+'岁':''}},
+      y:{grid:{color:'#e8e4dc'},ticks:{color:'#8b8fa8',font:{size:10},callback:v=>v+'万'},
+        title:{display:true,text:'累计硬缺口（万元）',color:'#8b8fa8',font:{size:10}}}
+    }
+  }
+});
+
+// ── TABLE ──
+let mode='key';
+const KEY_AGES=new Set([52,55,58,60,64,65,70,75,78,82,83,86,87,90,94,95,100,101,105,...Object.keys(EVENTS).map(Number)]);
+function renderTable(m){
+  let html='',lph='';
+  D.forEach(r=>{
+    const [age,yr,w0,w1,w2,g0,g1,g2,res1,res2]=r;
+    if(m==='key'&&!KEY_AGES.has(age))return;
+    if(m==='post82'&&age<82)return;
+    const ph=phOf(age);
+    if(ph!==lph){html+=`<tr class="psep"><td colspan="9">${PSECNAMES[ph]}</td></tr>`;lph=ph;}
+    const isEv=!!EVENTS[age], isCrit=res1<0||res2<0;
+    // Flow direction for each scenario this year
+    const fl0=g0>0?`<span class="sv">+${(g0/10000).toFixed(1)}万</span>`:`<span style="color:#aaa">${(g0/10000).toFixed(1)}万</span>`;
+    const fl1=g1>0?`<span class="sv">+${(g1/10000).toFixed(1)}万</span>`:w1>0?`<span style="color:#ea580c">${(g1/10000).toFixed(1)}万</span>`:`<span class="dv">${(g1/10000).toFixed(1)}万</span>`;
+    const fl2=g2>0?`<span class="sv">+${(g2/10000).toFixed(1)}万</span>`:w2>0?`<span style="color:#ea580c">${(g2/10000).toFixed(1)}万</span>`:`<span class="dv">${(g2/10000).toFixed(1)}万</span>`;
+    html+=`<tr class="${isEv?'ev':isCrit?'crit':''}">
+      <td>${age} / ${age+2}<span class="ptag ${PTAG[ph]}">${PNAMES[ph]}</span>
+        ${isEv?`<br><small style="color:#7a6010;font-size:10px">📌 ${EVENTS[age]}</small>`:''}
+      </td>
+      <td class="wv">${(w0/10000).toFixed(0)}万</td>
+      <td style="color:${w2>0?'var(--c1)':'#dc2626'};font-weight:600">${(w2/10000).toFixed(0)}万</td>
+      <td style="color:${w1>0?'var(--wan)':'#dc2626'};font-weight:600">${(w1/10000).toFixed(0)}万</td>
+      <td>${fl0}</td><td>${fl2}</td><td>${fl1}</td>
+      <td>${res2<0?`<span class="tag-warn">-${Math.abs(res2/10000).toFixed(1)}万</span>`:res2===0&&w2===0&&g2<0?`<span class="tag-warn">-${Math.abs(g2/10000).toFixed(1)}万</span>`:'<span class="tag-ok">无</span>'}</td>
+      <td>${res1<0?`<span class="tag-crit">-${Math.abs(res1/10000).toFixed(1)}万</span>`:res1===0&&w1===0&&g1<0?`<span class="tag-crit">-${Math.abs(g1/10000).toFixed(1)}万</span>`:'<span class="tag-ok">无</span>'}</td>
+    </tr>`;
+  });
+  document.getElementById('tb').innerHTML=html;
+}
+renderTable('key');
+function setTbl(m,btn){document.querySelectorAll('.tgl').forEach(b=>b.classList.remove('on'));btn.classList.add('on');mode=m;renderTable(m);}
+</script>
+</body>
+</html>

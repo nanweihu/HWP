@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>保险规划方案</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-pale: #F5E9C8;
+    --navy: #1A2744;
+    --navy-mid: #263459;
+    --navy-light: #3A4F7A;
+    --cream: #FDFAF3;
+    --white: #FFFFFF;
+    --text-dark: #1A1A2E;
+    --text-mid: #4A4A6A;
+    --green: #2E7D52;
+    --green-light: #E8F5EE;
+    --red-soft: #B5451B;
+    --tag-bg: #EEF2FF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--navy);
+    font-family: 'Noto Sans SC', sans-serif;
+    color: var(--text-dark);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  .wrapper {
+    max-width: 780px;
+    margin: 0 auto;
+    background: var(--cream);
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, #1E3A6E 100%);
+    padding: 36px 32px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,76,0.18) 0%, transparent 70%);
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent);
+  }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+  .badge {
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.4);
+    color: var(--gold-light);
+    font-size: 11px;
+    letter-spacing: 2px;
+    padding: 4px 12px;
+    border-radius: 2px;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-weight: 500;
+  }
+  .total-badge {
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 14px;
+    border-radius: 2px;
+    letter-spacing: 1px;
+  }
+  .header h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+  .header h1 span {
+    color: var(--gold-light);
+  }
+  .header-sub {
+    color: rgba(255,255,255,0.6);
+    font-size: 13px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ===== OVERVIEW STRIP ===== */
+  .overview {
+    background: var(--gold);
+    padding: 14px 32px;
+    display: flex;
+    gap: 0;
+    align-items: center;
+    justify-content: space-around;
+  }
+  .ov-item {
+    text-align: center;
+    color: var(--navy);
+  }
+  .ov-num {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+  .ov-label {
+    font-size: 11px;
+    font-weight: 500;
+    opacity: 0.75;
+    letter-spacing: 0.5px;
+  }
+  .ov-div {
+    width: 1px;
+    height: 36px;
+    background: rgba(26,39,68,0.25);
+  }
+
+  /* ===== SECTION ===== */
+  .section {
+    padding: 28px 32px 24px;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+  }
+  .section:last-child { border-bottom: none; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .section-num {
+    width: 32px; height: 32px;
+    background: var(--navy);
+    color: var(--gold);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 15px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .section-title {
+    flex: 1;
+  }
+  .section-title h2 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.2;
+  }
+  .section-title .product-tag {
+    display: inline-block;
+    margin-top: 3px;
+    font-size: 11px;
+    color: var(--gold);
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.3);
+    padding: 1px 8px;
+    border-radius: 2px;
+    letter-spacing: 0.5px;
+  }
+  .amount-pill {
+    background: var(--navy);
+    color: var(--gold-light);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    font-family: 'Noto Serif SC', serif;
+  }
+
+  /* ===== TIMELINE ===== */
+  .timeline {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    margin-bottom: 18px;
+    position: relative;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    top: 16px; left: 16px;
+    right: 16px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+    z-index: 0;
+  }
+  .tl-item {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+  .tl-dot {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 2.5px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--navy);
+    font-family: 'Noto Serif SC', serif;
+  }
+  .tl-dot.highlight {
+    background: var(--gold);
+    color: var(--navy);
+    border-color: var(--gold);
+  }
+  .tl-year {
+    font-size: 10px;
+    color: var(--gold);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+  }
+  .tl-desc {
+    font-size: 10.5px;
+    color: var(--text-mid);
+    line-height: 1.3;
+  }
+  .tl-desc strong {
+    display: block;
+    font-size: 13px;
+    color: var(--red-soft);
+    font-weight: 700;
+    font-family: 'Noto Serif SC', serif;
+  }
+
+  /* ===== CARDS ROW ===== */
+  .cards-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .info-card {
+    background: var(--white);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 6px;
+    padding: 12px 14px;
+  }
+  .info-card.full-width {
+    grid-column: 1 / -1;
+  }
+  .info-card-label {
+    font-size: 10px;
+    color: var(--gold);
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .info-card-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+    font-family: 'Noto Serif SC', serif;
+    line-height: 1.4;
+  }
+  .info-card-sub {
+    font-size: 11px;
+    color: var(--text-mid);
+    margin-top: 2px;
+    line-height: 1.3;
+  }
+
+  /* ===== BENEFIT TABLE ===== */
+  .benefit-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 14px;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .benefit-table thead tr {
+    background: var(--navy);
+  }
+  .benefit-table thead th {
+    color: var(--gold-light);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 9px 12px;
+    text-align: left;
+    letter-spacing: 0.5px;
+  }
+  .benefit-table tbody tr {
+    background: var(--white);
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+    transition: background 0.2s;
+  }
+  .benefit-table tbody tr:nth-child(even) {
+    background: var(--cream);
+  }
+  .benefit-table tbody td {
+    padding: 9px 12px;
+    font-size: 12.5px;
+    color: var(--text-dark);
+    vertical-align: middle;
+  }
+  .benefit-table tbody td:first-child {
+    color: var(--navy-light);
+    font-weight: 600;
+    font-size: 11px;
+  }
+  .benefit-table .highlight-cell {
+    color: var(--red-soft);
+    font-weight: 700;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 14px;
+  }
+
+  /* ===== SCENARIO TABS ===== */
+  .scenario-label {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .sc-tag {
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  .sc-tag.a {
+    background: rgba(46,125,82,0.1);
+    color: var(--green);
+    border: 1px solid rgba(46,125,82,0.3);
+  }
+  .sc-tag.b {
+    background: rgba(26,39,68,0.08);
+    color: var(--navy);
+    border: 1px solid rgba(26,39,68,0.2);
+  }
+
+  .scenario-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .sc-box {
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .sc-box-header {
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .sc-box.a .sc-box-header {
+    background: var(--green);
+    color: var(--white);
+  }
+  .sc-box.b .sc-box-header {
+    background: var(--navy);
+    color: var(--gold-light);
+  }
+  .sc-box-body {
+    background: var(--white);
+    border: 1px solid rgba(0,0,0,0.08);
+    border-top: none;
+    padding: 12px 14px;
+  }
+  .sc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 4px 0;
+    border-bottom: 1px dashed rgba(201,168,76,0.15);
+    font-size: 12px;
+  }
+  .sc-row:last-child { border-bottom: none; }
+  .sc-row-label { color: var(--text-mid); }
+  .sc-row-value {
+    font-weight: 700;
+    color: var(--navy);
+    font-family: 'Noto Serif SC', serif;
+    font-size: 13px;
+  }
+  .sc-row-value.big {
+    color: var(--red-soft);
+    font-size: 15px;
+  }
+
+  /* ===== TAGS ROW ===== */
+  .tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .tag {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--white);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 12px;
+    color: var(--text-dark);
+    font-weight: 500;
+  }
+  .tag .icon {
+    font-size: 14px;
+  }
+  .tag.green {
+    background: var(--green-light);
+    border-color: rgba(46,125,82,0.3);
+    color: var(--green);
+    font-weight: 600;
+  }
+  .tag.gold {
+    background: rgba(201,168,76,0.1);
+    border-color: rgba(201,168,76,0.4);
+    color: #8B6914;
+    font-weight: 600;
+  }
+
+  /* ===== DIVIDER ===== */
+  .gold-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent);
+    margin: 8px 0 20px;
+  }
+
+  /* ===== PERKS SECTION ===== */
+  .perks-section {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    padding: 28px 32px;
+  }
+  .perks-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 16px;
+    color: var(--gold-light);
+    font-weight: 700;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .perks-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(201,168,76,0.3);
+  }
+
+  .perks-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .perk-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .perk-card.wide {
+    grid-column: 1 / -1;
+  }
+  .perk-icon { font-size: 22px; margin-bottom: 6px; }
+  .perk-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gold-light);
+    margin-bottom: 4px;
+    font-family: 'Noto Serif SC', serif;
+  }
+  .perk-desc {
+    font-size: 11.5px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.5;
+  }
+  .perk-badge {
+    display: inline-block;
+    margin-top: 5px;
+    background: rgba(201,168,76,0.2);
+    border: 1px solid rgba(201,168,76,0.4);
+    color: var(--gold-light);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    background: var(--navy);
+    border-top: 1px solid rgba(201,168,76,0.2);
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-left {
+    color: rgba(255,255,255,0.5);
+    font-size: 11px;
+    line-height: 1.5;
+  }
+  .footer-seal {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(201,168,76,0.4);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold);
+    font-size: 18px;
+  }
+
+  /* ===== HIGHLIGHT NOTE ===== */
+  .note-box {
+    background: rgba(201,168,76,0.08);
+    border-left: 3px solid var(--gold);
+    padding: 10px 14px;
+    border-radius: 0 4px 4px 0;
+    margin-bottom: 14px;
+    font-size: 12px;
+    color: var(--text-mid);
+    line-height: 1.6;
+  }
+  .note-box strong { color: var(--navy); }
+
+  @media (max-width: 480px) {
+    .section { padding: 22px 20px 18px; }
+    .header { padding: 28px 20px 22px; }
+    .overview { padding: 12px 16px; }
+    .perks-section { padding: 22px 20px; }
+    .footer { padding: 14px 20px; }
+    .cards-row, .scenario-grid, .perks-grid { grid-template-columns: 1fr; }
+    .scenario-grid .sc-box:last-child, .perks-grid .perk-card.wide { grid-column: 1; }
+    .timeline::before { display: none; }
+    .timeline { flex-direction: column; gap: 10px; align-items: flex-start; }
+    .tl-item { display: flex; align-items: center; gap: 10px; text-align: left; }
+    .tl-dot { margin: 0; flex-shrink: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">
+      <span class="badge">专属保险规划方案</span>
+      <span class="total-badge">总保费 50 万</span>
+    </div>
+    <h1>家庭财富保障<span> · 双保单规划</span></h1>
+    <div class="header-sub">两张保单 · 攻守兼备 · 灵活传承 · 养老无忧</div>
+  </div>
+
+  <!-- OVERVIEW STRIP -->
+  <div class="overview">
+    <div class="ov-item">
+      <div class="ov-num">2</div>
+      <div class="ov-label">张保单</div>
+    </div>
+    <div class="ov-div"></div>
+    <div class="ov-item">
+      <div class="ov-num">3年</div>
+      <div class="ov-label">缴费期限</div>
+    </div>
+    <div class="ov-div"></div>
+    <div class="ov-item">
+      <div class="ov-num">5年</div>
+      <div class="ov-label">最快回本</div>
+    </div>
+    <div class="ov-div"></div>
+    <div class="ov-item">
+      <div class="ov-num">15倍</div>
+      <div class="ov-label">极限收益</div>
+    </div>
+    <div class="ov-div"></div>
+    <div class="ov-item">
+      <div class="ov-num">4个</div>
+      <div class="ov-label">专属权益</div>
+    </div>
+  </div>
+
+  <!-- ===== POLICY 1 ===== -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">壹</div>
+      <div class="section-title">
+        <h2>鑫享世家增额终身寿</h2>
+        <span class="product-tag">增额终身寿 · 家庭金库</span>
+      </div>
+      <div class="amount-pill">保费 15万</div>
+    </div>
+
+    <div class="cards-row">
+      <div class="info-card">
+        <div class="info-card-label">缴费方式</div>
+        <div class="info-card-value">3 年交清</div>
+        <div class="info-card-sub">每年 5 万，轻松完成</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-label">回本时间</div>
+        <div class="info-card-value">第 5 年起</div>
+        <div class="info-card-sub">退保无损失，随取随用</div>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot">5年</div>
+        <div class="tl-year">回本</div>
+        <div class="tl-desc"><strong>1×</strong>退保无损</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">27年</div>
+        <div class="tl-year">第27年</div>
+        <div class="tl-desc"><strong>2×</strong>翻倍</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">39年</div>
+        <div class="tl-year">第39年</div>
+        <div class="tl-desc"><strong>3×</strong>三倍</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">48年</div>
+        <div class="tl-year">第48年</div>
+        <div class="tl-desc"><strong>4×</strong>四倍</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot highlight">极限</div>
+        <div class="tl-year">终身</div>
+        <div class="tl-desc"><strong>7×</strong>七倍</div>
+      </div>
+    </div>
+
+    <div class="note-box">
+      💡 <strong>核心优势：</strong>自由提取，无需申请，随时使用，是您的<strong>私人金库</strong>——子女教育、应急备用、养老补充，随心调配，复利持续增长。
+    </div>
+
+    <div class="tags-row">
+      <div class="tag green"><span class="icon">✅</span>5年退保无损</div>
+      <div class="tag"><span class="icon">🔓</span>随时提取</div>
+      <div class="tag"><span class="icon">📈</span>复利增值</div>
+      <div class="tag"><span class="icon">🏦</span>终身金库</div>
+    </div>
+  </div>
+
+  <!-- ===== POLICY 2 ===== -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">贰</div>
+      <div class="section-title">
+        <h2>泰盈人生优享版年金分红险</h2>
+        <span class="product-tag">年金分红 · 万能账户</span>
+      </div>
+      <div class="amount-pill">保费 35万</div>
+    </div>
+
+    <div class="note-box">
+      🎯 <strong>一张保单，两种方案</strong>：可选<strong>女儿（10岁）</strong>或<strong>您本人</strong>作为被保险人，收益节奏不同，各有侧重，下方为您详细对比。
+    </div>
+
+    <div class="scenario-grid">
+
+      <!-- SCENARIO A: 女儿 -->
+      <div class="sc-box a">
+        <div class="sc-box-header">📌 方案 A · 女儿为被保人</div>
+        <div class="sc-box-body">
+          <div class="sc-row">
+            <span class="sc-row-label">第5年起 每年</span>
+            <span class="sc-row-value">≈3万/年</span>
+          </div>
+          <div class="sc-row">
+            <span class="sc-row-label">18~21岁大学期间</span>
+            <span class="sc-row-value big">5万/年</span>
+          </div>
+          <div class="sc-row">
+            <span class="sc-row-label">女儿30岁成家</span>
+            <span class="sc-row-value big">14万</span>
+          </div>
+          <div class="sc-row">
+            <span class="sc-row-label">未领金额</span>
+            <span class="sc-row-value">自动万能账户</span>
+          </div>
+          <div class="sc-row">
+            <span class="sc-row-label">极限收益</span>
+            <span class="sc-row-value big">本金 15×</span>
+          </div>
+          <div class="sc-row">
+            <span class="sc-row-label">退保无损</span>
+            <span class="sc-row-value">第6年起</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCENARIO B: 本人 -->
+      <div class="sc-box b">
+        <div class="sc-box-header">📌 方案 B · 您本人为被保人</div>
+        <div class="sc-box-body">
+          <div class="sc-row">
+            <span class="sc-row-label">每年领取</span>
+            <span class="sc-row-value big">4万/年</span>
+          </div>
+          <div class="sc-row">
+            <span class="sc-row-label">年金+分红</span>
+            <span class="sc-row-value">持续领取</span>
+          </div>
+          <div class="sc-row">
+            <span class="sc-row-label">60岁后</span>
+            <span class="sc-row-value">保证25年</span>
+          </div>
+          <div class="sc-row">
+            <span class="sc-row-label">最长领至</span>
+            <span class="sc-row-value">105岁</span>
+          </div>
+          <div class="sc-row">
+            <span class="sc-row-label">极限收益</span>
+            <span class="sc-row-value big">本金 7×</span>
+          </div>
+          <div class="sc-row">
+            <span class="sc-row-label">退保无损</span>
+            <span class="sc-row-value">第6年起</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key features table -->
+    <table class="benefit-table">
+      <thead>
+        <tr>
+          <th>核心特点</th>
+          <th>方案A（女儿）</th>
+          <th>方案B（本人）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>年金节奏</td>
+          <td>按女儿成长里程碑自动发放</td>
+          <td>每年稳定领取 4 万</td>
+        </tr>
+        <tr>
+          <td>未领金额</td>
+          <td colspan="2" style="text-align:center;">自动进入万能账户，继续增值，随时取用</td>
+        </tr>
+        <tr>
+          <td>保证领取</td>
+          <td colspan="2" style="text-align:center; font-weight:600; color:#1A2744;">60岁后，保证25年 · 最长至105岁</td>
+        </tr>
+        <tr>
+          <td>极限倍数</td>
+          <td class="highlight-cell">本金 15 倍</td>
+          <td class="highlight-cell">本金 7 倍</td>
+        </tr>
+        <tr>
+          <td>退保无损</td>
+          <td colspan="2" style="text-align:center; color:#2E7D52; font-weight:600;">✅ 第6年起，退保不亏损</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="tags-row">
+      <div class="tag green"><span class="icon">✅</span>6年退保无损</div>
+      <div class="tag"><span class="icon">🎓</span>教育金自动拨付</div>
+      <div class="tag"><span class="icon">💍</span>成家立业专属支取</div>
+      <div class="tag"><span class="icon">🏦</span>万能账户托底</div>
+    </div>
+  </div>
+
+  <!-- ===== PERKS ===== -->
+  <div class="perks-section">
+    <div class="perks-title">✦ 专属附加权益</div>
+
+    <div class="perks-grid">
+      <div class="perk-card">
+        <div class="perk-icon">🏥</div>
+        <div class="perk-name">重疾绿色通道</div>
+        <div class="perk-desc">每张保单各赠一个重疾绿通，共 <strong style="color:var(--gold-light)">2个</strong>，终身有效，可转让给家人使用</div>
+        <span class="perk-badge">终身有效 · 可转让</span>
+      </div>
+      <div class="perk-card">
+        <div class="perk-icon">🏡</div>
+        <div class="perk-name">护理版养老社区</div>
+        <div class="perk-desc">35万保单（泰盈人生）可申请<strong style="color:var(--gold-light)">护理型养老社区确认函</strong>，优先锁定入住资格</div>
+        <span class="perk-badge">35万保单专属</span>
+      </div>
+      <div class="perk-card wide">
+        <div class="perk-icon">🌇</div>
+        <div class="perk-name">拼单养老社区 · 未来可期</div>
+        <div class="perk-desc">所有保单未来均可<strong style="color:var(--gold-light)">合并计算权益、共同拼单</strong>，一键入住高品质养老社区，既保障自己，也为女儿减轻未来负担</div>
+        <span class="perk-badge">全保单通用</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <div class="footer">
+    <div class="footer-left">
+      本方案为个性化定制规划<br>
+      专业用心 · 为您量身设计
+    </div>
+    <div class="footer-seal">⚜</div>
+  </div>
+
+</div>
+</body>
+</html>

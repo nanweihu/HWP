@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>易学精进计划 · 每日课表与学习资源</title>
+<style>
+  :root {
+    --zw: #534AB7; --zw-l: #EEEDFE; --zw-m: #7F77DD; --zw-d: #26215C;
+    --bz: #BA7517; --bz-l: #FAEEDA; --bz-m: #EF9F27; --bz-d: #412402;
+    --qm: #0F6E56; --qm-l: #E1F5EE; --qm-m: #1D9E75; --qm-d: #04342C;
+    --biz: #993C1D; --biz-l: #FAECE7; --biz-m: #D85A30; --biz-d: #4A1B0C;
+    --gray: #5F5E5A; --gray-l: #F1EFE8; --gray-m: #888780; --gray-d: #2C2C2A;
+    --bg: #ffffff; --bg2: #F8F7F4; --bg3: #F1EFE8;
+    --text: #1a1a18; --text2: #5F5E5A; --text3: #888780;
+    --border: #D3D1C7; --border2: #B4B2A9;
+    --radius: 10px; --radius-sm: 6px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: var(--bg2); color: var(--text); font-size: 14px; line-height: 1.7; }
+  
+  /* Layout */
+  .sidebar { position: fixed; top: 0; left: 0; width: 220px; height: 100vh; background: var(--bg); border-right: 1px solid var(--border); overflow-y: auto; z-index: 100; padding: 20px 0 40px; }
+  .main { margin-left: 220px; padding: 32px 40px 80px; max-width: 900px; }
+  
+  /* Sidebar */
+  .sidebar-logo { padding: 0 20px 16px; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
+  .sidebar-logo h1 { font-size: 14px; font-weight: 600; color: var(--text); }
+  .sidebar-logo p { font-size: 11px; color: var(--text3); margin-top: 2px; }
+  .nav-section { padding: 8px 20px 4px; font-size: 11px; font-weight: 600; color: var(--text3); letter-spacing: 0.05em; text-transform: uppercase; }
+  .nav-item { display: block; padding: 6px 20px; font-size: 13px; color: var(--text2); text-decoration: none; cursor: pointer; border-left: 2px solid transparent; transition: all 0.15s; }
+  .nav-item:hover { background: var(--bg2); color: var(--text); }
+  .nav-item.active { border-left-color: var(--zw-m); color: var(--zw); background: var(--zw-l); font-weight: 500; }
+  .nav-item.sub { padding-left: 32px; font-size: 12px; }
+  
+  /* Sections */
+  .section { display: none; }
+  .section.active { display: block; }
+  
+  /* Headers */
+  h2 { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  h3 { font-size: 16px; font-weight: 600; color: var(--text); margin: 24px 0 10px; }
+  h4 { font-size: 14px; font-weight: 600; color: var(--text); margin: 16px 0 8px; }
+  .subtitle { font-size: 13px; color: var(--text3); margin-bottom: 24px; }
+  
+  /* Cards */
+  .card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
+  .card-sm { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 10px; }
+  
+  /* Phase header */
+  .phase-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+  .phase-badge { font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 20px; }
+  .phase-title-block h2 { margin-bottom: 2px; }
+  
+  /* Domain badge */
+  .domain-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+  
+  /* Schedule grid */
+  .schedule-grid { display: grid; gap: 10px; }
+  .time-block { display: flex; gap: 14px; align-items: flex-start; }
+  .time-label { min-width: 90px; font-size: 12px; font-weight: 600; color: var(--text3); padding-top: 2px; flex-shrink: 0; }
+  .time-content { flex: 1; padding: 12px 14px; border-radius: var(--radius-sm); }
+  .time-content h4 { margin: 0 0 6px; font-size: 13px; }
+  .time-content ul { padding-left: 16px; }
+  .time-content ul li { font-size: 13px; color: var(--text2); margin-bottom: 3px; }
+  .time-note { font-size: 12px; color: var(--text3); font-style: italic; margin-top: 4px; }
+  .walk-block { background: var(--qm-l); border-left: 3px solid var(--qm-m); display:flex; align-items:center; gap:10px; }
+  .walk-block h4 { color: var(--qm); margin:0; font-size:13px; }
+  .walk-block p { font-size:12px; color: var(--qm-d); margin:0; }
+  
+  /* Stats row */
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 20px; }
+  .stat-card { background: var(--bg2); border-radius: var(--radius-sm); padding: 12px; text-align: center; }
+  .stat-num { font-size: 20px; font-weight: 600; }
+  .stat-label { font-size: 11px; color: var(--text3); margin-top: 2px; }
+  
+  /* Weekly rhythm */
+  .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 20px; }
+  .day-card { background: var(--bg2); border-radius: var(--radius-sm); padding: 10px 8px; text-align: center; }
+  .day-name { font-size: 11px; font-weight: 600; color: var(--text3); margin-bottom: 6px; }
+  .day-dot { width: 8px; height: 8px; border-radius: 50%; margin: 2px auto; }
+  .day-label { font-size: 10px; color: var(--text3); margin-top: 4px; }
+  
+  /* Resources */
+  .resource-category { margin-bottom: 28px; }
+  .resource-list { display: flex; flex-direction: column; gap: 8px; }
+  .resource-item { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start; }
+  .resource-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .resource-body h4 { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .resource-body p { font-size: 12px; color: var(--text2); line-height: 1.5; }
+  .resource-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+  .tag { font-size: 11px; padding: 2px 8px; border-radius: 12px; }
+  
+  /* Priority badges */
+  .prio-high { background: #FEE; color: #A32D2D; font-size: 11px; padding: 2px 8px; border-radius: 12px; font-weight: 600; }
+  .prio-mid { background: #FAEEDA; color: #633806; font-size: 11px; padding: 2px 8px; border-radius: 12px; font-weight: 600; }
+  .prio-ref { background: var(--bg3); color: var(--text3); font-size: 11px; padding: 2px 8px; border-radius: 12px; }
+  
+  /* Milestone */
+  .milestone { background: var(--bg2); border-left: 3px solid var(--zw-m); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 12px 16px; margin-top: 20px; }
+  .milestone-label { font-size: 11px; font-weight: 600; color: var(--text3); margin-bottom: 5px; letter-spacing: 0.05em; }
+  .milestone-text { font-size: 13px; color: var(--text); line-height: 1.6; }
+  
+  /* Checklist */
+  .checklist { display: flex; flex-direction: column; gap: 6px; }
+  .check-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 12px; border-radius: var(--radius-sm); background: var(--bg2); }
+  .check-box { width: 16px; height: 16px; border: 1.5px solid var(--border2); border-radius: 4px; flex-shrink: 0; margin-top: 1px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+  .check-box.checked { background: var(--zw-m); border-color: var(--zw-m); }
+  .check-box.checked::after { content: "✓"; color: white; font-size: 10px; }
+  .check-text { font-size: 13px; color: var(--text2); transition: color 0.15s; }
+  .check-text.done { color: var(--text3); text-decoration: line-through; }
+  
+  /* Alert box */
+  .alert { border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 14px; font-size: 13px; line-height: 1.6; }
+  .alert-tip { background: #E6F1FB; border-left: 3px solid #378ADD; color: #0C447C; }
+  .alert-warn { background: #FAEEDA; border-left: 3px solid #BA7517; color: #633806; }
+  .alert-success { background: #EAF3DE; border-left: 3px solid #3B6D11; color: #27500A; }
+  
+  /* Table */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 16px; }
+  th { background: var(--bg3); text-align: left; padding: 8px 12px; font-weight: 600; color: var(--text2); border-bottom: 1px solid var(--border); }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text2); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  
+  /* Colors per domain */
+  .zw { background: var(--zw-l); } .zw-text { color: var(--zw); }
+  .bz { background: var(--bz-l); } .bz-text { color: var(--bz); }
+  .qm { background: var(--qm-l); } .qm-text { color: var(--qm); }
+  .biz { background: var(--biz-l); } .biz-text { color: var(--biz); }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; padding: 20px 16px; }
+    .week-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+  
+  /* Print */
+  @media print {
+    .sidebar { display: none; }
+    .main { margin-left: 0; }
+    .section { display: block !important; }
+  }
+  
+  hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+  
+  .pill { display: inline-block; font-size: 11px; padding: 1px 8px; border-radius: 20px; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- Sidebar Navigation -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <h1>易学精进计划</h1>
+    <p>2026.4 — 2027.12</p>
+  </div>
+  <div class="nav-section">每日课表</div>
+  <a class="nav-item active" onclick="show('p1')">阶段一 · 奠基深化</a>
+  <a class="nav-item sub" onclick="show('p1')">2026.4 — 2026.6</a>
+  <a class="nav-item" onclick="show('p2')">阶段二 · 案例积累</a>
+  <a class="nav-item sub" onclick="show('p2')">2026.7 — 2026.9</a>
+  <a class="nav-item" onclick="show('p3')">阶段三 · 实战突破</a>
+  <a class="nav-item sub" onclick="show('p3')">2026.10 — 2027.2</a>
+  <a class="nav-item" onclick="show('p4')">阶段四 · 盈利整合</a>
+  <a class="nav-item sub" onclick="show('p4')">2027.3 — 2027.12</a>
+  <div class="nav-section" style="margin-top:8px">学习资源</div>
+  <a class="nav-item" onclick="show('res-zw')">紫微斗数资源</a>
+  <a class="nav-item" onclick="show('res-bz')">八字资源</a>
+  <a class="nav-item" onclick="show('res-qm')">奇门遁甲资源</a>
+  <a class="nav-item" onclick="show('res-biz')">商业变现资源</a>
+  <div class="nav-section" style="margin-top:8px">工具</div>
+  <a class="nav-item" onclick="show('tracker')">每周追踪表</a>
+  <a class="nav-item" onclick="show('sop')">断事SOP</a>
+</nav>
+
+<!-- Main Content -->
+<div class="main">
+
+<!-- ============ PHASE 1 ============ -->
+<div id="p1" class="section active">
+  <div class="phase-header">
+    <div class="phase-badge" style="background:var(--zw-l);color:var(--zw-d)">阶段一</div>
+    <div class="phase-title-block">
+      <h2>奠基深化</h2>
+      <p class="subtitle" style="margin:0">2026年4月 — 2026年6月 · 共3个月 · 每日8–10小时</p>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num zw-text">5h</div><div class="stat-label">紫微斗数/日</div></div>
+    <div class="stat-card"><div class="stat-num bz-text">2.5h</div><div class="stat-label">八字/日</div></div>
+    <div class="stat-card"><div class="stat-num qm-text">0.5h</div><div class="stat-label">奇门/日</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--gray)">≥10</div><div class="stat-label">案例/日</div></div>
+  </div>
+
+  <div class="alert alert-tip">核心任务：把北派四化的"道理"变成"肌肉记忆"。这一阶段不急于断真实客户，重在建立框架、构筑案例库。</div>
+
+  <h3>一、每日标准课表（平日）</h3>
+
+  <div class="schedule-grid">
+    <div class="time-block">
+      <div class="time-label">09:00 – 09:30</div>
+      <div class="time-content" style="background:var(--bg2)">
+        <h4>晨间复盘（30分钟）</h4>
+        <ul><li>回顾前一日案例笔记，写3条"今日重点"</li><li>查阅当日奇门局（维持感觉）</li></ul>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">09:30 – 12:00</div>
+      <div class="time-content zw" style="border-left:3px solid var(--zw-m)">
+        <h4 class="zw-text">紫微斗数 · 精读理论（2.5小时）</h4>
+        <ul>
+          <li>北派四化核心逻辑精读：化禄、化权、化科、化忌的追踪路径</li>
+          <li>以《星侨》或《命理天机》盘面为底，逐一拆解飞星入宫规则</li>
+          <li>每节读完立即做笔记：「星象组合 → 事件类型」对照表</li>
+          <li>第1个月重点：熟练掌握大限飞化的追踪逻辑（前三个大限各画一遍）</li>
+        </ul>
+        <div class="time-note">工具：笔记本手写 + Obsidian数字笔记双轨并行</div>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">12:00 – 12:30</div>
+      <div class="time-content walk-block">
+        <h4>上午散步（30分钟）</h4>
+        <p>户外步行，让眼睛远眺放松，同时消化上午所学</p>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">12:30 – 14:00</div>
+      <div class="time-content" style="background:var(--bg2)">
+        <h4>午休（1.5小时）</h4>
+        <ul><li>可在休息时听课程录音（被动吸收）</li><li>不要强迫学习，大脑需要整合</li></ul>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">14:00 – 16:30</div>
+      <div class="time-content bz" style="border-left:3px solid var(--bz-m)">
+        <h4 class="bz-text">八字 · 系统学习（2.5小时）</h4>
+        <ul>
+          <li><strong>第1个月：</strong>盲派基础强化——十神旺衰、年月柱论六亲、流年大运触发</li>
+          <li><strong>第2个月：</strong>子平派入门——月令用神、格局判断（正格/变格）、调候概念</li>
+          <li><strong>第3个月：</strong>象意专项——每天拆解5组象意组合，建立「天干地支 × 十神 → 事物/事件」字典</li>
+          <li>每天至少用1个已知案例验证当日所学象意</li>
+        </ul>
+        <div class="time-note">象意是最难的，不要急。每日积累，3个月后质变</div>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">16:30 – 17:00</div>
+      <div class="time-content walk-block">
+        <h4>下午散步（30分钟）</h4>
+        <p>午后光线充足，远眺绿植；回来后视力和专注力均有恢复</p>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">17:00 – 17:30</div>
+      <div class="time-content qm" style="border-left:3px solid var(--qm-m)">
+        <h4 class="qm-text">奇门遁甲 · 维持（30分钟）</h4>
+        <ul>
+          <li>排当日局，快速判断格局吉凶</li>
+          <li>如有风水接单，此时间段处理客户反馈</li>
+        </ul>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">17:30 – 19:00</div>
+      <div class="time-content zw" style="border-left:3px solid var(--zw-m)">
+        <h4 class="zw-text">紫微斗数 · 案例复盘 + 三合星耀补充（1.5小时）</h4>
+        <ul>
+          <li>取历史案例（名人命盘优先）逐宫核验四化轨迹，每日3–5个</li>
+          <li>每个案例记录：「事件类型 / 触发大限流年 / 四化组合 / 准确度自评（1-5分）」</li>
+          <li>后半段读三合派星耀细节作为北派"注释层"（十四主星在不同宫位的细化解读）</li>
+        </ul>
+        <div class="time-note">素材来源见「紫微斗数资源」→「案例库」栏目</div>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">19:00 – 19:30</div>
+      <div class="time-content walk-block">
+        <h4>傍晚散步（30分钟）</h4>
+        <p>结束屏幕时间，饭后步行助消化，同时在脑中自由复盘今日所学</p>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">19:30 – 21:00</div>
+      <div class="time-content" style="background:var(--bg2)">
+        <h4>晚间整理（1.5小时）</h4>
+        <ul>
+          <li>整理当日笔记，补充「星象组合对照表」新条目</li>
+          <li>写「每日断事日记」：今日遇到的难点 + 解法（或搁置待验证）</li>
+          <li>规划明日3个重点案例来源</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h3>二、每周节奏（7天安排）</h3>
+  <div class="week-grid">
+    <div class="day-card"><div class="day-name">周一</div><div class="day-dot" style="background:var(--zw-m)"></div><div class="day-dot" style="background:var(--bz-m)"></div><div class="day-label">理论日</div></div>
+    <div class="day-card"><div class="day-name">周二</div><div class="day-dot" style="background:var(--zw-m)"></div><div class="day-dot" style="background:var(--bz-m)"></div><div class="day-label">案例日</div></div>
+    <div class="day-card"><div class="day-name">周三</div><div class="day-dot" style="background:var(--zw-m)"></div><div class="day-dot" style="background:var(--bz-m)"></div><div class="day-label">象意日</div></div>
+    <div class="day-card"><div class="day-name">周四</div><div class="day-dot" style="background:var(--zw-m)"></div><div class="day-dot" style="background:var(--bz-m)"></div><div class="day-label">案例日</div></div>
+    <div class="day-card"><div class="day-name">周五</div><div class="day-dot" style="background:var(--zw-m)"></div><div class="day-dot" style="background:var(--bz-m)"></div><div class="day-label">难点攻克</div></div>
+    <div class="day-card"><div class="day-name">周六</div><div class="day-dot" style="background:var(--zw-m)"></div><div class="day-dot" style="background:var(--qm-m)"></div><div class="day-label">复盘日</div></div>
+    <div class="day-card"><div class="day-name">周日</div><div class="day-dot" style="background:var(--gray-m)"></div><div class="day-label">休整/输出</div></div>
+  </div>
+  <p style="font-size:12px;color:var(--text3);margin-bottom:20px">周六：完整复盘本周案例，统计准确率。周日：输出1篇学习总结（可发朋友圈积累口碑）或彻底休息。</p>
+
+  <div class="milestone">
+    <div class="milestone-label">阶段一里程碑</div>
+    <div class="milestone-text">建立北派四化核心断事框架 · 紫微案例库达300+ · 八字象意初步体系化 · 奇门持续稳定接单</div>
+  </div>
+</div>
+
+<!-- ============ PHASE 2 ============ -->
+<div id="p2" class="section">
+  <div class="phase-header">
+    <div class="phase-badge" style="background:var(--bz-l);color:var(--bz-d)">阶段二</div>
+    <div class="phase-title-block">
+      <h2>案例积累</h2>
+      <p class="subtitle" style="margin:0">2026年7月 — 2026年9月 · 共3个月 · 每日8–10小时</p>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num zw-text">5h</div><div class="stat-label">紫微斗数/日</div></div>
+    <div class="stat-card"><div class="stat-num bz-text">2.5h</div><div class="stat-label">八字/日</div></div>
+    <div class="stat-card"><div class="stat-num qm-text">0.5h</div><div class="stat-label">奇门/日</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--gray)">≥500</div><div class="stat-label">紫微案例累计</div></div>
+  </div>
+
+  <div class="alert alert-tip">核心任务：量变积累。这一阶段的核心是"刷案例"。理论已有基础，现在要让数百个案例把飞星组合和事件类型之间的映射关系烙在大脑中。</div>
+
+  <h3>每日课表</h3>
+  <div class="schedule-grid">
+    <div class="time-block">
+      <div class="time-label">09:00 – 09:30</div>
+      <div class="time-content" style="background:var(--bg2)">
+        <h4>晨间复盘 + 当日案例预读</h4>
+        <ul><li>提前挑好今日3个重点案例，写出「预测」再看答案</li></ul>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">09:30 – 12:00</div>
+      <div class="time-content zw" style="border-left:3px solid var(--zw-m)">
+        <h4 class="zw-text">紫微斗数 · 大量案例复盘（2.5小时）</h4>
+        <ul>
+          <li>每日完成5–8个深度案例（婚姻、健康、财富、子女各类型轮转）</li>
+          <li>重点：先用北派四化定事件性质，再用三合星耀细化人事细节</li>
+          <li>必须覆盖：过去已发生事件（验证准确率）+ 当下状态判断</li>
+          <li>第7–8月：专攻大限+流年双叠加的触发机制</li>
+          <li>第9月：专攻夫妻宫/官禄宫/财帛宫的复杂四化互动</li>
+        </ul>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">12:00 – 12:30</div>
+      <div class="time-content walk-block">
+        <h4>上午散步（30分钟）</h4>
+        <p>户外步行，让眼睛远眺放松，同时在脑中自由联想早上的案例规律</p>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">12:30 – 14:00</div>
+      <div class="time-content" style="background:var(--bg2)"><h4>午休（1.5小时）</h4></div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">14:00 – 15:00</div>
+      <div class="time-content zw" style="border-left:3px solid var(--zw-m)">
+        <h4 class="zw-text">紫微斗数 · 双体系交叉验证（1小时）</h4>
+        <ul>
+          <li>取已完成的八字案例，同一人用紫微重新推演，对比两套体系结论</li>
+          <li>记录：哪类事件两套体系都指向同一结论（高置信度信号）</li>
+        </ul>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">15:00 – 16:30</div>
+      <div class="time-content bz" style="border-left:3px solid var(--bz-m)">
+        <h4 class="bz-text">八字 · 子平整合 + 无时辰推命（1.5小时）</h4>
+        <ul>
+          <li>子平派系统学习：月令用神判断、格局高低（月令是否透干）</li>
+          <li>无时辰推命SOP建立：以年柱+月柱+日柱三柱起格，大运流年补充</li>
+          <li>每日练习3个无时辰案例，建立标准化输出模板</li>
+        </ul>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">16:30 – 17:00</div>
+      <div class="time-content walk-block">
+        <h4>下午散步（30分钟）</h4>
+        <p>午后光线充足，远眺绿植；回来后视力和专注力均有恢复</p>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">17:00 – 18:00</div>
+      <div class="time-content bz" style="border-left:3px solid var(--bz-m)">
+        <h4 class="bz-text">八字 · 象意深化（1小时）</h4>
+        <ul>
+          <li>专项训练：六亲代入（日主视角 → 年干/月干代入 → 事件触发）</li>
+          <li>每天拆解10组象意组合，强制写出3个场景解读</li>
+          <li>用已知案例反推，验证象意对应事件的准确率</li>
+        </ul>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">18:00 – 18:30</div>
+      <div class="time-content qm" style="border-left:3px solid var(--qm-m)">
+        <h4 class="qm-text">奇门遁甲 · 接单处理（30分钟）</h4>
+        <ul><li>处理客户风水咨询，积累真实反馈</li><li>整理接单收益记录（为阶段四定价参考）</li></ul>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">18:30 – 19:00</div>
+      <div class="time-content walk-block">
+        <h4>傍晚散步（30分钟）</h4>
+        <p>结束屏幕时间，饭后步行，同时自由复盘今日案例</p>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">19:00 – 20:30</div>
+      <div class="time-content" style="background:var(--bg2)">
+        <h4>晚间整理（1.5小时）</h4>
+        <ul>
+          <li>更新「星象组合对照表」（紫微）和「象意字典」（八字）</li>
+          <li>写每日断事准确率记录（自评分变化趋势）</li>
+          <li>每周六做月度总结：当月准确率统计 + 薄弱环节分析</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="milestone">
+    <div class="milestone-label">阶段二里程碑</div>
+    <div class="milestone-text">紫微案例累计500+ · 八字无时辰推命SOP建立 · 双体系交叉验证能力形成 · 开始积累身边人口碑（可做义务咨询）</div>
+  </div>
+</div>
+
+<!-- ============ PHASE 3 ============ -->
+<div id="p3" class="section">
+  <div class="phase-header">
+    <div class="phase-badge" style="background:var(--qm-l);color:var(--qm-d)">阶段三</div>
+    <div class="phase-title-block">
+      <h2>实战突破</h2>
+      <p class="subtitle" style="margin:0">2026年10月 — 2027年2月 · 共5个月 · 每日8–10小时</p>
+    </div>
+  </div>
+
+  <div class="alert alert-warn">这是整个计划最关键的阶段。必须开始接触真实客户——即使是义务咨询。断事准确率的提升90%来自真人真事反馈，而不是书本。</div>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num zw-text">4.5h</div><div class="stat-label">紫微斗数/日</div></div>
+    <div class="stat-card"><div class="stat-num bz-text">2.5h</div><div class="stat-label">八字/日</div></div>
+    <div class="stat-card"><div class="stat-num qm-text">0.5h</div><div class="stat-label">奇门/日</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--gray)">≤30分</div><div class="stat-label">限时断事目标</div></div>
+  </div>
+
+  <h3>每日课表</h3>
+  <div class="schedule-grid">
+    <div class="time-block">
+      <div class="time-label">09:00 – 09:30</div>
+      <div class="time-content" style="background:var(--bg2)">
+        <h4>晨间：当日客户/案例准备</h4>
+        <ul><li>如有预约客户，提前看盘，但不做完整分析（留给实战计时）</li></ul>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">09:30 – 12:00</div>
+      <div class="time-content zw" style="border-left:3px solid var(--zw-m)">
+        <h4 class="zw-text">紫微 · 限时断事专项训练（2.5小时）</h4>
+        <ul>
+          <li>每次计时30分钟，完成1个命盘的完整断事输出（过往3件 + 当下 + 未来大限）</li>
+          <li>强制输出，不许犹豫修改，写完再对答案</li>
+          <li>记录每次计时、准确率（过往验证）、客户评价</li>
+          <li>特殊格局专题：双化忌叠加、对宫互化、借宫飞化等</li>
+        </ul>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">12:00 – 12:30</div>
+      <div class="time-content walk-block">
+        <h4>上午散步（30分钟）</h4>
+        <p>户外步行，眼睛放松；可在脑中默默复盘刚才的断事逻辑</p>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">12:30 – 14:00</div>
+      <div class="time-content" style="background:var(--bg2)"><h4>午休（1.5小时）</h4></div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">14:00 – 15:30</div>
+      <div class="time-content zw" style="border-left:3px solid var(--zw-m)">
+        <h4 class="zw-text">紫微 · 真实客户案例处理（1.5小时）</h4>
+        <ul>
+          <li>接受义务/低价咨询，初期建立口碑（每周2–3个客户）</li>
+          <li>咨询结束后立即写复盘笔记：客户反馈 vs 自己断事内容</li>
+          <li>逐渐压缩至20分钟内完成初步断事</li>
+        </ul>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">15:30 – 17:00</div>
+      <div class="time-content bz" style="border-left:3px solid var(--bz-m)">
+        <h4 class="bz-text">八字 · 无时辰实战（1.5小时）</h4>
+        <ul>
+          <li>无时辰客户SOP实战：标准化提问流程（引导客户提供佐证信息）</li>
+          <li>强制象意输出训练：看到干支组合，3秒内说出第一反应，不允许犹豫</li>
+          <li>大运流年精度训练：精确到触发年份（±1年为合格，精确命中为优秀）</li>
+        </ul>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">17:00 – 17:30</div>
+      <div class="time-content walk-block">
+        <h4>下午散步（30分钟）</h4>
+        <p>午后户外，远眺放松；与客户沟通后的心理减压时间</p>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">17:30 – 18:00</div>
+      <div class="time-content qm" style="border-left:3px solid var(--qm-m)">
+        <h4 class="qm-text">奇门遁甲（30分钟）</h4>
+        <ul><li>稳定接单，考虑包月/项目制收费方式</li><li>与易学咨询客户交叉推荐</li></ul>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">18:00 – 19:00</div>
+      <div class="time-content" style="background:var(--bg2)">
+        <h4>进阶专题研究（1小时）</h4>
+        <ul>
+          <li>每周选择1个专题深入研究（例：「化忌入疾厄宫的健康判断」「流年换宫后财运变化」）</li>
+          <li>产出1篇专题笔记（500–1000字），可同步发布积累内容口碑</li>
+        </ul>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">19:00 – 19:30</div>
+      <div class="time-content walk-block">
+        <h4>傍晚散步（30分钟）</h4>
+        <p>结束屏幕，饭后步行，彻底脱离工作状态，让大脑休息</p>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">19:30 – 20:30</div>
+      <div class="time-content" style="background:var(--bg2)">
+        <h4>客户沟通 + 服务流程优化（1小时）</h4>
+        <ul>
+          <li>处理微信咨询，完善接单话术</li>
+          <li>整理客户正面反馈（截图收集，用于后续社群推广）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="milestone">
+    <div class="milestone-label">阶段三里程碑</div>
+    <div class="milestone-text">首批付费易学客户（50–200元/次）· 断事准确率获客户认可 · 10–30分钟内完成完整命盘解读 · 建立标准化服务SOP</div>
+  </div>
+</div>
+
+<!-- ============ PHASE 4 ============ -->
+<div id="p4" class="section">
+  <div class="phase-header">
+    <div class="phase-badge" style="background:var(--biz-l);color:var(--biz-d)">阶段四</div>
+    <div class="phase-title-block">
+      <h2>盈利整合</h2>
+      <p class="subtitle" style="margin:0">2027年3月 — 2027年12月 · 共10个月</p>
+    </div>
+  </div>
+
+  <div class="alert alert-success">这一阶段的核心是「易学 + 保险」协同变现跑通。命盘揭示人生风险节点，自然导入泰康保险规划，两者互相加持，客单价与信任度双提升。</div>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num zw-text">4h</div><div class="stat-label">紫微咨询/日</div></div>
+    <div class="stat-card"><div class="stat-num bz-text">2h</div><div class="stat-label">八字/日</div></div>
+    <div class="stat-card"><div class="stat-num qm-text">0.5h</div><div class="stat-label">奇门/日</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--biz-m)">1.5h</div><div class="stat-label">商业运营/日</div></div>
+  </div>
+
+  <h3>每日课表</h3>
+  <div class="schedule-grid">
+    <div class="time-block">
+      <div class="time-label">09:00 – 12:00</div>
+      <div class="time-content zw" style="border-left:3px solid var(--zw-m)">
+        <h4 class="zw-text">紫微 · 付费客户咨询（3小时）</h4>
+        <ul>
+          <li>每日接待2–4个付费客户（20–30分钟/人），专注输出高质量断事</li>
+          <li>接待后立即复盘，持续优化准确率与表达方式</li>
+          <li>定期接受"难题命盘"挑战，保持精进状态</li>
+          <li>制作部分经典案例解析内容（脱敏后），用于引流</li>
+        </ul>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">12:00 – 12:30</div>
+      <div class="time-content walk-block">
+        <h4>上午散步（30分钟）</h4>
+        <p>连续接待客户后的眼睛与精神放松，户外远眺</p>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">12:30 – 14:00</div>
+      <div class="time-content" style="background:var(--bg2)"><h4>午休（1.5小时）</h4></div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">14:00 – 16:00</div>
+      <div class="time-content bz" style="border-left:3px solid var(--bz-m)">
+        <h4 class="bz-text">八字 · 无时辰咨询 + 持续精进（2小时）</h4>
+        <ul>
+          <li>处理无时辰八字客户，作为紫微的补充服务</li>
+          <li>象意持续打磨：每周找5个"卡壳"组合专项突破</li>
+        </ul>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">16:00 – 16:30</div>
+      <div class="time-content walk-block">
+        <h4>下午散步（30分钟）</h4>
+        <p>午后户外，远眺放松；整理思路，准备下午的商业运营</p>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">16:30 – 17:00</div>
+      <div class="time-content qm" style="border-left:3px solid var(--qm-m)">
+        <h4 class="qm-text">奇门遁甲（30分钟）</h4>
+        <ul><li>稳定接单，与易学套餐组合打包</li></ul>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">17:00 – 18:30</div>
+      <div class="time-content" style="background:var(--biz-l);border-left:3px solid var(--biz-m)">
+        <h4 style="color:var(--biz)">商业整合 · 易学×保险协同（1.5小时）</h4>
+        <ul>
+          <li>私域社群运营：每周发1–2条干货内容，维持活跃度</li>
+          <li>保险转化路径维护：命盘触发风险认知 → 引导保险规划谈话</li>
+          <li>定价体系迭代（单次 / 套餐 / 奇门风水）</li>
+          <li>客户转介绍激励：老客户推荐享优惠</li>
+        </ul>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">18:30 – 19:00</div>
+      <div class="time-content walk-block">
+        <h4>傍晚散步（30分钟）</h4>
+        <p>结束屏幕，饭后步行，彻底关机，让眼睛和大脑都充分休息</p>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">19:00 – 20:00</div>
+      <div class="time-content" style="background:var(--bg2)">
+        <h4>内容输出 + 复盘（1小时）</h4>
+        <ul>
+          <li>每周1篇专题文章或案例解析（公众号/朋友圈）</li>
+          <li>每月做一次收入来源分析（易学/保险/奇门占比）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h3>易学×保险联动转化路径</h3>
+  <div class="card">
+    <table>
+      <tr><th>命盘信号</th><th>人生风险节点</th><th>保险规划切入点</th></tr>
+      <tr><td>疾厄宫化忌 / 大限逢忌</td><td>健康风险年段</td><td>重疾险、医疗险规划</td></tr>
+      <tr><td>财帛宫化忌 / 流年破财</td><td>财务风险意识</td><td>理财型保险、年金规划</td></tr>
+      <tr><td>父母宫 / 子女宫化忌</td><td>家庭保障缺口</td><td>家庭保障规划（寿险、教育金）</td></tr>
+      <tr><td>官禄宫化忌 / 事业不稳</td><td>收入中断风险</td><td>失能险、意外险配置</td></tr>
+      <tr><td>大限晚年宫位不理想</td><td>养老风险意识</td><td>养老金、泰康年金产品</td></tr>
+    </table>
+    <div class="alert alert-tip" style="margin-top:10px">切入话术参考：「您这个大限中疾厄宫有化忌入，这段时间身体方面需要特别注意。刚好我这边也做保险规划，我们可以顺带看看您现有的保障缺口……」</div>
+  </div>
+
+  <div class="milestone">
+    <div class="milestone-label">阶段四里程碑 · 2027年底</div>
+    <div class="milestone-text">易学稳定月收入 · 保险+命理联动转化路径跑通 · 客户主动转介绍 · 获得充分信任 · 多元收入体系成型</div>
+  </div>
+</div>
+
+<!-- ============ RESOURCES: ZW ============ -->
+<div id="res-zw" class="section">
+  <h2>紫微斗数学习资源</h2>
+  <p class="subtitle">以北派四化为主干，三合星耀为辅</p>
+
+  <h3>经典著作（必读）</h3>
+  <div class="resource-list">
+    <div class="resource-item">
+      <div class="resource-icon">📘</div>
+      <div class="resource-body">
+        <h4>《紫微斗数全书》</h4>
+        <p>传统根基文本，所有流派的共同基础。用于理解星曜本义，不拘泥于某派解读。阶段一前两周精读星曜基本含义。</p>
+        <div class="resource-tags"><span class="prio-high">必读</span><span class="tag" style="background:var(--zw-l);color:var(--zw)">基础</span></div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <div class="resource-icon">📘</div>
+      <div class="resource-body">
+        <h4>《紫微斗数之「飞星四化」》· 梁若瑜</h4>
+        <p>北派四化飞星最系统的入门著作。清晰讲解四化追踪逻辑，是你北派深造的核心教材。阶段一第1–2个月精读并反复演练。</p>
+        <div class="resource-tags"><span class="prio-high">核心</span><span class="tag" style="background:var(--zw-l);color:var(--zw)">北派四化</span></div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <div class="resource-icon">📘</div>
+      <div class="resource-body">
+        <h4>《紫微斗数之「宫位飞化」》· 陈世兴（哲瑞）</h4>
+        <p>飞化派权威著作，宫位互动分析极为深入。与梁若瑜体系互为补充，建议阶段一结束后精读。</p>
+        <div class="resource-tags"><span class="prio-high">核心</span><span class="tag" style="background:var(--zw-l);color:var(--zw)">飞星派</span></div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <div class="resource-icon">📘</div>
+      <div class="resource-body">
+        <h4>《紫微斗数讲义》· 王亭之</h4>
+        <p>北派宗师王亭之著作，星曜论命细节极为丰富。用于三合星耀细节的补充学习，阶段一后期开始穿插阅读。</p>
+        <div class="resource-tags"><span class="prio-mid">重要</span><span class="tag" style="background:var(--zw-l);color:var(--zw)">北派/三合</span></div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <div class="resource-icon">📘</div>
+      <div class="resource-body">
+        <h4>《紫微斗数白话例题详解》</h4>
+        <p>大量命例实战分析，适合案例积累阶段（阶段二）大量刷例题使用。</p>
+        <div class="resource-tags"><span class="prio-mid">案例</span><span class="tag" style="background:var(--zw-l);color:var(--zw)">实战</span></div>
+      </div>
+    </div>
+  </div>
+
+  <h3>进阶著作（阶段二–三）</h3>
+  <div class="resource-list">
+    <div class="resource-item">
+      <div class="resource-icon">📗</div>
+      <div class="resource-body">
+        <h4>《斗数卷》· 钟义明</h4>
+        <p>包含大量真实案例与实战断法，钟义明对婚姻、财运的细化论述尤其精彩。阶段二案例积累期重点参考。</p>
+        <div class="resource-tags"><span class="prio-mid">重要</span><span class="tag" style="background:var(--zw-l);color:var(--zw)">实战案例</span></div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <div class="resource-icon">📗</div>
+      <div class="resource-body">
+        <h4>《紫微论命实例》系列（各家出版）</h4>
+        <p>以有记录的名人为对象的命盘案例集，有标准答案可对照，是阶段一–二刷案例的理想素材。</p>
+        <div class="resource-tags"><span class="prio-mid">案例库</span></div>
+      </div>
+    </div>
+  </div>
+
+  <h3>软件工具</h3>
+  <div class="resource-list">
+    <div class="resource-item">
+      <div class="resource-icon">💻</div>
+      <div class="resource-body">
+        <h4>星侨紫微斗数（桌面端）</h4>
+        <p>业界最主流的紫微软件，飞星四化追踪功能完整，支持大限流年宫位飞化可视化。Windows版为主。</p>
+        <div class="resource-tags"><span class="prio-high">主力工具</span></div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <div class="resource-icon">📱</div>
+      <div class="resource-body">
+        <h4>紫微命盘 App（iOS/Android）</h4>
+        <p>外出接客时快速起盘用，多款App可用（推荐「紫微命盘」「星盘占星」等评分较高版本）。以起盘为主，分析回软件。</p>
+        <div class="resource-tags"><span class="prio-mid">辅助</span></div>
+      </div>
+    </div>
+  </div>
+
+  <h3>案例素材来源</h3>
+  <div class="resource-list">
+    <div class="resource-item">
+      <div class="resource-icon">🌐</div>
+      <div class="resource-body">
+        <h4>各大紫微论坛与社群</h4>
+        <p>PTT八字板（台湾）、百度紫微斗数吧、各微信紫微群——都有大量命主本人提供的已验证案例。重点找「事后验证」帖，有标准答案。</p>
+        <div class="resource-tags"><span class="prio-high">案例库首选</span></div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <div class="resource-icon">🌐</div>
+      <div class="resource-body">
+        <h4>名人命盘数据库</h4>
+        <p>搜索「名人紫微命盘」，时间线明确的名人（婚变、财务危机、重大成就）提供绝佳的验证案例。建议维护个人名人案例Excel表。</p>
+        <div class="resource-tags"><span class="prio-mid">案例库</span></div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <div class="resource-icon">📺</div>
+      <div class="resource-body">
+        <h4>YouTube / Bilibili 命理解析频道</h4>
+        <p>搜索「北派四化实战」「飞星派命盘解析」，部分老师会有完整命盘演示视频，可配合书本学习。注意甄别流派是否符合你的主线。</p>
+        <div class="resource-tags"><span class="prio-ref">参考</span></div>
+      </div>
+    </div>
+  </div>
+
+  <h3>笔记体系建议</h3>
+  <div class="card">
+    <h4>「星象组合对照表」结构（Obsidian / Excel 均可）</h4>
+    <table>
+      <tr><th>飞化组合</th><th>入宫位</th><th>主要事件类型</th><th>典型案例ID</th><th>准确度</th></tr>
+      <tr><td>化忌飞入夫妻宫</td><td>夫妻</td><td>感情困难、分离、冷战</td><td>案例#047</td><td>★★★★</td></tr>
+      <tr><td>化禄飞入财帛宫</td><td>财帛</td><td>正财增加、进财机会</td><td>案例#023</td><td>★★★★★</td></tr>
+      <tr><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td></tr>
+    </table>
+    <p style="font-size:12px;color:var(--text3)">每积累50个案例做一次提炼，将高频验证的组合提升为「高置信规律」，低频或混乱的标记「待验证」。</p>
+  </div>
+</div>
+
+<!-- ============ RESOURCES: BZ ============ -->
+<div id="res-bz" class="section">
+  <h2>八字学习资源</h2>
+  <p class="subtitle">盲派与子平派并行，主攻象意和无时辰推命</p>
+
+  <div class="alert alert-tip">你的关键突破口在「象意」。象意不是背诵，是联想力训练。每天强制输出，不要等"想清楚了"再写——就是要先输出，再复盘。</div>
+
+  <h3>盲派核心著作</h3>
+  <div class="resource-list">
+    <div class="resource-item">
+      <div class="resource-icon">📘</div>
+      <div class="resource-body">
+        <h4>《八字命理通论》· 邵伟华</h4>
+        <p>现代盲派基础，十神旺衰体系清晰，适合夯实基础。阶段一月一精读十神章节。</p>
+        <div class="resource-tags"><span class="prio-high">必读</span><span class="tag" style="background:var(--bz-l);color:var(--bz)">盲派</span></div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <div class="resource-icon">📘</div>
+      <div class="resource-body">
+        <h4>《盲派八字笔记》· 网络整理版</h4>
+        <p>各大命理论坛整理的盲派口诀与实战技法汇总，碎片化但实用性极高。搜索「盲派八字断事口诀」可找到多个版本。</p>
+        <div class="resource-tags"><span class="prio-high">实战</span><span class="tag" style="background:var(--bz-l);color:var(--bz)">盲派</span></div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <div class="resource-icon">📘</div>
+      <div class="resource-body">
+        <h4>盲派断事视频课程（多家机构）</h4>
+        <p>搜索「盲派八字实战课」，李涵辰、任铁樵传承体系、天机八字等均有视频课程。以案例演示为主的课程优先选择。</p>
+        <div class="resource-tags"><span class="prio-mid">重要</span><span class="tag" style="background:var(--bz-l);color:var(--bz)">盲派</span></div>
+      </div>
+    </div>
+  </div>
+
+  <h3>子平派核心著作</h3>
+  <div class="resource-list">
+    <div class="resource-item">
+      <div class="resource-icon">📗</div>
+      <div class="resource-body">
+        <h4>《子平真诠》· 沈孝瞻</h4>
+        <p>子平派最重要的古典著作，月令用神体系的理论根基。配合徐乐吾注解版阅读更易理解。阶段一后期至阶段二精读。</p>
+        <div class="resource-tags"><span class="prio-high">必读</span><span class="tag" style="background:var(--bz-l);color:var(--bz)">子平</span></div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <div class="resource-icon">📗</div>
+      <div class="resource-body">
+        <h4>《穷通宝鉴》</h4>
+        <p>调候用神的权威参考，依月令逐一说明各日主的用忌，实战中作为查询手册使用。</p>
+        <div class="resource-tags"><span class="prio-high">参考手册</span><span class="tag" style="background:var(--bz-l);color:var(--bz)">子平</span></div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <div class="resource-icon">📗</div>
+      <div class="resource-body">
+        <h4>《命理约言》· 陈素庵</h4>
+        <p>格局判断补充参考，对正格外的变格论述较为细致。阶段二中期参考。</p>
+        <div class="resource-tags"><span class="prio-ref">参考</span><span class="tag" style="background:var(--bz-l);color:var(--bz)">子平</span></div>
+      </div>
+    </div>
+  </div>
+
+  <h3>象意专项训练资源</h3>
+  <div class="resource-list">
+    <div class="resource-item">
+      <div class="resource-icon">🧩</div>
+      <div class="resource-body">
+        <h4>《象意断命》· 网络课程版（多老师）</h4>
+        <p>搜索「八字象意实战」，徐伟刚、晴子八字等老师有专门的象意课程，结合大量案例演示，对建立象意直觉帮助极大。</p>
+        <div class="resource-tags"><span class="prio-high">象意必修</span></div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <div class="resource-icon">🧩</div>
+      <div class="resource-body">
+        <h4>自建「象意字典」（每日维护）</h4>
+        <p>格式：天干/地支/十神 → 象意列表 → 触发场景 → 验证案例。例：「甲木」→ 头、肝、木材、参天大树、领袖气质、长子……每天强制增加5–10条。</p>
+        <div class="resource-tags"><span class="prio-high">自建工具</span></div>
+      </div>
+    </div>
+  </div>
+
+  <h3>无时辰推命 SOP（参考框架）</h3>
+  <div class="card">
+    <h4>客户信息收集清单</h4>
+    <div class="checklist" id="bz-checklist">
+      <div class="check-item"><div class="check-box" onclick="toggle(this)"></div><div class="check-text">出生年月日（阳历/农历均可）</div></div>
+      <div class="check-item"><div class="check-box" onclick="toggle(this)"></div><div class="check-text">出生城市（用于节气判断）</div></div>
+      <div class="check-item"><div class="check-box" onclick="toggle(this)"></div><div class="check-text">性别</div></div>
+      <div class="check-item"><div class="check-box" onclick="toggle(this)"></div><div class="check-text">近3年发生的1–2件重要事件（主动提供，用于验证大运）</div></div>
+      <div class="check-item"><div class="check-box" onclick="toggle(this)"></div><div class="check-text">目前婚姻状况</div></div>
+      <div class="check-item"><div class="check-box" onclick="toggle(this)"></div><div class="check-text">职业大类（用于论官禄宫象意）</div></div>
+      <div class="check-item"><div class="check-box" onclick="toggle(this)"></div><div class="check-text">咨询重点方向（感情/财运/事业/健康）</div></div>
+    </div>
+    <p style="font-size:12px;color:var(--text3);margin-top:10px">无时辰时：先以三柱定格局用神，以已知事件验证大运准确性，再推流年。明确告知客户「时柱未知，部分细节可能有偏差」，建立诚信。</p>
+  </div>
+
+  <h3>软件工具</h3>
+  <div class="resource-list">
+    <div class="resource-item">
+      <div class="resource-icon">💻</div>
+      <div class="resource-body">
+        <h4>万年历软件（含节气换柱功能）</h4>
+        <p>「八字排盘」类软件多款可用，关键需支持：节气换月柱、大运起运准确计算。推荐「八字命盘」App或「八字排盘大师」桌面版。</p>
+        <div class="resource-tags"><span class="prio-high">主力工具</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ RESOURCES: QM ============ -->
+<div id="res-qm" class="section">
+  <h2>奇门遁甲资源</h2>
+  <p class="subtitle">你已有盈利基础，此板块以维持水平为主（10%时间）</p>
+
+  <div class="alert alert-success">你的阴盘奇门中锁单宫风水运筹已可盈利，核心任务是「稳定」，不需要大量新增学习投入。重点是接单积累案例，持续验证，偶尔扩展技法。</div>
+
+  <h3>维护学习资源</h3>
+  <div class="resource-list">
+    <div class="resource-item">
+      <div class="resource-icon">📘</div>
+      <div class="resource-body">
+        <h4>《奇门遁甲秘笈大全》</h4>
+        <p>奇门遁甲经典参考文献，用于翻查局式格局细节。不需要重新系统学，遇到疑难局时查阅。</p>
+        <div class="resource-tags"><span class="prio-ref">查阅参考</span></div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <div class="resource-icon">📘</div>
+      <div class="resource-body">
+        <h4>阴盘奇门专项课程（你现有体系）</h4>
+        <p>维持现有学习资源，每月重听1节课复习，确保核心技法不生疏。</p>
+        <div class="resource-tags"><span class="prio-mid">维持</span></div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <div class="resource-icon">🌐</div>
+      <div class="resource-body">
+        <h4>奇门遁甲论坛与社群</h4>
+        <p>各奇门遁甲微信群、QQ群，定期关注同行案例交流，保持对特殊局式的敏感度。参与讨论也有助于接单引流。</p>
+        <div class="resource-tags"><span class="prio-ref">社群维护</span></div>
+      </div>
+    </div>
+  </div>
+
+  <h3>接单与定价参考</h3>
+  <div class="card">
+    <table>
+      <tr><th>服务类型</th><th>参考定价</th><th>周期</th></tr>
+      <tr><td>单次风水运筹咨询</td><td>200–500元</td><td>按需</td></tr>
+      <tr><td>项目制风水布局（到场）</td><td>1000–3000元</td><td>单次</td></tr>
+      <tr><td>奇门+易学套餐</td><td>500–1500元</td><td>阶段四起推出</td></tr>
+    </table>
+    <p style="font-size:12px;color:var(--text3)">价格随口碑积累逐步提升，不要一开始定价过高失去第一批客户。</p>
+  </div>
+</div>
+
+<!-- ============ RESOURCES: BIZ ============ -->
+<div id="res-biz" class="section">
+  <h2>商业变现资源</h2>
+  <p class="subtitle">易学盈利 + 泰康保险协同</p>
+
+  <h3>易学定价策略（阶段三起执行）</h3>
+  <div class="card">
+    <table>
+      <tr><th>服务项目</th><th>阶段三定价</th><th>阶段四定价</th><th>说明</th></tr>
+      <tr><td>紫微斗数单次咨询（30分钟）</td><td>50–150元</td><td>200–500元</td><td>口碑积累后提价</td></tr>
+      <tr><td>紫微+八字双体系解读</td><td>200元</td><td>400–800元</td><td>适合有时辰+无时辰对比需求</td></tr>
+      <tr><td>年度运势规划（大限+流年）</td><td>300元</td><td>600–1200元</td><td>含1次追问机会</td></tr>
+      <tr><td>奇门风水运筹</td><td>200–500元</td><td>500–2000元</td><td>视项目复杂度</td></tr>
+      <tr><td>组合套餐（命理+风水）</td><td>—</td><td>1000–3000元</td><td>阶段四推出</td></tr>
+    </table>
+  </div>
+
+  <h3>私域运营建议</h3>
+  <div class="resource-list">
+    <div class="resource-item">
+      <div class="resource-icon">📱</div>
+      <div class="resource-body">
+        <h4>微信私域：个人IP打造</h4>
+        <p>朋友圈每周发1–2条内容：案例解析（脱敏）、专题知识点、客户好评截图。不需要大量发，保持「专业感」即可。关键：让联系人知道你做命理咨询。</p>
+        <div class="resource-tags"><span class="prio-high">主渠道</span></div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <div class="resource-icon">📱</div>
+      <div class="resource-body">
+        <h4>小红书 / 公众号（阶段三后期起）</h4>
+        <p>发布「星象解读科普」类内容引流，例：「2027年哪些命盘财运特别好」「化忌入夫妻宫真的会离婚吗」。不直接卖课，引导私信加微信。</p>
+        <div class="resource-tags"><span class="prio-mid">扩流量</span></div>
+      </div>
+    </div>
+  </div>
+
+  <h3>易学×保险协同学习资源</h3>
+  <div class="resource-list">
+    <div class="resource-item">
+      <div class="resource-icon">🏢</div>
+      <div class="resource-body">
+        <h4>泰康HWP内训体系（你已有）</h4>
+        <p>重点掌握：产品话术中「风险意识唤醒」部分，与命盘风险节点对接。将命理断事作为"个性化风险分析工具"，差异化于普通保险代理人。</p>
+        <div class="resource-tags"><span class="prio-high">核心整合</span></div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <div class="resource-icon">📖</div>
+      <div class="resource-body">
+        <h4>《影响力》· Robert Cialdini</h4>
+        <p>理解信任建立的心理学机制，特别是「权威」「一致性」「喜爱」原则，对易学咨询的信任建立与保险转化都有直接指导意义。</p>
+        <div class="resource-tags"><span class="prio-mid">商业思维</span></div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <div class="resource-icon">📖</div>
+      <div class="resource-body">
+        <h4>《高绩效销售对话》类课程</h4>
+        <p>专注顾问式销售技巧，如何从"客户需求挖掘"到"方案提出"的完整对话设计，命理咨询中同样适用。</p>
+        <div class="resource-tags"><span class="prio-ref">参考</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TRACKER ============ -->
+<div id="tracker" class="section">
+  <h2>每周追踪表</h2>
+  <p class="subtitle">每周填写，追踪三大核心指标</p>
+
+  <div class="card">
+    <h3 style="margin-top:0">本周案例记录</h3>
+    <table id="case-table">
+      <tr><th>#</th><th>日期</th><th>体系</th><th>事件类型</th><th>断事准确度（1–5）</th><th>关键星象/干支</th></tr>
+      <tr><td>1</td><td><input type="text" placeholder="日期" style="width:80px;border:none;background:transparent;font-size:13px;color:var(--text)"></td><td><select style="border:none;background:transparent;font-size:13px;color:var(--text)"><option>紫微</option><option>八字</option><option>奇门</option></select></td><td><input type="text" placeholder="婚姻/财运…" style="width:100px;border:none;background:transparent;font-size:13px;color:var(--text)"></td><td><input type="number" min="1" max="5" placeholder="1–5" style="width:60px;border:none;background:transparent;font-size:13px;color:var(--text)"></td><td><input type="text" placeholder="组合" style="width:120px;border:none;background:transparent;font-size:13px;color:var(--text)"></td></tr>
+    </table>
+    <button onclick="addRow()" style="margin-top:10px;padding:6px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg2);font-size:12px;cursor:pointer;color:var(--text2)">+ 添加行</button>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">每周自评指标</h3>
+    <table>
+      <tr><th>指标</th><th>本周数值</th><th>目标</th><th>达成？</th></tr>
+      <tr><td>紫微案例数（累计）</td><td><input type="number" style="width:80px;border:none;background:transparent;font-size:13px"></td><td>300/500/800/1200</td><td><input type="checkbox"></td></tr>
+      <tr><td>八字案例数（累计）</td><td><input type="number" style="width:80px;border:none;background:transparent;font-size:13px"></td><td>100/200/400</td><td><input type="checkbox"></td></tr>
+      <tr><td>紫微平均准确度</td><td><input type="text" style="width:80px;border:none;background:transparent;font-size:13px" placeholder="x.x/5"></td><td>≥4.0</td><td><input type="checkbox"></td></tr>
+      <tr><td>客户咨询场次（本周）</td><td><input type="number" style="width:80px;border:none;background:transparent;font-size:13px"></td><td>阶段三：2–3/周</td><td><input type="checkbox"></td></tr>
+      <tr><td>象意字典新增条目</td><td><input type="number" style="width:80px;border:none;background:transparent;font-size:13px"></td><td>≥35/周</td><td><input type="checkbox"></td></tr>
+      <tr><td>奇门接单收入（元）</td><td><input type="number" style="width:80px;border:none;background:transparent;font-size:13px"></td><td>稳定有单</td><td><input type="checkbox"></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">本周反思（文字记录）</h3>
+    <p style="font-size:12px;color:var(--text3);margin-bottom:8px">回答3个问题：① 本周最大收获是什么？ ② 哪个星象/干支组合还没理解透彻？ ③ 下周重点攻克哪个方向？</p>
+    <textarea style="width:100%;min-height:100px;border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px;font-size:13px;resize:vertical;background:var(--bg2);color:var(--text)" placeholder="本周反思…"></textarea>
+  </div>
+</div>
+
+<!-- ============ SOP ============ -->
+<div id="sop" class="section">
+  <h2>断事SOP · 标准作业流程</h2>
+  <p class="subtitle">10–30分钟内完成完整命盘解读的标准流程</p>
+
+  <div class="alert alert-warn">这份SOP是目标状态，阶段一–二先打好基础，阶段三开始按此SOP训练，强迫自己在时限内输出，不允许无限拖延。</div>
+
+  <h3>紫微斗数 · 断事SOP（目标：20–30分钟）</h3>
+  <div class="card">
+    <div class="checklist">
+      <div class="check-item"><div class="check-box" onclick="toggle(this)"></div><div class="check-text"><strong>步骤1（2分钟）：</strong>看命宫三方四正，确定命主基本格局（强弱、主星特质）</div></div>
+      <div class="check-item"><div class="check-box" onclick="toggle(this)"></div><div class="check-text"><strong>步骤2（3分钟）：</strong>看本命四化飞入各宫，标记化禄/权/科/忌落点，建立全局观</div></div>
+      <div class="check-item"><div class="check-box" onclick="toggle(this)"></div><div class="check-text"><strong>步骤3（5分钟）：</strong>定当下大限宫位，追踪大限四化与本命的互动（入/冲/叠）</div></div>
+      <div class="check-item"><div class="check-box" onclick="toggle(this)"></div><div class="check-text"><strong>步骤4（5分钟）：</strong>流年飞化叠入，确认当年触发的宫位方向</div></div>
+      <div class="check-item"><div class="check-box" onclick="toggle(this)"></div><div class="check-text"><strong>步骤5（5分钟）：</strong>针对客户问题宫位（夫妻/财帛/官禄等）深化解读，加入三合星耀细节</div></div>
+      <div class="check-item"><div class="check-box" onclick="toggle(this)"></div><div class="check-text"><strong>步骤6（5分钟）：</strong>整理输出：过往2–3件 → 当下状态 → 未来大限建议，用客户能理解的语言表达</div></div>
+      <div class="check-item"><div class="check-box" onclick="toggle(this)"></div><div class="check-text"><strong>步骤7（可选）：</strong>如适合，自然引入保险规划谈话（健康宫/财运宫有负面信号时）</div></div>
+    </div>
+  </div>
+
+  <h3>八字 · 无时辰断事SOP（目标：15–20分钟）</h3>
+  <div class="card">
+    <div class="checklist">
+      <div class="check-item"><div class="check-box" onclick="toggle(this)"></div><div class="check-text"><strong>步骤1（2分钟）：</strong>三柱起盘，判断日主强弱（月令是否得令、天干透干情况）</div></div>
+      <div class="check-item"><div class="check-box" onclick="toggle(this)"></div><div class="check-text"><strong>步骤2（3分钟）：</strong>找用神（月令用神优先），确认喜忌方向</div></div>
+      <div class="check-item"><div class="check-box" onclick="toggle(this)"></div><div class="check-text"><strong>步骤3（3分钟）：</strong>看大运走势（顺运/逆运），以客户提供的已知事件验证大运是否跑偏</div></div>
+      <div class="check-item"><div class="check-box" onclick="toggle(this)"></div><div class="check-text"><strong>步骤4（5分钟）：</strong>当前大运十神象意解读 → 六亲动向 → 事业/财运/感情触发方向</div></div>
+      <div class="check-item"><div class="check-box" onclick="toggle(this)"></div><div class="check-text"><strong>步骤5（3分钟）：</strong>流年碰合冲刑分析，近1–2年具体触发点</div></div>
+      <div class="check-item"><div class="check-box" onclick="toggle(this)"></div><div class="check-text"><strong>步骤6（2分钟）：</strong>输出总结，明确表达「有时辰会更准，目前基于三柱」的诚信说明</div></div>
+    </div>
+  </div>
+
+  <h3>客户沟通话术参考</h3>
+  <div class="card">
+    <h4>建立信任的破冰问法</h4>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:10px">「在我具体分析之前，您能告诉我大概2–3年前或者近期发生的1–2件比较重要的事吗？这样我可以先验证一下命盘准不准，您也比较放心。」</p>
+    <h4>保险转化话术切入点</h4>
+    <p style="font-size:13px;color:var(--text2)">「从您的命盘来看，[X年–Y年]这段大限，疾厄宫的气场比较弱，这段时间身体方面要特别注意。刚好我这边除了做命理，也做保险规划，我们可以顺带看看您现有的健康保障是否完整，有没有需要补缺的地方……」</p>
+  </div>
+</div>
+
+</div><!-- end main -->
+
+<script>
+function show(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function toggle(el) {
+  el.classList.toggle('checked');
+  const text = el.nextElementSibling;
+  text.classList.toggle('done');
+}
+
+function addRow() {
+  const table = document.getElementById('case-table');
+  const rows = table.querySelectorAll('tr');
+  const num = rows.length;
+  const row = document.createElement('tr');
+  row.innerHTML = `<td>${num}</td><td><input type="text" placeholder="日期" style="width:80px;border:none;background:transparent;font-size:13px;color:var(--text)"></td><td><select style="border:none;background:transparent;font-size:13px;color:var(--text)"><option>紫微</option><option>八字</option><option>奇门</option></select></td><td><input type="text" placeholder="婚姻/财运…" style="width:100px;border:none;background:transparent;font-size:13px;color:var(--text)"></td><td><input type="number" min="1" max="5" placeholder="1–5" style="width:60px;border:none;background:transparent;font-size:13px;color:var(--text)"></td><td><input type="text" placeholder="组合" style="width:120px;border:none;background:transparent;font-size:13px;color:var(--text)"></td>`;
+  table.appendChild(row);
+}
+</script>
+</body>
+</html>
